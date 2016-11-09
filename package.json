@@ -1,0 +1,24 @@
+{
+  "name": "twitchlite",
+  "version": "1.0.0",
+  "description": "Automated stream highlighting feed for Twitch users",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Misguided-Butterflies/TwitchLite.git"
+  },
+  "keywords": [
+    "twitch",
+    "bot",
+    "irc"
+  ],
+  "author": "Sam Sherman, Shensen Wang, John Oksasoglu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Misguided-Butterflies/TwitchLite/issues"
+  },
+  "homepage": "https://github.com/Misguided-Butterflies/TwitchLite#readme"
+}
