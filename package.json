@@ -26,10 +26,14 @@
   },
   "homepage": "https://github.com/Misguided-Butterflies/TwitchLite#readme",
   "devDependencies": {
+    "babel-eslint": "^7.1.0",
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.0",
     "enzyme": "^2.5.1",
+    "eslint": "^3.9.1",
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "eslint-plugin-react": "^6.6.0",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
     "sinon": "^1.17.6"
