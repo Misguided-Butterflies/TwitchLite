@@ -8,7 +8,8 @@
     "test:server": "mocha test/server/.setup.js test/server/**.spec.js test/server/*/*.spec.js",
     "test:server:watch": "mocha test/server/.setup.js test/server/**.spec.js test/server/*/*.spec.js --watch",
     "test:client": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js",
-    "test:client:watch": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js --watch"
+    "test:client:watch": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js --watch",
+    "lint": "eslint ./"
   },
   "repository": {
     "type": "git",
