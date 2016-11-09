@@ -8,4 +8,4 @@ app.get('/', function(req, res) {
   res.sendFile('index.html');
 });
 
-app.listen(8000);
+app.listen(process.env.PORT || 8000);
