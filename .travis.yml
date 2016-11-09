@@ -7,9 +7,5 @@ deploy:
   provider: heroku
   api_key:
     secure: 60e2aa89-3ac0-4564-a4e1-8311108482da
-  on:
-    all_branches: true
-  app: 
-    master: twitchlite
-    develop: twitchlite-develop
+  app: twitchlite
 after_deploy: "echo 'deployed to heroku!'"
