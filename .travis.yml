@@ -9,7 +9,7 @@ deploy:
     secure: 60e2aa89-3ac0-4564-a4e1-8311108482da
   on:
     all_branches: true
-  app: 
+  app:
     master: twitchlite
     develop: twitchlite-develop
 after_deploy: "echo 'deployed to heroku!'"
