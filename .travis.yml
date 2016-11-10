@@ -17,4 +17,7 @@ deploy:
   app:
     master: twitchlite
     develop: twitchlite-develop
-after_deploy: "echo 'deployed to heroku!'"
+after_deploy: echo 'deployed to heroku!'
+env:
+  matrix:
+    secure: bF7LdfFg9Ce8lJf0+BJwxMGYLtrDZIQiERwTPtkHhlS161jCQvkQRPgwstMMXI7YaRh7Qp7l1VSvg+pAA6ZnbYsJN1jsX3ZfnSyapXTM3OuOefxbTDkCXiNZqCFcapQ4QRAMCiIcMU+nXI1C0FzfABtxOeWrMCK+qL6NfAYhiKYLD99dwBqCYZ2MLY7geFpAIk+vYFJ8sWiV8AI8rSeFfavARwHYXa0Vi7/oql1+hHcLMmhA6Z9fftr/fbFpSX29KGMqtLD9eWkk+aoPWvZ47WnBjwtIs1u78JualbJrMYuwsLqQyvy782T2oXoM4EhrfzSpZwb9P7zrQ8A0gJpc3SRCk1QTBBtUYWt+zfl9grL8T51Un5Hnu2uNrUvbm15c+4ialStr0K0Wzefm08ka67EcU14IOWRqVRy5iOcC2q535zjTbgK+/o7qy/bfV3UAZY3suiOI6ntnrb9KQTqMkN2F7o/Cp1hxS/T0hmFhvINWKRLn0ivPm8DB6pt/4oQmCfC/Qz+WFml/dM+ciKpETJ7WI0HsfMfKFcnRd1d1RozlEmoa4h1+JDO5+oBEMqqtaQ3y/lQhQLNS02HmE1GOvtmdPPVRiCUIBs1VN8URSO9iKpzMkcp8dFqn/pyusJ/b2tFnhqs9I8/y8i7LJri8t9/6EyH3hokuPHdstF/0f60=
