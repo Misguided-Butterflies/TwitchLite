@@ -1,3 +1,4 @@
+var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
 // var worker = require('../../workers/worker');
 
@@ -23,17 +24,25 @@ describe('workerMaster', function() {
     expect(workerMaster.getWorkers()[channelName]).to.not.exist;
   });
 
-  it('should fetch the top 50 Twitch streams', function() {
-
-  });
-
   describe('getTopStreams', function() {
     it('should return a Promise', function() {
+      var result = workerMaster.getTopStreams();
 
+      expect(result).to.be.an.instanceOf(Promise);
     });
 
-    it('should fetch the top 50 Twitch streams', function() {
-
+    it('should fetch the top 50 Twitch streams', function(done) {
+      workerMaster.getTopStreams()
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        expect(data.streams.length).to.equal(50);
+        done();
+      })
+      .catch(error => {
+        console.error('Error fetching top 50 streams:', error);
+      });
     });
   });
 });
