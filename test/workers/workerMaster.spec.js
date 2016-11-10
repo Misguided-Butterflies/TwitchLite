@@ -31,17 +31,19 @@ describe('workerMaster', function() {
       expect(result).to.be.an.instanceOf(Promise);
     });
 
-    it('should fetch the top 50 Twitch streams', function(done) {
+    it('should fetch the top Twitch streams', function(done) {
       workerMaster.getTopStreams()
       .then(response => {
         return response.json();
       })
       .then(data => {
-        expect(data.streams.length).to.equal(50);
+        // 25 is an arbitrary number, but we want to ensure we always have a
+        // sizable portion at least
+        expect(data.streams.length > 25).to.be.true;
         done();
       })
       .catch(error => {
-        console.error('Error fetching top 50 streams:', error);
+        console.error('Failed to fetch top 50 streams:', error);
       });
     });
   });
