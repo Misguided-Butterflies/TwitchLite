@@ -1,0 +1,14 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "./node_modules/eslint-config-hackreactor/index.js",
+    "plugin:react/recommended"
+  ],
+  "ecmaVersion": 6,
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": 0
+  }
+}
