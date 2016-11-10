@@ -14,7 +14,10 @@
 
 */
 
+var fetch = require('node-fetch');
+var secret = require('./../.secret');
 // var worker = require('./worker');
+// REPLACE THE FOLLOWING WITH THE REAL MODULE LATER
 var Worker = function() {
   this.connect = () => '';
   this.disconnect = () => '';
@@ -24,7 +27,11 @@ var activeWorkers = {};
 
 var workerMaster = {
   getTopStreams: function() {
-    // should return a promise
+    return fetch('https://api.twitch.tv/kraken/streams?limit=50', {
+      headers: {
+        'Client-ID': secret.TWITCH_CLIENT_ID
+      }
+    });
   },
   getWorkers: function() {
     return activeWorkers;
@@ -51,6 +58,9 @@ var workerMaster = {
     delete activeWorkers[channelName];
 
     return workerToRemove;
+  },
+  getStreamVODID: function(channelName) {
+
   }
 };
 
