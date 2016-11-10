@@ -15,21 +15,42 @@
 */
 
 // var worker = require('./worker');
+var Worker = function() {
+  this.connect = () => '';
+  this.disconnect = () => '';
+};
 
-var workers = {};
+var activeWorkers = {};
 
 var workerMaster = {
   getTopStreams: function() {
     // should return a promise
   },
-  getActiveWorkers: function() {
-    return workers;
+  getWorkers: function() {
+    return activeWorkers;
   },
-  addWorker: function() {
+  addWorker: function(channelName) {
+    if (activeWorkers[channelName]) {
+      // Signify invalid command; worker already exists
+      return false;
+    }
 
+    activeWorkers[channelName] = new Worker(channelName);
+    activeWorkers[channelName].connect();
+
+    return activeWorkers[channelName];
   },
-  removeWorker: function() {
+  removeWorker: function(channelName) {
+    var workerToRemove = activeWorkers[channelName];
+    if (!workerToRemove) {
+      // Signify invalid command; worker doesn't exist
+      return false;
+    }
 
+    workerToRemove.disconnect();
+    delete activeWorkers[channelName];
+
+    return workerToRemove;
   }
 };
 
