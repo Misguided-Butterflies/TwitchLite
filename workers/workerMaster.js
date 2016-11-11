@@ -47,7 +47,7 @@ var workerMaster = {
 
     return workerToRemove;
   },
-  getStreamVODID: function(channelName) {
+  getStreamVodData: function(channelName) {
     return fetch(
       `https://api.twitch.tv/kraken/channels/${channelName}/videos/?limit=1&broadcasts=true`,
       fetchOptions
@@ -56,15 +56,22 @@ var workerMaster = {
       return response.json();
     })
     .then(data => {
-      // _id is a string with 'v' + a number, like 'v100290621'
-      // so let's slice off the v and return just the number part (as a string)
-      return data.videos[0]._id.slice(1);
+      var streamStart = new Date(data.videos[0]['recorded_at']);
+      streamStart = streamStart.getTime();
+
+      return {
+        link: data.videos[0].url,
+        game: data.videos[0].game,
+        streamStart
+      };
     });
   },
   saveHighlight: function(highlightData) {
-    // highlightData should be an obj with start time, endtime, and channel
-    // should call this.getStreamVODID with the channel name, then use that to save stuff
-    // after, this should make db call and save the highlight
+    // highlightData should be: { highlightStart: number, highlightEnd: number, channel: string }
+    // call this.getStreamVodData
+    // combine results of that with highlightData to form necessary data for db schema
+    // save to db, probably return a promise
+    return;
   }
 };
 
