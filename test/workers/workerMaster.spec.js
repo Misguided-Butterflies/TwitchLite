@@ -2,7 +2,9 @@ var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
 
 var sampleChannel = 'twitch';
-
+console.log(process.env.TWITCH_CLIENT_ID);
+console.log(process.env.TWITCH_PASSWORD);
+console.log(process.env.TWITCH_USERNAME);
 describe('workerMaster', function() {
   beforeEach(function() {
     var activeWorkerNames = Object.keys(workerMaster.getWorkers());
