@@ -44,22 +44,42 @@ describe('workerMaster', function() {
     });
   });
 
-  describe('getStreamVODID', function() {
+  describe('getStreamVodData', function() {
     it('should return a Promise', function() {
-      var result = workerMaster.getStreamVODID(sampleChannel);
+      var result = workerMaster.getStreamVodData(sampleChannel);
 
       expect(result).to.be.an.instanceOf(Promise);
     });
 
-    it('should fetch the VOD ID of the channel\'s latest broadcast', function(done) {
-      workerMaster.getStreamVODID(sampleChannel)
-      .then(id => {
-        expect(typeof id).to.equal('string');
+    it('should fetch the VOD data of the channel\'s latest broadcast', function(done) {
+      workerMaster.getStreamVodData(sampleChannel)
+      .then(data => {
+        expect(typeof data.link).to.equal('string');
+        expect(typeof data.game).to.equal('string');
+        expect(typeof data.streamStart).to.equal('number');
         done();
       })
       .catch(error => {
         console.error('Error encountered:', error);
       });
+    });
+  });
+
+  describe('saveHighlight', function() {
+    it('should return a Promise', function() {
+      var highlightData = {
+        highlightStart: 1,
+        highlightEnd: 2,
+        channel: 'twitch'
+      };
+
+      var result = workerMaster.saveHighlight(highlightData);
+
+      expect(result).to.be.an.instanceOf(Promise);
+    });
+
+    xit('should save highlights to the database', function() {
+
     });
   });
 
