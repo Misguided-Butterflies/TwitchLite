@@ -4,8 +4,9 @@ var HighlightSchema = mongoose.Schema({
   link: String,
   channel: String,
   game: String,
-  start: Number,
-  end: Number,
+  streamStart: Number,
+  highlightStart: Number,
+  highlightEnd: Number,
   vote: Number
 });
 
