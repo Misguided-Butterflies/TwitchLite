@@ -12,7 +12,7 @@
     "test:workers": "mocha test/workers/.setup.js test/workers/**.spec.js test/workers/*/*.spec.js",
     "test:workers:watch": "mocha test/workers/.setup.js test/workers/**.spec.js test/workers/*/*.spec.js --watch",
     "test:db": "mocha test/db/**.spec.js",
-    "watch:db": "mocha test/db/**.spec.js --watch",
+    "test:db:watch": "mocha test/db/**.spec.js --watch",
     "lint": "eslint ./",
     "build": "webpack",
     "build:watch": "webpack -w",
