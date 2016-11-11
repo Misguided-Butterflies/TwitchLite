@@ -66,7 +66,7 @@ describe('workerMaster', function() {
   });
 
   describe('saveHighlight', function() {
-    it('should return a Promise', function() {
+    xit('should return a Promise', function() {
       var highlightData = {
         highlightStart: 1,
         highlightEnd: 2,
