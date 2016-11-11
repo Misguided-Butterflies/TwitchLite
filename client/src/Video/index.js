@@ -1,6 +1,17 @@
 import React from 'react';
 import 'twitch-embed';
 
+/** Video
+ * this is a component for showing a twitch vod highlight.
+ * usage:
+ * let video = {
+ *   id: 'v97978712', // twitch video id
+ *   start: 7206, // start time of the hightlight in seconds
+ *   duration: 15, // duration of the highlight in seconds
+ * };
+ * // ...
+ * <Video video={video} />
+ */
 class Video extends React.Component {
   constructor(props) {
     super(props);
