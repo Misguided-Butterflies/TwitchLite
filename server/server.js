@@ -2,7 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var highlight = require('../db/controllers/highlight.js');
 
-var db = mongoose.connect(process.env.MONGOD_URI);
+var db = mongoose.connect(process.env.MONGODB_URI);
 
 var app = express();
 
