@@ -10,12 +10,14 @@ class App extends React.Component {
       <div>
         <Header />
         <Video video={{
-          start: '1h',
-          id: 'v97978712'
+          start: 3600,
+          id: 'v97978712',
+          duration: 10,
         }} />
         <Video video={{
-          start: '2h6s',
-          id: 'v97978712'
+          start: 7206,
+          id: 'v97978712',
+          duration: 6,
         }} />
       </div>
     );

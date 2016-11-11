@@ -8,8 +8,9 @@ let component = (
 );
 
 let testVideo = {
-  start: '2h6s',
-  id: 'v97978712'
+  start: 7206,
+  id: 'v97978712',
+  duration: 6,
 };
 
 describe('client tests', () => {
