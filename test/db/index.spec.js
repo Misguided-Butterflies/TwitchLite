@@ -5,43 +5,44 @@ var expect = chai.expect;
 var {findAll, findOne, insertOne} = require('../../db/controllers/highlight');
 var model = require('../../db/models/highlight');
 
-
+// does db also need to store the start time of the stream itself?
 var obj = {
   _id: new ObjectId('582514df57a32e10c426ec3b'),
-  link: "this.that.com",
-  channel: "dk doublelunch",
-  game: "pong",
-  start: 1,
-  end: 2,
+  link: 'this.that.com',
+  channel: 'dk doublelunch',
+  game: 'pong',
+  streamStart: 1,
+  highlightStart: 2,
+  highlightEnd: 3,
   vote: 10
-}
+};
 
-describe("Highlights Model", function(){  
-  
+describe('Highlights Model', function() {
+
   beforeEach(function(done) {
     var clearDB = function() {
       model.remove({}).exec();
-      return done()
+      return done();
     };
-    
+
     if (mongoose.connection.readyState === 0) {
       mongoose.connect(process.env.MONGODB_URI, function(err) {
-        console.log("connecting: " + process.env.MONGODB_URI);
-        console.log("connection error: " , err);
+        console.log('connecting: ' + process.env.MONGODB_URI);
+        console.log('connection error: ', err);
         return clearDB();
       });
     } else {
       return clearDB();
     }
-    
+
   });
-  
+
   afterEach(function(done) {
     mongoose.disconnect();
     return done();
-  })
-  
-  it("is able to add a highlight", function(done){
+  });
+
+  it('is able to add a highlight', function(done) {
     insertOne(obj, function(err, created) {
       //there shouldn't be an error
       expect(err).to.not.exist;
@@ -49,8 +50,8 @@ describe("Highlights Model", function(){
       done();
     });
   });
-  
-  it("should only add one highlight at once", function(done) {
+
+  it('should only add one highlight at once', function(done) {
     insertOne(obj, function() {
       findAll(function(err, res) {
         expect(res.length).to.equal(1);
@@ -58,13 +59,13 @@ describe("Highlights Model", function(){
       });
     });
   });
-  
-  it("should be able to find by id", function(done) {
+
+  it('should be able to find by id', function(done) {
     insertOne(obj, function() {
       findOne('582514df57a32e10c426ec3b', function(err, res) {
         expect(res.game).to.equal('pong');
         done();
-      })
-    })
+      });
+    });
   });
 });

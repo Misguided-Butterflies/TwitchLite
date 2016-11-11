@@ -3,20 +3,18 @@ var mongoose = require ('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 
 // findAll retrieves all highlights
-function findAll(callback) {
+var findAll = function(callback) {
   model.find({}, callback);
-}
+};
 
 // findOne will retrieve the highlight associated with the given id
-function findOne(id, callback) {
+var findOne = function(id, callback) {
   model.findById(id, callback);
-}
+};
 
 // insertOne inserts a highlight into the db
-function insertOne(highlight, callback) {
+var insertOne = function(highlight, callback) {
   model.create(highlight, callback);
-}
-
-
+};
 
 module.exports = {findAll, findOne, insertOne};
