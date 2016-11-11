@@ -1,35 +1,21 @@
-/*
-  what jobs does master have?
-  needs to keep track of how many bots are out there
-  needs to probably get top channels, and poll for those channels being active
-  needs to send bots to popular channels when that happens
-  needs to communicate with bot and know that when one bot is done (ie a channel goes offline),
-    a new bot space is freed up
-  needs to send data to the db
-  needs to store obj of channel names with active bots
-  every time it gets the list of top 50 again, if one item that has an active both is no longer in top 50,
-    then stop that bot
-  so that means bot should probably be instantiated like `new Bot(channelName)`
-
-
-*/
+// Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
+// or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
 
 var fetch = require('node-fetch');
-// var worker = require('./worker');
-// REPLACE THE FOLLOWING WITH THE REAL MODULE LATER
-var Worker = function() {
-  this.connect = () => '';
-  this.disconnect = () => '';
+var worker = require('./worker');
+var fetchOptions = {
+  headers: {
+    'Client-ID': process.env.TWITCH_CLIENT_ID
+  }
 };
-
 var activeWorkers = {};
+
 var workerMaster = {
   getTopStreams: function() {
-    return fetch('https://api.twitch.tv/kraken/streams?limit=50', {
-      headers: {
-        'Client-ID': process.env.TWITCH_CLIENT_ID
-      }
-    });
+    return fetch('https://api.twitch.tv/kraken/streams?limit=50', fetchOptions)
+      .then(response => {
+        return response.json();
+      });
   },
   getWorkers: function() {
     return activeWorkers;
@@ -40,8 +26,11 @@ var workerMaster = {
       return false;
     }
 
-    activeWorkers[channelName] = new Worker(channelName);
-    activeWorkers[channelName].connect();
+    activeWorkers[channelName] = worker(channelName, this.saveHighlight.bind(this));
+    activeWorkers[channelName].connect()
+    .catch(function(err) {
+      // Run some code here when disconnect happens
+    });
 
     return activeWorkers[channelName];
   },
@@ -53,12 +42,29 @@ var workerMaster = {
     }
 
     workerToRemove.disconnect();
+
     delete activeWorkers[channelName];
 
     return workerToRemove;
   },
   getStreamVODID: function(channelName) {
-
+    return fetch(
+      `https://api.twitch.tv/kraken/channels/${channelName}/videos/?limit=1&broadcasts=true`,
+      fetchOptions
+    )
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      // _id is a string with 'v' + a number, like 'v100290621'
+      // so let's slice off the v and return just the number part (as a string)
+      return data.videos[0]._id.slice(1);
+    });
+  },
+  saveHighlight: function(highlightData) {
+    // highlightData should be an obj with start time, endtime, and channel
+    // should call this.getStreamVODID with the channel name, then use that to save stuff
+    // after, this should make db call and save the highlight
   }
 };
 
