@@ -1,8 +1,7 @@
 var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
-// var worker = require('../../workers/worker');
 
-var sampleChannel = 'GosuTV_OW';
+var sampleChannel = 'twitch';
 
 describe('workerMaster', function() {
   beforeEach(function() {
