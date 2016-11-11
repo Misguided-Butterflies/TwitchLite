@@ -4,6 +4,9 @@ node_js:
 
 services: mongodb
 
+env:
+- MONGODB_URI=mongodb://localhost/twitchlite
+
 before_deploy: "echo 'ready?'"
 deploy:
   provider: heroku
