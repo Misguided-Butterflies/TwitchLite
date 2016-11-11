@@ -1,13 +1,30 @@
+import Video from '../../client/src/Video';
+import 'twitch-embed';
+
 let component = (
   <div>
     <h1>Test Component</h1>
   </div>
 );
 
-describe('client tests', () => {
-  it('should render something', () => {
-    let wrapper = shallow(component);
+let testVideo = {
+  start: 7206,
+  id: 'v97978712',
+  duration: 6,
+};
 
-    expect(wrapper.contains(<h1>Test Component</h1>)).to.equal(true);
+describe('client tests', () => {
+
+  describe('video', () => {
+    let video;
+    global.Twitch = window.Twitch;
+    beforeEach(() => {
+      video = (<Video video={testVideo} />);
+    });
+
+    it('should have a class .video', () => {
+      let wrapper = shallow(video);
+      expect(wrapper.find('.video')).to.have.length(1);
+    });
   });
 });
