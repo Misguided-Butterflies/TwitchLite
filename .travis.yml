@@ -2,6 +2,8 @@ language: node_js
 node_js:
   - "6"
 
+services: mongodb
+
 before_deploy: "echo 'ready?'"
 deploy:
   provider: heroku
