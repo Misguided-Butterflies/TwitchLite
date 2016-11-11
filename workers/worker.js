@@ -15,12 +15,25 @@ var tmi = require('tmi.js');
  *
  * see https://docs.tmijs.org/v1.1.1/index.html for more information.
  */
-module.exports = function(stream) {
-  return new tmi.client({
+var createWorker = function(stream, handleHighlight) {
+  var worker = new tmi.client({
     identity: {
       username: process.env.TWITCH_USERNAME,
       password: process.env.TWITCH_PASSWORD
     },
     channels: [stream]
   });
+
+  worker.addListener('message', (from, to, message) => {
+    // handle the message, do checks for highlight
+    console.log('message from', from, 'to', to);
+    console.log(message);
+  });
+
+  // when highlight detected, call handleHighlight with the appropriate data, eg:
+  // handleHighlight({ startTime: 1234, endTime: 5678, channelName: stream});
+
+  return worker;
 };
+
+module.exports = createWorker;
