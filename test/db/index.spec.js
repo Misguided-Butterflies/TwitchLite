@@ -25,7 +25,9 @@ describe("Highlights Model", function(){
     };
     
     if (mongoose.connection.readyState === 0) {
-      mongoose.connect(process.env.MONGODB_URI, function() {
+      mongoose.connect(process.env.MONGODB_URI, function(err) {
+        console.log("connecting: " + process.env.MONGODB_URI);
+        console.log("connection error: " , err);
         return clearDB();
       });
     } else {
