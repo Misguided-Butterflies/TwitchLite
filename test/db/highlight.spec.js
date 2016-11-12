@@ -47,22 +47,36 @@ describe('Highlights Model', function() {
   it('should only add one highlight at once', function(done) {
     insertOne(obj)
     .then( () => {
-      findAll()
-      .then(res => {
-        expect(res.length).to.equal(1);
-        done();
-      });
+      return findAll();
+    })
+    .then(res => {
+      expect(res.length).to.equal(1);
+      done();
     });
   });
 
   it('should be able to find by id', function(done) {
     insertOne(obj)
     .then( () => {
-      findOne('582514df57a32e10c426ec3b')
-      .then(res => {
-        expect(res.game).to.equal('pong');
-        done();
-      });
+      return findOne('582514df57a32e10c426ec3b');
+    })
+    .then(res => {
+      expect(res.game).to.equal('pong');
+      done();
+    });
+  });
+
+  it('should only add the same highlight once', function(done) {
+    insertOne(obj)
+    .then( () => {
+      return insertOne(obj);
+    })
+    .then( () => {
+      return findAll(obj);
+    })
+    .then(results => {
+      expect(results.length).to.equal(1);
+      done();
     });
   });
 });
