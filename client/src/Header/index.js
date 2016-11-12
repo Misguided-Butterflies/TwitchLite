@@ -1,4 +1,5 @@
 import React from 'react';
+import {PageHeader} from 'react-bootstrap';
 
 class Header extends React.Component {
   constructor(props) {
@@ -7,9 +8,9 @@ class Header extends React.Component {
 
   render() {
     return (
-      <div>
+      <PageHeader className='centered'>
         <span className='title'>TwitchLite</span>
-      </div>
+      </PageHeader>
     );
   }
 }
