@@ -38,10 +38,10 @@ describe('workerMaster', function() {
 
     it('should fetch the top Twitch streams', function(done) {
       workerMaster.getTopStreams()
-      .then(data => {
+      .then(streams => {
         // 25 is an arbitrary number, but we want to ensure we always have a
         // sizable portion at least
-        expect(data.streams.length > 25).to.be.true;
+        expect(streams.length > 25).to.be.true;
         done();
       })
       .catch(error => {
@@ -102,6 +102,50 @@ describe('workerMaster', function() {
       })
       .catch(error => {
         mongoose.disconnect();
+      });
+    });
+  });
+
+  describe('updateWorkers', function() {
+    it('should return a Promise', function() {
+      var result = workerMaster.updateWorkers();
+
+      expect(result).to.be.an.instanceOf(Promise);
+    });
+
+    it('should destroy old workers and add new ones', function(done) {
+      // Manually add some streams
+      var initialChannels = ['blizzard', 'vgbootcamp', 'taimoutv', 'iddqdow'];
+      for (var channelName of initialChannels) {
+        workerMaster.addWorker(channelName);
+      }
+
+      // Set up new stream data for stubbing
+      var newChannels = ['blizzard', 'BeyondTheSummit', 'esl_AlphaCast', 'twitch'];
+      var newStreams = []; // Fill this out with what getTopStreams should get
+      for (var channelName of newChannels) {
+        newStreams.push({
+          channel: {
+            name: channelName
+          }
+        });
+      }
+
+      // Stub getTopStreams with promise that returns set list of 5 or so items
+      var getTopStreamsStub = new Promise((resolve, reject) => {
+        resolve(newStreams);
+      });
+
+      sinon.stub(workerMaster, 'getTopStreams').returns(getTopStreamsStub);
+
+      // Trigger the update, and verify the differences
+      workerMaster.updateWorkers()
+      .then(removedWorkers => {
+        expect(removedWorkers).to.eql(['vgbootcamp', 'taimoutv', 'iddqdow']);
+        expect(Object.keys(workerMaster.getWorkers())).to.eql(newChannels);
+
+        workerMaster.getTopStreams.restore();
+        done();
       });
     });
   });

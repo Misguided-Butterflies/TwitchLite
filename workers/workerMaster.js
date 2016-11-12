@@ -15,6 +15,9 @@ var workerMaster = {
     return fetch('https://api.twitch.tv/kraken/streams?limit=50', fetchOptions)
       .then(response => {
         return response.json();
+      })
+      .then(data => {
+        return data.streams;
       });
   },
   getWorkers: function() {
@@ -45,7 +48,7 @@ var workerMaster = {
 
     delete activeWorkers[channelName];
 
-    return workerToRemove;
+    return channelName;
   },
   getStreamVodData: function(channelName) {
     return fetch(
@@ -75,6 +78,33 @@ var workerMaster = {
     })
     .catch(error => {
       console.error('Some error creating highlight data:', error);
+    });
+  },
+  updateWorkers: function() {
+    return this.getTopStreams()
+    .then(streams => {
+      var currentWorkers = Object.keys(this.getWorkers());
+      var oldWorkers = [];
+      var newStreamsHash = {};
+
+      for (var stream of streams) {
+        // Create hash of the new streams for easy lookup/comparison
+        newStreamsHash[stream.channel.name] = true;
+        // Add every thing from new set
+        this.addWorker(stream.channel.name);
+      }
+
+      for (var channelName of currentWorkers) {
+        // Remove any current workers that aren't part of the new set
+        if (!newStreamsHash[channelName]) {
+          this.removeWorker(channelName);
+          oldWorkers.push(channelName);
+        }
+      }
+
+      // Return a list of all the old channels; not necessary but maybe useful
+      // down the line
+      return oldWorkers;
     });
   }
 };
