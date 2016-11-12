@@ -1,11 +1,20 @@
 var mongoose = require('mongoose');
+
+// Necessary to prevent some model duplication errors
+// See: https://github.com/Automattic/mongoose/issues/1251#issuecomment-41844298
+// Could also consider a solution that would fix the problem in the
+// model files themselves; see excellent example here:
+// https://github.com/j0ni/beachenergy.ca/blob/master/datamodel/index.js#L20
+mongoose.models = {};
+mongoose.modelSchemas = {};
+
+
 var ObjectId = mongoose.Types.ObjectId;
 var chai = require('chai');
 var expect = chai.expect;
-var {findAll, findOne, insertOne} = require('../../db/controllers/highlight');
-var model = require('../../db/models/highlight');
+var Highlight = require('../../db/models/highlight');
+var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
 
-// does db also need to store the start time of the stream itself?
 var obj = {
   _id: new ObjectId('582514df57a32e10c426ec3b'),
   link: 'this.that.com',
@@ -21,14 +30,12 @@ describe('Highlights Model', function() {
 
   beforeEach(function(done) {
     var clearDB = function() {
-      model.remove({}).exec();
+      Highlight.remove({}).exec();
       return done();
     };
 
     if (mongoose.connection.readyState === 0) {
       mongoose.connect(process.env.MONGODB_URI, function(err) {
-        console.log('connecting: ' + process.env.MONGODB_URI);
-        console.log('connection error: ', err);
         return clearDB();
       });
     } else {
