@@ -1,5 +1,11 @@
 var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
+var mongoose = require('mongoose');
+
+// See explanation in db test .setup.js
+mongoose.models = {};
+mongoose.modelSchemas = {};
+var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
 
 var sampleChannel = 'twitch';
 
@@ -66,20 +72,37 @@ describe('workerMaster', function() {
   });
 
   describe('saveHighlight', function() {
-    xit('should return a Promise', function() {
-      var highlightData = {
-        highlightStart: 1,
-        highlightEnd: 2,
-        channel: 'twitch'
-      };
+    var highlightData = {
+      highlightStart: 1,
+      highlightEnd: 2,
+      channel: 'twitch'
+    };
 
+    it('should return a Promise', function() {
       var result = workerMaster.saveHighlight(highlightData);
 
       expect(result).to.be.an.instanceOf(Promise);
     });
 
-    xit('should save highlights to the database', function() {
+    it('should save highlights to the database', function(done) {
+      if (mongoose.connection.readyState === 0) {
+        mongoose.connect(process.env.MONGODB_URI);
+      }
 
+      workerMaster.saveHighlight(highlightData)
+      .then( savedHighlight => {
+        return findOne(savedHighlight._id);
+      })
+      .then(retrievedHighlight => {
+        expect(retrievedHighlight.highlightStart).to.equal(highlightData.highlightStart);
+        expect(retrievedHighlight.highlightEnd).to.equal(highlightData.highlightEnd);
+        expect(retrievedHighlight.channel).to.equal(highlightData.channel);
+        done();
+        mongoose.disconnect();
+      })
+      .catch(error => {
+        mongoose.disconnect();
+      });
     });
   });
 

@@ -1,6 +1,6 @@
 // Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
 // or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
-
+var { findAll, findOne, insertOne } = require('../db/controllers/highlight');
 var fetch = require('node-fetch');
 var worker = require('./worker');
 var fetchOptions = {
@@ -67,11 +67,15 @@ var workerMaster = {
     });
   },
   saveHighlight: function(highlightData) {
-    // highlightData should be: { highlightStart: number, highlightEnd: number, channel: string }
-    // call this.getStreamVodData
-    // combine results of that with highlightData to form necessary data for db schema
-    // save to db, probably return a promise
-    return;
+    return this.getStreamVodData(highlightData.channel)
+    .then(vodData => {
+      // Stitch together highlightData and vodData and save to db
+      var combinedData = Object.assign({}, highlightData, vodData);
+      return insertOne(combinedData);
+    })
+    .catch(error => {
+      console.error('Some error creating highlight data:', error);
+    });
   }
 };
 
