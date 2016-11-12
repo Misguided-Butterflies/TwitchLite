@@ -26,7 +26,7 @@ var createAvg = function(n) {
         arr = arr.slice(1);
         //add element to array
         arr.push(val);
-        //recalculate sum
+        //recalculate average
         var sum = arr.reduce(function(a, b) {
           return a + b;
         }, 0);
