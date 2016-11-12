@@ -46,7 +46,6 @@ var createWorker = function(stream, handleHighlight) {
   //event handler for receiving messages
   worker.on('message', (from, to, message) => {
     // handle the message, do checks for highlight
-    console.log(message);
     messages++;
   });
 
@@ -55,17 +54,13 @@ var createWorker = function(stream, handleHighlight) {
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over
   var checkHighlight = function(mult) {
-    console.log('current mult: ' , mult);
     if (mult > cutoff) {
       //if highlight is detected, increment end time, calculate multiplier
-      console.log('highlight detected');
       mult > multiplier ? multiplier = mult : null;
       end = Date.now();
     } else if (end > 0) {
       //if highlight is now over, send highlight off to worker manager
       handleHighlight({ startTime: start, endTime: end, channelName: stream, multiplier: multiplier});
-      console.log('start: ', start);
-      console.log('end: ', end);
       end = 0;
       multiplier = 0;
     } else {
@@ -83,7 +78,6 @@ var createWorker = function(stream, handleHighlight) {
     //reset messages counter
     messages = 0;
     //add value to current average
-    console.log('adding value ' , currVal);
     currAvg.add(currVal);
     //check for highlights
     checkHighlight(currMult);
