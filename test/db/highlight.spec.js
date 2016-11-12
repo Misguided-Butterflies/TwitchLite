@@ -10,7 +10,8 @@ var obj = {
   streamStart: 1,
   highlightStart: 2,
   highlightEnd: 3,
-  vote: 10
+  vote: ['bob'],
+  multiplier: 4.2
 };
 
 describe('Highlights Model', function() {
