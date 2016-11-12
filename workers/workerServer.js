@@ -34,3 +34,6 @@
   that func will call the methods inside master
   so the tests for that func might need to be spied on?
 */
+setInterval(() => {
+  console.log('sup dawg');
+}, 1000);

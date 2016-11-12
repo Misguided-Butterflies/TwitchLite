@@ -17,7 +17,9 @@
     "build": "webpack",
     "build:watch": "webpack -w",
     "postinstall": "npm run build",
-    "start": "node server/server.js & workers/workerServer.js"
+    "start": "npm run start:workers & npm run start:server",
+    "start:server": "node server/server.js",
+    "start:workers": "node workers/workerServer.js"
   },
   "repository": {
     "type": "git",
