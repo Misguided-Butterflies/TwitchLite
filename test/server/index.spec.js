@@ -8,6 +8,16 @@ var fakeHighlight = {
   vote: 0
 };
 
+var fakeHighlight2 = {
+  link: 'v8098092',
+  channel: 'haumph',
+  game: 'Magic',
+  streamStart: 12343,
+  highlightStart: 12355,
+  highlightEnd: 12376,
+  vote: 0
+};
+
 describe('server', () => {
 
   it('should exist', () => {
@@ -25,11 +35,13 @@ describe('server', () => {
   describe('GET /highlights', () => {
     beforeEach(done => {
       highlights.insertOne(fakeHighlight)
+      .then(() => highlights.insertOne(fakeHighlight2))
       .then(() => done());
     });
 
     afterEach(done => {
       highlights.remove(fakeHighlight)
+      .then(() => highlights.remove(fakeHighlight2))
       .then(() => done());
     });
 
@@ -43,7 +55,16 @@ describe('server', () => {
       request(app)
         .get('/highlights')
         .expect(res => {
-          expect(res.body[0].link).to.eql(fakeHighlight.link);
+          expect(res.body[0].link).to.equal(fakeHighlight.link);
+        })
+        .end(err => err ? done(err) : done());
+    });
+
+    it('should find multiple highlights', done => {
+      request(app)
+        .get('/highlights')
+        .expect(res => {
+          expect(res.body).to.have.length(2);
         })
         .end(err => err ? done(err) : done());
     });
