@@ -16,7 +16,8 @@
     "lint": "eslint ./",
     "build": "webpack",
     "build:watch": "webpack -w",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "start": "node server/server.js & workers/workerServer.js"
   },
   "repository": {
     "type": "git",
