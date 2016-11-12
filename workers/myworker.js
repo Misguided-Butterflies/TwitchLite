@@ -1,6 +1,5 @@
 var tmi = require('tmi.js');
-var request = require('request');
-var avg = require('./rollingAvg');
+var createAvg = require('./rollingAvg');
 /** createClient
  * returns a twitch chat irc client to connect to.
  *
@@ -18,6 +17,9 @@ var avg = require('./rollingAvg');
  */
 var createWorker = function(stream, handleHighlight) {
   var worker = new tmi.client({
+    connection: {
+      reconnect: true
+    },
     identity: {
       username: process.env.TWITCH_USERNAME,
       password: process.env.TWITCH_PASSWORD
@@ -25,79 +27,74 @@ var createWorker = function(stream, handleHighlight) {
     channels: [stream]
   });
   
-  //if client is currently connected or not
-  var connected = false;
   //CHANGEME: multiplier cutoff for highlights
-  var cutoff = 4
-  //CHANGEME: total time to measure over. currently set at 10 min
-  var totalTime = 600000;
-  //CHANGEME: interval for api-related events. MUST BE LESS THAN time. currently set at 2 min
-  var apiDelay = 120000;
+  var cutoff = 2;
   //CHANGEME: time interval for data entry point. eg, msgs / delay. currently set at 10s
   var dataDelay = 10000;
+  //CHANGEME current running average history duration, currently set to 1 min
+  var currAvg = createAvg(6);
+  
   //current number of messages
   var messages = 0;
-  //CHANGEME current running average history duration, currently set to 1 min
-  var currAvg = avg(6);
-  
-  //config for twitch api call
-  var options = {
-    url: 'https://api.twitch.tv/kraken/streams/' + stream,
-    headers: {
-      'Client-ID': process.env.TWITCH_CLIENT_ID
-    }
-  };
-  //check twitch api for current count of stream viewers
-  var checkViewers = function() {
-    request(options, function(err, res, body) {
-      viewers = JSON.parse(body).stream.viewers;
-    });
-  };
+  //highlight start time
+  var start = Date.now();
+  //highlight end time
+  var end = 0;
+  //highlight multiplier
+  var multiplier = 0;
 
-  worker.addListener('message', (from, to, message) => {
+  //event handler for receiving messages
+  worker.on('message', (from, to, message) => {
     // handle the message, do checks for highlight
     console.log(message);
     messages++;
   });
 
-  //connect to stream
-  worker.connect();
-  connected = true;
+
   
-  //disconnect after time period NOTE: REMOVE FOR 24HR USE
-  setTimeout(function() {
-    connected = false;
-    worker.disconnect();
-  }, totalTime);
+  //given a multiplier and cutoff, records start times, end times for highlights
+  //calls handleHighlight when highlight is over
+  var checkHighlight = function(mult) {
+    console.log('current mult: ' , mult);
+    if (mult > cutoff) {
+      //if highlight is detected, increment end time, calculate multiplier
+      console.log('highlight detected');
+      mult > multiplier ? multiplier = mult : null;
+      end = Date.now();
+    } else if (end > 0) {
+      //if highlight is now over, send highlight off to worker manager
+      handleHighlight({ startTime: start, endTime: end, channelName: stream, multiplier: multiplier});
+      console.log('start: ', start);
+      console.log('end: ', end);
+      end = 0;
+      multiplier = 0;
+    } else {
+      //if no highlight activity, keep incrementing start time
+      start = Date.now();
+    }
+  }
   
   
   //periodically add up number of messages and send it to be averaged
   var checkData = setInterval(function() {
-    if (connected) {
-      //number of messages per viewer per second
-      var currVal = (messages / dataDelay * 1000);
-      var currMult = (currVal / currAvg.avg());
-      //reset messages counter
-      messages = 0;
-      //add value to current average
-      console.log('adding value ' , currVal);
-      console.log('multiplier', currMult);
-      if (currMult >= cutoff) {
-        console.log('highlight found!!!');
-      }
-      currAvg.add(currVal);
-    } else {
-      clearInterval(checkData);
-    }
+    //number of messages per viewer per second
+    var currVal = (messages / dataDelay * 1000);
+    var currMult = (currVal / currAvg.avg());
+    //reset messages counter
+    messages = 0;
+    //add value to current average
+    console.log('adding value ' , currVal);
+    currAvg.add(currVal);
+    //check for highlights
+    checkHighlight(currMult);
   }, dataDelay);
   
-  
-  // when highlight detected, call handleHighlight with the appropriate data, eg:
-  // handleHighlight({ startTime: 1234, endTime: 5678, channelName: stream});
-  
+  worker.on("disconnected", function (event) {
+    clearInterval(checkData);
+  });
+
   return worker;
 };
 
-var w = createWorker('nadeshot');
 
 module.exports = createWorker;
