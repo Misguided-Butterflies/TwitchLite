@@ -50,17 +50,18 @@ describe('Highlights Model', function() {
   });
 
   it('is able to add a highlight', function(done) {
-    insertOne(obj, function(err, created) {
-      //there shouldn't be an error
-      expect(err).to.not.exist;
+    insertOne(obj)
+    .then(created => {
       expect(created.game).to.equal('pong');
       done();
     });
   });
 
   it('should only add one highlight at once', function(done) {
-    insertOne(obj, function() {
-      findAll(function(err, res) {
+    insertOne(obj)
+    .then( () => {
+      findAll()
+      .then(res => {
         expect(res.length).to.equal(1);
         done();
       });
@@ -68,8 +69,10 @@ describe('Highlights Model', function() {
   });
 
   it('should be able to find by id', function(done) {
-    insertOne(obj, function() {
-      findOne('582514df57a32e10c426ec3b', function(err, res) {
+    insertOne(obj)
+    .then( () => {
+      findOne('582514df57a32e10c426ec3b')
+      .then(res => {
         expect(res.game).to.equal('pong');
         done();
       });
