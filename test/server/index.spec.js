@@ -5,7 +5,6 @@ var fakeHighlight = {
   streamStart: 1234,
   highlightStart: 1235,
   highlightEnd: 1236,
-  vote: 0
 };
 
 var fakeHighlight2 = {
@@ -15,7 +14,6 @@ var fakeHighlight2 = {
   streamStart: 12343,
   highlightStart: 12355,
   highlightEnd: 12376,
-  vote: 0
 };
 
 describe('server', () => {
