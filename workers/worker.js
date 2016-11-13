@@ -26,14 +26,14 @@ var createWorker = function(stream, handleHighlight) {
     },
     channels: [stream]
   });
-  
+
   //CHANGEME: multiplier cutoff for highlights, currently set to 3x
   var cutoff = 3;
   //CHANGEME: time interval for data entry point. eg, msgs / delay. currently set at 10s
   var dataDelay = 10000;
   //CHANGEME current running average history duration, currently set to 5 min
   var currAvg = createAvg(30);
-  
+
   //current number of messages
   var messages = 0;
   //highlight start time
@@ -50,7 +50,7 @@ var createWorker = function(stream, handleHighlight) {
   });
 
 
-  
+
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over
   var checkHighlight = function(mult) {
@@ -67,9 +67,9 @@ var createWorker = function(stream, handleHighlight) {
       //if no highlight activity, keep incrementing start time
       start = Date.now();
     }
-  }
-  
-  
+  };
+
+
   //periodically add up number of messages and send it to be averaged
   var checkData = setInterval(function() {
     //number of messages per viewer per second
@@ -82,8 +82,8 @@ var createWorker = function(stream, handleHighlight) {
     //check for highlights
     checkHighlight(currMult);
   }, dataDelay);
-  
-  worker.on("disconnected", function (event) {
+
+  worker.on('disconnected', function (event) {
     clearInterval(checkData);
   });
 
