@@ -119,10 +119,12 @@ describe('workerMaster', function() {
   });
 
   describe('updateWorkers', function() {
-    it('should return a Promise', function() {
-      var result = workerMaster.updateWorkers();
-
-      expect(result).to.be.an.instanceOf(Promise);
+    it('should return a Promise', function(done) {
+      var result = workerMaster.updateWorkers()
+      .then( () => {
+        expect(result).to.be.an.instanceOf(Promise);
+        done();
+      });
     });
 
     it('should destroy old workers and add new ones', function(done) {
