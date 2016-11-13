@@ -7,7 +7,8 @@ var HighlightSchema = mongoose.Schema({
   streamStart: Number,
   highlightStart: Number,
   highlightEnd: Number,
-  vote: Number
+  vote: {type: [{type: String}], default: []},
+  multiplier: Number
 });
 
 var HighlightModel = mongoose.model('Highlight', HighlightSchema);
