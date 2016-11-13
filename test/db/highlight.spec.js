@@ -10,7 +10,6 @@ var obj = {
   streamStart: 1,
   highlightStart: 2,
   highlightEnd: 3,
-  vote: ['bob'],
   multiplier: 4.2
 };
 
@@ -41,6 +40,7 @@ describe('Highlights Model', function() {
     insertOne(obj)
     .then(created => {
       expect(created.game).to.equal('pong');
+      expect(created.vote.length).to.equal(0);
       done();
     });
   });
