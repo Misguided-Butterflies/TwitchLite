@@ -50,6 +50,16 @@ var workerMaster = {
 
     return channelName;
   },
+  removeAllWorkers: function() {
+    var allChannels = Object.keys(activeWorkers);
+    var removedWorkers = [];
+
+    for (var channelName of allChannels) {
+      removedWorkers.push(this.removeWorker(channelName));
+    }
+
+    return removedWorkers;
+  },
   getStreamVodData: function(channelName) {
     return fetch(
       `https://api.twitch.tv/kraken/channels/${channelName}/videos/?limit=1&broadcasts=true`,

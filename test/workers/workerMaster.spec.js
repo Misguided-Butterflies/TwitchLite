@@ -17,6 +17,10 @@ describe('workerMaster', function() {
     });
   });
 
+  after(function() {
+    workerMaster.removeAllWorkers();
+  });
+
   it('should be able to add workers', function() {
     expect(workerMaster.getWorkers()).to.eql({});
     workerMaster.addWorker(sampleChannel);
@@ -27,6 +31,14 @@ describe('workerMaster', function() {
     workerMaster.addWorker(sampleChannel);
     workerMaster.removeWorker(sampleChannel);
     expect(workerMaster.getWorkers()[sampleChannel]).to.not.exist;
+  });
+
+  it('should be able to remove all workers', function() {
+    workerMaster.addWorker('taimoutv');
+    workerMaster.addWorker('vgbootcamp');
+    workerMaster.addWorker('blizzard');
+    workerMaster.removeAllWorkers();
+    expect(workerMaster.getWorkers()).to.eql({});
   });
 
   describe('getTopStreams', function() {
