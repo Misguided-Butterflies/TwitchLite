@@ -36,4 +36,8 @@ var insertOne = function(highlightData) {
   });
 };
 
-module.exports = {findAll, findOne, insertOne};
+var remove = function(highlightData) {
+  return Highlight.remove(highlightData);
+};
+
+module.exports = {findAll, findOne, insertOne, remove};
