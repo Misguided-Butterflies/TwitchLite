@@ -81,6 +81,7 @@ var workerMaster = {
       streamStart = streamStart.getTime();
 
       return {
+        vodId: data.videos[0]._id,
         link: data.videos[0].url,
         game: data.videos[0].game,
         streamStart
@@ -95,7 +96,6 @@ var workerMaster = {
     .then(vodData => {
       // Stitch together highlightData and vodData and save to db
       var combinedData = Object.assign({}, highlightData, vodData);
-      console.log('Trying to save highlight:', combinedData);
       return insertOne(combinedData);
     })
     .catch(error => {
