@@ -60,7 +60,7 @@ var createWorker = function(stream, handleHighlight) {
       end = Date.now();
     } else if (end > 0) {
       //if highlight is now over, send highlight off to worker manager
-      handleHighlight({ startTime: start, endTime: end, channelName: stream, multiplier: multiplier});
+      handleHighlight({ highlightStart: start, highlightEnd: end, channelName: stream, multiplier: multiplier});
       end = 0;
       multiplier = 0;
     } else {
