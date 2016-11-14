@@ -3,9 +3,10 @@ var Highlight = require('../../db/models/highlight');
 var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
 
 var obj = {
-  _id: new ObjectId('582514df57a32e10c426ec3b'),
+  _id: new ObjectId(),
   link: 'this.that.com',
-  channel: 'dk doublelunch',
+  channelName: 'dk doublelunch',
+  vodId: 'v101',
   game: 'pong',
   streamStart: 1,
   highlightStart: 2,
@@ -59,7 +60,7 @@ describe('Highlights Model', function() {
   it('should be able to find by id', function(done) {
     insertOne(obj)
     .then( () => {
-      return findOne('582514df57a32e10c426ec3b');
+      return findOne(obj._id);
     })
     .then(res => {
       expect(res.game).to.equal('pong');
