@@ -11,8 +11,9 @@ var fetchOptions = {
 var activeWorkers = {};
 
 var workerMaster = {
-  getTopStreams: function() {
-    return fetch('https://api.twitch.tv/kraken/streams?limit=50', fetchOptions)
+  // Fetch the top quantity of streams from Twitch
+  getTopStreams: function(quantity = 50) {
+    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity + 10}`, fetchOptions)
       .then(response => {
         return response.json();
       })
@@ -20,9 +21,11 @@ var workerMaster = {
         return data.streams;
       });
   },
+
   getWorkers: function() {
     return activeWorkers;
   },
+
   addWorker: function(channelName) {
     if (activeWorkers[channelName]) {
       // Signify invalid command; worker already exists
@@ -37,6 +40,7 @@ var workerMaster = {
 
     return activeWorkers[channelName];
   },
+
   removeWorker: function(channelName) {
     var workerToRemove = activeWorkers[channelName];
     if (!workerToRemove) {
@@ -50,6 +54,7 @@ var workerMaster = {
 
     return channelName;
   },
+
   removeAllWorkers: function() {
     var allChannels = Object.keys(activeWorkers);
     var removedWorkers = [];
@@ -60,6 +65,9 @@ var workerMaster = {
 
     return removedWorkers;
   },
+
+  // Get data on the latest video in a channel's list of videos. If a channel is
+  // live, then the latest video will be what is currently being recorded.
   getStreamVodData: function(channelName) {
     return fetch(
       `https://api.twitch.tv/kraken/channels/${channelName}/videos/?limit=1&broadcasts=true`,
@@ -79,17 +87,24 @@ var workerMaster = {
       };
     });
   },
+
+  // Save a highlight to the db. Takes some data about the highlight, combines
+  // with data returned by getStreamVodData, and saved to the db.
   saveHighlight: function(highlightData) {
-    return this.getStreamVodData(highlightData.channel)
+    return this.getStreamVodData(highlightData.channelName)
     .then(vodData => {
       // Stitch together highlightData and vodData and save to db
       var combinedData = Object.assign({}, highlightData, vodData);
+      console.log('Trying to save highlight:', combinedData);
       return insertOne(combinedData);
     })
     .catch(error => {
       console.error('Some error creating highlight data:', error);
     });
   },
+
+  // Gets list of the top streams, creates new workers for any new channels,
+  // and destroys workers for channels that are no longer in the top streams.
   updateWorkers: function() {
     return this.getTopStreams()
     .then(streams => {

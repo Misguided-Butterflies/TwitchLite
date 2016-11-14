@@ -49,11 +49,12 @@ describe('workerMaster', function() {
     });
 
     it('should fetch the top Twitch streams', function(done) {
-      workerMaster.getTopStreams()
+      var desiredStreamCount = 25;
+      workerMaster.getTopStreams(desiredStreamCount)
       .then(streams => {
         // 25 is an arbitrary number, but we want to ensure we always have a
         // sizable portion at least
-        expect(streams.length > 25).to.be.true;
+        expect(streams.length > desiredStreamCount).to.be.true;
         done();
       })
       .catch(error => {
@@ -87,7 +88,7 @@ describe('workerMaster', function() {
     var highlightData = {
       highlightStart: 1,
       highlightEnd: 2,
-      channel: 'twitch'
+      channelName: 'twitch'
     };
 
     it('should return a Promise', function() {
