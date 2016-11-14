@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 
 var HighlightSchema = mongoose.Schema({
+  vodId: String,
   link: String,
-  channel: String,
+  channelName: String,
   game: String,
   streamStart: Number,
   highlightStart: Number,
