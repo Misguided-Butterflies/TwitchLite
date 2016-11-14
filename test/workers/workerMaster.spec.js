@@ -97,11 +97,10 @@ describe('workerMaster', function() {
     });
 
     it('should save highlights to the database', function(done) {
-      if (mongoose.connection.readyState === 0) {
-        mongoose.connect(process.env.MONGODB_URI);
-      }
-
-      workerMaster.saveHighlight(highlightData)
+      mongoose.connect(process.env.MONGODB_URI)
+      .then( stuff => {
+        return workerMaster.saveHighlight(highlightData);
+      })
       .then( savedHighlight => {
         return findOne(savedHighlight._id);
       })
@@ -109,10 +108,11 @@ describe('workerMaster', function() {
         expect(retrievedHighlight.highlightStart).to.equal(highlightData.highlightStart);
         expect(retrievedHighlight.highlightEnd).to.equal(highlightData.highlightEnd);
         expect(retrievedHighlight.channel).to.equal(highlightData.channel);
-        done();
         mongoose.disconnect();
+        done();
       })
       .catch(error => {
+        console.error('There was an error testing highlight saving to database:', error);
         mongoose.disconnect();
       });
     });
