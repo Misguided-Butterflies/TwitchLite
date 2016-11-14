@@ -4,22 +4,6 @@ import Header from './Header';
 import VideoList from './VideoList';
 import $ from 'jquery';
 
-let testVideos = [
-  {
-    id: 'v97978712',
-    start: 7206,
-    duration: 6,
-  }, {
-    id: 'v99478815',
-    start: 9342,
-    duration: 55,
-  }, {
-    id: 'v100239687',
-    start: 22,
-    duration: 9,
-  }
-];
-
 class App extends React.Component {
   constructor(props) {
     super(props);
