@@ -1,5 +1,6 @@
 var fakeHighlight = {
-  link: 'v343453459',
+  vodId: 'v343453459',
+  link: 'https://example.com',
   channel: 'lsv',
   game: 'Magic',
   streamStart: 1234,
@@ -8,7 +9,8 @@ var fakeHighlight = {
 };
 
 var fakeHighlight2 = {
-  link: 'v8098092',
+  vodId: 'v8098092',
+  link: 'https://example.com',
   channel: 'haumph',
   game: 'Magic',
   streamStart: 12343,
@@ -17,6 +19,35 @@ var fakeHighlight2 = {
 };
 
 describe('server', () => {
+
+  beforeEach(done => {
+    highlights.remove({})
+    .then(() => {
+      done();
+    });
+  });
+
+  before(done => {
+    if (mongoose.connection.readyState !== 0) {
+      return done();
+    }
+
+    mongoose.connect()
+    .then(() => {
+      done();
+    });
+  });
+
+  after(done => {
+    if (mongoose.connection.readyState === 0) {
+      return done();
+    }
+    
+    mongoose.disconnect()
+    .then(() => {
+      done();
+    });
+  });
 
   it('should exist', () => {
     expect(app).to.exist;
@@ -53,7 +84,7 @@ describe('server', () => {
       request(app)
         .get('/highlights')
         .expect(res => {
-          expect(res.body[0].link).to.equal(fakeHighlight.link);
+          expect(res.body[0].vodId).to.equal(fakeHighlight.vodId);
         })
         .end(err => err ? done(err) : done());
     });
