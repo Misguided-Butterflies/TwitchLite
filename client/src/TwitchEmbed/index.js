@@ -2,6 +2,7 @@ import React from 'react';
 import 'twitch-embed';
 
 const proportionOfScreenToFill = .75;
+const heightWidthRatio = 9 / 16;
 
 class TwitchEmbed extends React.Component {
   constructor(props) {
@@ -17,12 +18,12 @@ class TwitchEmbed extends React.Component {
   componentDidMount() {
     let embedWidth;
     let embedHeight;
-    if (innerWidth * 9 > innerHeight * 16) {
+    if (innerWidth * heightWidthRatio > innerHeight) {
       embedHeight = innerHeight * proportionOfScreenToFill;
-      embedWidth = embedHeight * 16 / 9;
+      embedWidth = embedHeight / heightWidthRatio;
     } else {
       embedWidth = innerWidth * proportionOfScreenToFill;
-      embedHeight = embedWidth * 9 / 16;
+      embedHeight = embedWidth * heightWidthRatio;
     }
     var options = {
       width: embedWidth,
