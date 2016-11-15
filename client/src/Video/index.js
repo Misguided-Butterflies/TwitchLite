@@ -45,6 +45,10 @@ class Video extends React.Component {
   }
 
   componentDidMount() {
+    this.initializeTwitchPlayer();
+  }
+
+  initializeTwitchPlayer() {
     var options = {
       width: 854,
       height: 480,
