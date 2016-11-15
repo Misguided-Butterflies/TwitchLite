@@ -39,26 +39,20 @@ class App extends React.Component {
   }
 
   sortByMultiplier() {
-    console.log('before sorting by multiplier', this.allHighlights);
     this.allHighlights.sort((a, b) => b.multiplier - a.multiplier);
-    console.log('after sorting by multiplier', this.allHighlights);
     this.updateList(0);
   }
 
   sortByAge() {
-    console.log('before sorting by age', this.allHighlights);
     this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
-    console.log('after sorting by age', this.allHighlights);
     this.updateList(0);
   }
 
   updateList(start) {
-    console.log('before updating list', this.state && this.state.list);
     this.setState({
       list: this.allHighlights.slice(start, start + 5),
       start: start,
-    }, () => console.log('setState callback', this.state.list));
-    console.log('after updating list', this.state.list);
+    });
   }
 
   render() {
