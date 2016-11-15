@@ -20,7 +20,7 @@ var findOne = function(id) {
 // insertOne inserts a highlight into the db if it doesn't yet exist
 var insertOne = function(highlightData) {
   return findAll({
-    channel: highlightData.channel,
+    channelName: highlightData.channelName,
     highlightStart: highlightData.highlightStart,
     highlightEnd: highlightData.highlightEnd
   })

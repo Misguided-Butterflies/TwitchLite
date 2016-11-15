@@ -8,7 +8,7 @@ var createAvg = function(n) {
   //note: cutoff is incusive
   var currAvg = undefined;
   var currCutoff = undefined;
-  
+
   return {
     avg: function() {
       return currAvg;
@@ -36,7 +36,7 @@ var createAvg = function(n) {
         arr.push(val);
       }
     }
-  }
-}
+  };
+};
 
 module.exports = createAvg;

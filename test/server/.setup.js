@@ -6,3 +6,9 @@ global.expect = chai.expect;
 global.app = require('../../server/server');
 global.request = require('supertest');
 global.highlights = require('../../db/controllers/highlight');
+
+
+var mongoose = require('mongoose');
+global.mongoose = mongoose;
+mongoose.models = {};
+mongoose.modelSchemas = {};

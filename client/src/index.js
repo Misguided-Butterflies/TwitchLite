@@ -1,30 +1,71 @@
 import React from 'react';
 import {render} from 'react-dom';
+import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
+import Navbar from './Navbar';
 import VideoList from './VideoList';
 
-let testVideos = [
-  {
-    id: 'v97978712',
-    start: 7206,
-    duration: 6,
-  }, {
-    id: 'v99478815',
-    start: 9342,
-    duration: 55,
-  }, {
-    id: 'v100239687',
-    start: 22,
-    duration: 9,
-  }
-];
+const numberOfVideosToShowPerPage = 5;
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      list: []
+    };
+
+    this.allHighlights = [];
+
+    this.sortByMultiplier = this.sortByMultiplier.bind(this);
+    this.sortByAge = this.sortByAge.bind(this);
+    this.updateList = this.updateList.bind(this);
+  }
+
+  /** componentWillMount
+   * runs once when component loads
+   * fetches all highlights from the database
+   * sorts those highlights by newest first
+   * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
+   */
+  componentWillMount() {
+    $.ajax({
+      method: 'GET',
+      url: '/highlights',
+      success: response => {
+        this.allHighlights = response;
+        this.sortByAge();
+      }
+    });
+  }
+
+  sortByMultiplier() {
+    this.allHighlights.sort((a, b) => b.multiplier - a.multiplier);
+    this.updateList(0);
+  }
+
+  sortByAge() {
+    this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
+    this.updateList(0);
+  }
+
+  updateList(start) {
+    this.setState({
+      list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
+      start: start,
+    });
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <VideoList list={testVideos} />
+        <Navbar />
+        <ButtonToolbar>
+          <Button onClick={this.sortByMultiplier}>Hottest first</Button>
+          <Button onClick={this.sortByAge}>Newest first</Button>
+        </ButtonToolbar>
+        <VideoList list={this.state.list} />
       </div>
     );
   }
