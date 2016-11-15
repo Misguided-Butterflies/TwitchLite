@@ -1,6 +1,8 @@
 import React from 'react';
 import Video from '../Video';
 
+const numberOfSecondsToAddToBeginningOfHighlights = 30;
+
 /** VideoList
  * a collection of Video components.
  * usage: <VideoList list={[video1, video2, video3]} />
@@ -14,9 +16,9 @@ const VideoList = function(props) {
           <div key={i}>
             <Video video={{
               id: video.vodId || video.link.split('/').map((element, index, array) => index >= array.length - 2 ? element : '').join(''),
-              start: Math.floor((video.highlightStart - video.streamStart) / 1000),
-              duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000)
-            }} />
+              start: Math.floor((video.highlightStart - video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
+              duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+            }} divId={'video' + i}/>
             <span>Start time: {video.highlightStart}</span>
             <span>Multiplier: {video.multiplier}</span>
           </div>
