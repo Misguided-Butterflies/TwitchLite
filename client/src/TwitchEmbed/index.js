@@ -17,7 +17,7 @@ class TwitchEmbed extends React.Component {
       width: 854,
       height: 480,
       video: this.props.id,
-      time: this.start,
+      time: this.props.start,
       autoplay: false
     };
     this.player = new Twitch.Player(this.divId, options);

@@ -1,7 +1,6 @@
 import React from 'react';
 import 'twitch-embed';
 import TwitchEmbed from '../TwitchEmbed';
-import {Button} from 'react-bootstrap';
 import $ from 'jquery';
 import ReactDOM from 'react-dom';
 
@@ -19,8 +18,6 @@ import ReactDOM from 'react-dom';
 class Video extends React.Component {
   constructor(props) {
     super(props);
-
-    this.removePlayer = this.removePlayer.bind(this);
   }
 
   // twitch player wants a string like "1h3m44s" as the start time. this function converts a number of seconds to that format.
@@ -64,7 +61,6 @@ class Video extends React.Component {
 
 Video.propTypes = {
   video: React.PropTypes.object.isRequired,
-  divId: React.PropTypes.string
 };
 
 export default Video;
