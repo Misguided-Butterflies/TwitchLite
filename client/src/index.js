@@ -4,7 +4,6 @@ import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
 import Navbar from './Navbar';
 import VideoList from './VideoList';
-import $ from 'jquery';
 
 const numberOfVideosToShowPerPage = 5;
 
