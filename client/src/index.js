@@ -2,8 +2,8 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
+import Navbar from './Navbar';
 import VideoList from './VideoList';
-import $ from 'jquery';
 
 const numberOfVideosToShowPerPage = 5;
 
@@ -60,6 +60,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
+        <Navbar />
         <ButtonToolbar>
           <Button onClick={this.sortByMultiplier}>Hottest first</Button>
           <Button onClick={this.sortByAge}>Newest first</Button>

@@ -1,7 +1,6 @@
 import React from 'react';
 import 'twitch-embed';
 import TwitchEmbed from '../TwitchEmbed';
-import $ from 'jquery';
 import ReactDOM from 'react-dom';
 
 /** Video
