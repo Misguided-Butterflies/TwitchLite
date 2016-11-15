@@ -27,9 +27,11 @@ class Navbar extends React.Component {
   }
   
   componentDidMount() {
-    Twitch.api({method: 'user'}, function(err, user) {
-      this.setState({name: user.name});
-    }.bind(this));
+    if (this.status.authenticated) {
+      Twitch.api({method: 'user'}, function(err, user) {
+        this.setState({name: user.name});
+      }.bind(this));
+    }
   }
   
   render() {

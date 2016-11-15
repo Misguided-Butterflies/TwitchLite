@@ -58,6 +58,11 @@ class App extends React.Component {
     this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
     this.updateList(0);
   }
+  
+  sortByFollowing(followArr) {
+    //FIXME
+    this.updateList(0);
+  }
 
   updateList(start) {
     this.setState({
@@ -77,7 +82,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Navbar />
+        <Navbar sortMult={this.sortByMultiplier} sortAge={this.sortByAge} sortFollow={this.sortByFollowing}/>
         <ButtonToolbar>
           <Button onClick={this.sortByMultiplier}>Hottest first</Button>
           <Button onClick={this.sortByAge}>Newest first</Button>
