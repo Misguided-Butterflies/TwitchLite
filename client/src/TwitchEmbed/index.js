@@ -4,7 +4,7 @@ import 'twitch-embed';
 class TwitchEmbed extends React.Component {
   constructor(props) {
     super(props);
-    this.divId = 'twitch-embed' + this.props.id + this.props.start;
+    this.divId = 'twitch-embed' + this.props.id + this.props.startString;
 
     this.handleFirstPlay = this.handleFirstPlay.bind(this);
     this.handleAdditionalPlay = this.handleAdditionalPlay.bind(this);
@@ -17,7 +17,7 @@ class TwitchEmbed extends React.Component {
       width: 854,
       height: 480,
       video: this.props.id,
-      time: this.props.start,
+      time: this.props.startString,
       autoplay: false
     };
     this.player = new Twitch.Player(this.divId, options);
@@ -37,11 +37,11 @@ class TwitchEmbed extends React.Component {
   // and sets the highlight to inactive if not.
   handleAdditionalPlay() {
     let currentTime = this.player.getCurrentTime();
-    if (currentTime < this.props.start || currentTime > this.props.start + this.props.duration) {
+    if (currentTime < this.props.startTime || currentTime > this.props.startTime + this.props.duration) {
       this.active = false;
       this.player.removeEventListener(Twitch.Player.PLAY, this.handleAdditionalPlay);
     } else {
-      setTimeout(this.handleHighlightEnd, Math.ceil(this.props.duration - currentTime + this.props.start) * 1000);
+      setTimeout(this.handleHighlightEnd, Math.ceil(this.props.duration - currentTime + this.props.startTime) * 1000);
     }
   }
 
@@ -55,10 +55,10 @@ class TwitchEmbed extends React.Component {
   handleHighlightEnd() {
     if (this.active) {
       let currentTime = this.player.getCurrentTime();
-      if (currentTime > this.props.start + this.props.duration) {
+      if (currentTime > this.props.startTime + this.props.duration) {
         this.player.pause();
       } else {
-        setTimeout(this.handleHighlightEnd, Math.ceil(this.props.duration - currentTime + this.props.start) * 1000);
+        setTimeout(this.handleHighlightEnd, Math.ceil(this.props.duration - currentTime + this.props.startTime) * 1000);
       }
     }
   }
@@ -72,7 +72,8 @@ class TwitchEmbed extends React.Component {
 
 TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
-  start: React.PropTypes.string.isRequired,
+  startTime: React.PropTypes.number.isRequired,
+  startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired
 };
 
