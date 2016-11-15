@@ -10,12 +10,16 @@ const VideoList = function(props) {
   return (
     <div>
       <ul className='video-list'>
-        {props.list.map(video => (
-          <Video video={{
-            id: video.link.split('/').map((element, index, array) => index >= array.length - 2 ? element : '').join(''),
-            start: Math.floor((video.highlightStart - video.streamStart) / 1000),
-            duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000)
-          }} />
+        {props.list.map((video, i) => (
+          <div key={i}>
+            <Video video={{
+              id: video.vodId || video.link.split('/').map((element, index, array) => index >= array.length - 2 ? element : '').join(''),
+              start: Math.floor((video.highlightStart - video.streamStart) / 1000),
+              duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000)
+            }} />
+            <span>Start time: {video.highlightStart}</span>
+            <span>Multiplier: {video.multiplier}</span>
+          </div>
         ))}
       </ul>
     </div>
