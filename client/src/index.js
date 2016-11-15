@@ -5,6 +5,8 @@ import Header from './Header';
 import VideoList from './VideoList';
 import $ from 'jquery';
 
+const numberOfVideosToShowPerPage = 5;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ class App extends React.Component {
    * runs once when component loads
    * fetches all highlights from the database
    * sorts those highlights by newest first
-   * sets the first 10 highlights to be shown on the page
+   * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
     $.ajax({
@@ -32,7 +34,6 @@ class App extends React.Component {
       url: '/highlights',
       success: response => {
         this.allHighlights = response;
-        console.log('response received', this.allHighlights);
         this.sortByAge();
       }
     });
@@ -50,7 +51,7 @@ class App extends React.Component {
 
   updateList(start) {
     this.setState({
-      list: this.allHighlights.slice(start, start + 5),
+      list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
       start: start,
     });
   }
