@@ -76,6 +76,9 @@ describe('workerMaster', function() {
         expect(typeof data.link).to.equal('string');
         expect(typeof data.game).to.equal('string');
         expect(typeof data.streamStart).to.equal('number');
+        expect(typeof data.vodId).to.equal('string');
+        expect(typeof data.preview).to.equal('string');
+        expect(typeof data.streamTitle).to.equal('string');
         done();
       })
       .catch(error => {

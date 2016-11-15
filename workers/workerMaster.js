@@ -89,6 +89,8 @@ var workerMaster = {
         vodId: data.videos[0]._id,
         link: data.videos[0].url,
         game: data.videos[0].game,
+        streamTitle: data.videos[0].title,
+        preview: data.videos[0].preview,
         streamStart
       };
     });
