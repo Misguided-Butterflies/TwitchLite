@@ -2,13 +2,27 @@
   "name": "twitchlite",
   "version": "1.0.0",
   "description": "Automated stream highlighting feed for Twitch users",
-  "main": "index.js",
+  "main": "server/server.js",
+  "engines": {
+    "node": "6.9.1"
+  },
   "scripts": {
-    "test": "npm run test:server && npm run test:client",
+    "test": "npm run test:server && npm run test:workers && npm run test:client && npm run test:db",
     "test:server": "mocha test/server/.setup.js test/server/**.spec.js test/server/*/*.spec.js",
     "test:server:watch": "mocha test/server/.setup.js test/server/**.spec.js test/server/*/*.spec.js --watch",
     "test:client": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js",
-    "test:client:watch": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js --watch"
+    "test:client:watch": "mocha test/client/.setup.js test/client/**.spec.js test/client/*/*.spec.js --watch",
+    "test:workers": "mocha test/workers/.setup.js test/workers/**.spec.js test/workers/*/*.spec.js",
+    "test:workers:watch": "mocha test/workers/.setup.js test/workers/**.spec.js test/workers/*/*.spec.js --watch",
+    "test:db": "mocha test/db/.setup.js test/db/**.spec.js",
+    "test:db:watch": "mocha test/db/.setup.js test/db/**.spec.js --watch",
+    "lint": "eslint ./",
+    "build": "webpack",
+    "build:watch": "webpack -w",
+    "postinstall": "npm run build",
+    "start": "npm run start:workers & npm run start:server",
+    "start:server": "node server/server.js",
+    "start:workers": "node workers/workerServer.js"
   },
   "repository": {
     "type": "git",
@@ -26,19 +40,33 @@
   },
   "homepage": "https://github.com/Misguided-Butterflies/TwitchLite#readme",
   "devDependencies": {
+    "babel-eslint": "^7.1.0",
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.0",
     "enzyme": "^2.5.1",
+    "eslint": "^3.9.1",
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "eslint-plugin-react": "^6.6.0",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
-    "sinon": "^1.17.6"
+    "sinon": "^1.17.6",
+    "supertest": "^2.0.1"
   },
   "dependencies": {
     "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "browser-request": "^0.3.3",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.6",
+    "node-fetch": "^1.6.3",
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-bootstrap": "^0.30.6",
+    "react-dom": "^15.3.2",
+    "tmi.js": "^1.1.2",
+    "twitch-embed": "^1.1.0",
+    "webpack": "^1.13.3"
   }
 }

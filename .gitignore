@@ -38,3 +38,6 @@ jspm_packages
 
 # Other
 .DS_Store
+/client/bundle.js
+.secret.js
+populateDatabase.js
