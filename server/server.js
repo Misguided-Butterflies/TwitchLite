@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var highlight = require('../db/controllers/highlight.js');
 
 var db = mongoose.connect(process.env.MONGODB_URI);
+var port = process.env.PORT || 8000;
 
 var app = module.exports = express();
 
@@ -17,4 +18,6 @@ app.get('/highlights', function(req, res) {
   .then(data => res.json(data));
 });
 
-app.listen(process.env.PORT || 8000);
+app.listen(port, function() {
+  console.log(`Application server running on port ${port}`);
+});
