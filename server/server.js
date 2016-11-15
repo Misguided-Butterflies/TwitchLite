@@ -15,7 +15,10 @@ app.get('/', function(req, res) {
 
 app.get('/highlights', function(req, res) {
   highlight.findAll()
-  .then(data => res.json(data));
+  .then(data => {
+    let currentTime = Date.now();
+    res.json(data.filter(highlight => highlight.highlightEnd < currentTime - 30 * 60 * 1000));
+  });
 });
 
 app.listen(port, function() {
