@@ -77,6 +77,11 @@ var workerMaster = {
       return response.json();
     })
     .then(data => {
+      if (!data.videos.length) {
+        // Some channels store no VODs, so we need to handle such cases
+        throw new Error(`Channel ${channelName} does not store VODs`);
+        return;
+      }
       var streamStart = new Date(data.videos[0]['recorded_at']);
       streamStart = streamStart.getTime();
 
