@@ -50,6 +50,7 @@
     "eslint-plugin-react": "^6.6.0",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
+    "react-addons-test-utils": "^15.4.0",
     "sinon": "^1.17.6",
     "supertest": "^2.0.1"
   },
@@ -62,9 +63,9 @@
     "express": "^4.14.0",
     "mongoose": "^4.6.6",
     "node-fetch": "^1.6.3",
-    "react": "^15.3.2",
+    "react": "^15.4.0",
     "react-bootstrap": "^0.30.6",
-    "react-dom": "^15.3.2",
+    "react-dom": "^15.4.0",
     "tmi.js": "^1.1.2",
     "twitch-embed": "^1.1.0",
     "webpack": "^1.13.3"
