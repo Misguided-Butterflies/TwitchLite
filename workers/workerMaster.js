@@ -86,6 +86,7 @@ var workerMaster = {
       streamStart = streamStart.getTime();
 
       return {
+        status: data.videos[0].status,
         vodId: data.videos[0]._id,
         link: data.videos[0].url,
         game: data.videos[0].game,
@@ -101,6 +102,10 @@ var workerMaster = {
   saveHighlight: function(highlightData) {
     return this.getStreamVodData(highlightData.channelName)
     .then(vodData => {
+      if (vodData.status !== 'recording') { // stream was already over when we detected this highlight.
+        return false;
+      }
+      delete vodData.status;
       // Stitch together highlightData and vodData and save to db
       var combinedData = Object.assign({}, highlightData, vodData);
       return insertOne(combinedData);
