@@ -13,10 +13,13 @@ class TwitchEmbed extends React.Component {
     this.handleAdditionalPlay = this.handleAdditionalPlay.bind(this);
     this.handleFirstPause = this.handleFirstPause.bind(this);
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
+    this.loadVideo = this.loadVideo.bind(this);
   }
 
-  componentDidMount() {
+  loadVideo() {
+    $(this.refs.base).empty();
     this.createTwitchPlayer();
+    this.player.play();
   }
 
   createTwitchPlayer() {
@@ -34,7 +37,7 @@ class TwitchEmbed extends React.Component {
       height: embedHeight,
       video: this.props.id,
       time: this.props.startString,
-      autoplay: false // TODO change this to true when we add on-demand loading
+      autoplay: false
     };
     this.player = new Twitch.Player(this.divId, options);
     this.player.addEventListener(Twitch.Player.PLAY, this.handleFirstPlay);
@@ -81,7 +84,9 @@ class TwitchEmbed extends React.Component {
 
   render() {
     return (
-      <div id={this.divId}></div>
+      <div id={this.divId} ref='base'>
+        <img src={this.props.preview} onClick={this.loadVideo} />
+      </div>
     );
   }
 }
@@ -90,7 +95,8 @@ TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
   startTime: React.PropTypes.number.isRequired,
   startString: React.PropTypes.string.isRequired,
-  duration: React.PropTypes.number.isRequired
+  duration: React.PropTypes.number.isRequired,
+  preview: React.PropTypes.string
 };
 
 export default TwitchEmbed;
