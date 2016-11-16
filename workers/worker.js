@@ -28,7 +28,7 @@ var createWorker = function(stream, handleHighlight) {
   });
 
   //CHANGEME: multiplier cutoff for highlights, currently set to 3x
-  var cutoff = 3;
+  var cutoff = 5;
   //CHANGEME: time interval for data entry point. eg, msgs / delay. currently set at 10s
   var dataDelay = 10000;
   //CHANGEME current running average history duration, currently set to 5 min
