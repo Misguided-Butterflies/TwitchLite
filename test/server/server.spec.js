@@ -131,7 +131,7 @@ describe('server', () => {
         .set('Accept', /application\/json/)
         .expect(function(res) {
           expect(res.body._id).to.equal(fakeHighlight._id);
-          expect(res.body.vote).to.eql({
+          expect(res.body.votes).to.eql({
             'batman': 1
           });
         })

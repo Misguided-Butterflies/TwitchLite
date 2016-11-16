@@ -43,7 +43,7 @@ describe('Highlights Model', function() {
     insertOne(obj)
     .then(created => {
       expect(created.game).to.equal('pong');
-      expect(created.vote).to.eql({});
+      expect(created.votes).to.eql({});
       done();
     });
   });
@@ -95,7 +95,7 @@ describe('Highlights Model', function() {
         });
       })
       .then(updatedHighlight => {
-        expect(updatedHighlight.vote['a_seagull']).to.equal(-1);
+        expect(updatedHighlight.votes['a_seagull']).to.equal(-1);
 
         return updateVote({
           highlightId: obj._id,
@@ -104,7 +104,7 @@ describe('Highlights Model', function() {
         });
       })
       .then(updatedHighlight => {
-        expect(updatedHighlight.vote['a_seagull']).to.equal(1);
+        expect(updatedHighlight.votes['a_seagull']).to.equal(1);
 
         return updateVote({
           highlightId: obj._id,
@@ -113,7 +113,7 @@ describe('Highlights Model', function() {
         });
       })
       .then(updatedHighlight => {
-        expect(updatedHighlight.vote['a_seagull']).to.equal(0);
+        expect(updatedHighlight.votes['a_seagull']).to.equal(0);
 
         done();
       });
@@ -136,8 +136,8 @@ describe('Highlights Model', function() {
         });
       })
       .then(updatedHighlight => {
-        expect(updatedHighlight.vote['a_seagull']).to.equal(1);
-        expect(updatedHighlight.vote['miro']).to.equal(-1);
+        expect(updatedHighlight.votes['a_seagull']).to.equal(1);
+        expect(updatedHighlight.votes['miro']).to.equal(-1);
 
         done();
       });

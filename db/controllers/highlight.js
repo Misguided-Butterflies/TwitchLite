@@ -45,7 +45,7 @@ var updateVote = function(voteData) {
   // where -1 could also be 0 or 1, to indicate the user's vote
   return findOne(voteData.highlightId)
   .then(highlight => {
-    highlight.vote[voteData.username] = voteData.vote;
+    highlight.votes[voteData.username] = voteData.vote;
 
     return highlight.save();
   })
