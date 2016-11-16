@@ -4,6 +4,7 @@ import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
+import axios from 'axios';
 
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
@@ -29,8 +30,8 @@ class App extends React.Component {
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
-    
- 
+
+
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
@@ -46,7 +47,7 @@ class App extends React.Component {
       hotness: this.sortByHotness,
       follow: this.sortByFollowing,
     };
-    
+
     $(() => {
       let $window = $(window);
       $window.scroll(() => {
@@ -64,13 +65,10 @@ class App extends React.Component {
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
-    $.ajax({
-      method: 'GET',
-      url: '/highlights',
-      success: response => {
-        this.allHighlights = response;
-        this.updateList(0);
-      }
+    axios.get('/highlights')
+    .then(response => {
+      this.allHighlights = response;
+      this.sortByAge();
     });
   }
 
@@ -100,13 +98,13 @@ class App extends React.Component {
     this.selected.sortType = 'age';
     this.updateList();
   }
-  
+
   sortByFollowing() {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
-    this.updateList();    
+    this.updateList();
   }
-  
+
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
@@ -130,7 +128,7 @@ class App extends React.Component {
   updateList() {
     //filter list into myHighlights
     this.filter();
-    
+
     //change state
     this.setState({
       list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
@@ -153,7 +151,7 @@ class App extends React.Component {
     //updates userData object with info
     this.setState(info);
   }
-  
+
   render() {
     return (
       <div>
