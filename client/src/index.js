@@ -17,8 +17,14 @@ class App extends React.Component {
 
     //single source of truth for highlights
     this.allHighlights = [];
-    //filtered highlight list for user's followed
-    this.allMyHighlights = null;
+    //tracks which sorting options are chosen
+    this.selected = {
+      multiplier: false,
+      age: true,
+      following: false
+    };
+    //current highlight list, refiltered from allHighlights OTF
+    this.myHighlights = null;
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
@@ -54,51 +60,58 @@ class App extends React.Component {
   }
 
   sortByMultiplier() {
-    if (!this.allMyHighlights) {
-      //if not filtering by following
-      this.allHighlights.sort((a, b) => b.multiplier - a.multiplier);
-      this.updateList(0);
-    } else {
-      //if filtered by following
-      this.allMyHighlights.sort((a, b) => b.multiplier - a.multiplier);
-      this.updateList(0, this.allMyHighlights);
-    }
+    this.selected.multiplier = true;
+    this.selected.age = false;
+    this.updateList(0);
   }
 
   sortByAge() {
-    if (!this.allMyHighlights) {
-      console.log('hello world');
-      this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
-      this.updateList(0);
-    } else {
-      this.allMyHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
-      this.updateList(0, this.allMyHighlights);  
-    }
+    this.selected.multiplier = false;
+    this.selected.age = true;
+    this.updateList(0);
   }
   
   sortByFollowing(followArr) {
     //Toggles whether or not to filter by following stram
-    if (this.allMyHighlights === null) {
-      this.allMyHighlights = this.allHighlights.filter(function (elem) {
-        return followArr.indexOf(elem.channelName) > -1 ? true : false;
-      });
-      this.updateList(0, this.allMyHighlights);
+    if (this.selected.following === false) {
+      this.selected.following = followArr;
     } else {
-      this.allMyHighlights = null;
-      this.updateList(0);    
+      this.selected.following = false;
     }
+    this.updateList(0);    
   };
+  
+  filter() {
+    //filters allHighlights into myHighlights
+    this.myHighlights = this.allHighlights.slice(0);
+    if (this.selected.following !== false) {
+      var arr = this.selected.following;
+      this.myHighlights = this.myHighlights.filter(function (elem) {
+        return arr.indexOf(elem.channelName) > -1 ? true : false;
+      });
+    }
+    if (this.selected.age) {
+      this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
+    }
+    if (this.selected.multiplier) {
+      this.myHighlights.sort((a, b) => b.multiplier - a.multiplier);
+    }
+  }
 
-  updateList(start, list = this.allHighlights) {
+  updateList(start) {
+    //filter list into myHighlights
+    this.filter();
+    
+    //change state
     this.setState({
-      list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
+      list: this.myHighlights.slice(start, start + numberOfVideosToShowPerPage),
       next: start + numberOfVideosToShowPerPage,
     });
   }
 
   increaseList() {
     this.setState({
-      list: this.allHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
+      list: this.myHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
       next: this.state.next + numberOfVideosToShowPerPage
     });
   }
