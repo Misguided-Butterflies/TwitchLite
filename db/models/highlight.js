@@ -10,7 +10,7 @@ var HighlightSchema = mongoose.Schema({
   streamTitle: String,
   highlightStart: Number,
   highlightEnd: Number,
-  vote: {type: [{type: String}], default: []},
+  vote: {type: mongoose.Schema.Types.Mixed, default: {}},
   multiplier: Number
 });
 
