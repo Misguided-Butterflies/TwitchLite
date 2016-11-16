@@ -6,8 +6,7 @@ class Menu extends React.Component {
     super(props);
     //init twitch js api
     this.state = {
-      name: '',
-      following: []
+      name: ''
     };
     Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, function(error, status) {
       this.status = status;
@@ -24,15 +23,16 @@ class Menu extends React.Component {
   
   logout() {
     Twitch.logout(function(err) {
+      this.props.user({
+        name: '',
+        following: []
+      });
       this.setState({name: ''});
     }.bind(this));
   }
   
-  sortFollow() {
-    this.props.sortFollow(this.state.following);
-  }
-  
   componentDidMount() {
+    //if logged in, get user's name and following channels. pass it up to main app
     if (this.status.authenticated) {
       var name = '';
       var following = [];
@@ -42,9 +42,14 @@ class Menu extends React.Component {
           for (var elem of list.follows) {
             following.push(elem.channel.name);
           }
-          this.setState({
+          //update userData object in parent app
+          this.props.user({
             name: name,
             following: following
+          })
+          //update menu state with username
+          this.setState({
+            name: name
           });
         }.bind(this));
       }.bind(this))
@@ -53,13 +58,14 @@ class Menu extends React.Component {
   
   
   render() {
+    //change user view depending on whether or not user is logged in
     var auth;
     var user;
     var userLink;
     if (this.state.name.length > 0 && this.status.authenticated) {
       auth = <MenuItem onClick={this.logout.bind(this)}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
-      userLink = <MenuItem onClick={this.sortFollow.bind(this)}>Following</MenuItem>;
+      userLink = <MenuItem onClick={this.props.sort.follow}>Following</MenuItem>;
     } else {
       auth = <MenuItem onClick={this.login.bind(this)}>LOGIN</MenuItem>;
       user = null;
@@ -76,8 +82,8 @@ class Menu extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem onClick={this.props.sortMult}>Hottest</NavItem>
-            <NavItem onClick={this.props.sortAge}>New</NavItem>
+            <NavItem onClick={this.props.sort.mult}>Hottest</NavItem>
+            <NavItem onClick={this.props.sort.age}>New</NavItem>
             {userLink}
           </Nav>
           <Nav pullRight>

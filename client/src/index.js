@@ -12,7 +12,9 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      list: []
+      list: [],
+      name: '',
+      following: []
     };
 
     //single source of truth for highlights
@@ -25,6 +27,8 @@ class App extends React.Component {
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
+    
+ 
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
@@ -32,6 +36,13 @@ class App extends React.Component {
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
 
+    //refrences all sort functions from one object
+    this.sortFunctions = {
+      mult: this.sortByMultiplier,
+      age: this.sortByAge,
+      follow: this.sortByFollowing
+    };
+    
     $(() => {
       let $window = $(window);
       $window.scroll(() => {
@@ -73,19 +84,15 @@ class App extends React.Component {
   
   sortByFollowing(followArr) {
     //Toggles whether or not to filter by following stram
-    if (this.selected.following === false) {
-      this.selected.following = followArr;
-    } else {
-      this.selected.following = false;
-    }
+    this.selected.following = !this.selected.following;
     this.updateList(0);    
   };
   
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
-    if (this.selected.following !== false) {
-      var arr = this.selected.following;
+    if (this.selected.following) {
+      var arr = this.state.following;
       this.myHighlights = this.myHighlights.filter(function (elem) {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
@@ -116,11 +123,20 @@ class App extends React.Component {
     });
   }
 
+  updateUser(info) {
+    //if user is logging out, sets following filter to false
+    if (info.name === '') {
+      this.selected.following = false;
+    }
+    //updates userData object with info
+    this.setState(info);
+  }
+  
   render() {
     return (
       <div>
         <Header />
-        <Menu sortMult={this.sortByMultiplier} sortAge={this.sortByAge} sortFollow={this.sortByFollowing}/>
+        <Menu sort={this.sortFunctions} user={this.updateUser.bind(this)}/>
         <VideoList list={this.state.list} />
       </div>
     );
