@@ -20,6 +20,7 @@ class App extends React.Component {
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.increaseList = this.increaseList.bind(this);
   }
 
   /** componentWillMount
@@ -52,7 +53,14 @@ class App extends React.Component {
   updateList(start) {
     this.setState({
       list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
-      start: start,
+      next: start + numberOfVideosToShowPerPage,
+    });
+  }
+
+  increaseList() {
+    this.setState({
+      list: this.allHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
+      next: this.state.next + numberOfVideosToShowPerPage
     });
   }
 
@@ -66,6 +74,7 @@ class App extends React.Component {
           <Button onClick={this.sortByAge}>Newest first</Button>
         </ButtonToolbar>
         <VideoList list={this.state.list} />
+        <Button onClick={this.increaseList}>More</Button>
       </div>
     );
   }
