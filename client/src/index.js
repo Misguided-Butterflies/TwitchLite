@@ -6,6 +6,7 @@ import Menu from './Menu';
 import VideoList from './VideoList';
 
 const numberOfVideosToShowPerPage = 5;
+const dateRedditUsesForTheirAlgorithm = 1134028003000;
 
 class App extends React.Component {
   constructor(props) {
@@ -67,6 +68,30 @@ class App extends React.Component {
         this.allHighlights = response;
         this.sortByAge();
       }
+    });
+  }
+
+  sortByHotness() {
+    this.allHighlights.sort((a, b) => {
+      let aScore = 0;
+      let bScore = 0;
+      for (key in a.votes) {
+        aScore += a.votes[key];
+      }
+      for (key in b.votes) {
+        bScore += b.votes[key];
+      }
+
+      let aOrder = Math.log10(Math.max(Math.abs(aScore), 1));
+      let bOrder = Math.log10(Math.max(Math.abs(bScore), 1));
+
+      let aSign = aScore > 0 ? 1 : aScore < 0 ? -1 : 0;
+      let bSign = bScore > 0 ? 1 : bScore < 0 ? -1 : 0;
+
+      let aSeconds = (a.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
+      let bSeconds = (b.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
+
+      
     });
   }
 
