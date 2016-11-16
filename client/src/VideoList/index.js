@@ -16,6 +16,7 @@ const VideoList = function(props) {
           <div key={i}>
             <Video video={{
               id: video.vodId,
+              preview: video.preview,
               start: Math.floor((video.highlightStart - video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
               duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
             }} />
