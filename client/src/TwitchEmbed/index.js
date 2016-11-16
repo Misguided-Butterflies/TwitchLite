@@ -1,6 +1,9 @@
 import React from 'react';
 import 'twitch-embed';
 
+const proportionOfScreenToFill = .75;
+const heightWidthRatio = 9 / 16;
+
 class TwitchEmbed extends React.Component {
   constructor(props) {
     super(props);
@@ -13,12 +16,21 @@ class TwitchEmbed extends React.Component {
   }
 
   componentDidMount() {
+    let embedWidth;
+    let embedHeight;
+    if (innerWidth * heightWidthRatio > innerHeight) {
+      embedHeight = innerHeight * proportionOfScreenToFill;
+      embedWidth = embedHeight / heightWidthRatio;
+    } else {
+      embedWidth = innerWidth * proportionOfScreenToFill;
+      embedHeight = embedWidth * heightWidthRatio;
+    }
     var options = {
-      width: 854,
-      height: 480,
+      width: embedWidth,
+      height: embedHeight,
       video: this.props.id,
       time: this.props.startString,
-      autoplay: false
+      autoplay: false // TODO change this to true when we add on-demand loading
     };
     this.player = new Twitch.Player(this.divId, options);
     this.player.addEventListener(Twitch.Player.PLAY, this.handleFirstPlay);
