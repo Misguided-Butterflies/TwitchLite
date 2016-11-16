@@ -21,6 +21,15 @@ class App extends React.Component {
     this.sortByAge = this.sortByAge.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
+
+    $(() => {
+      let $window = $(window);
+      $window.scroll(() => {
+        if ($window.scrollTop() === $(document).height() - $window.height()) {
+          this.increaseList();
+        }
+      });
+    });
   }
 
   /** componentWillMount
@@ -74,7 +83,6 @@ class App extends React.Component {
           <Button onClick={this.sortByAge}>Newest first</Button>
         </ButtonToolbar>
         <VideoList list={this.state.list} />
-        <Button onClick={this.increaseList}>More</Button>
       </div>
     );
   }
