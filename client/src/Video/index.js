@@ -48,7 +48,13 @@ class Video extends React.Component {
   }
 
   addNewPlayer() {
-    ReactDOM.render(<TwitchEmbed id={this.props.video.id} startTime={this.props.video.start} startString={this.getStartString()} duration={this.props.video.duration} />, this.refs.video);
+    ReactDOM.render(<TwitchEmbed
+      id={this.props.video.id}
+      startTime={this.props.video.start}
+      startString={this.getStartString()}
+      duration={this.props.video.duration}
+      preview={this.props.video.preview}
+    />, this.refs.video);
   }
 
   render() {

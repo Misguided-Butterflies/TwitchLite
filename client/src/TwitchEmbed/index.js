@@ -13,24 +13,35 @@ class TwitchEmbed extends React.Component {
     this.handleAdditionalPlay = this.handleAdditionalPlay.bind(this);
     this.handleFirstPause = this.handleFirstPause.bind(this);
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
+    this.loadVideo = this.loadVideo.bind(this);
+
+    this.calculateDimensions();
   }
 
-  componentDidMount() {
-    let embedWidth;
-    let embedHeight;
+  calculateDimensions() {
     if (innerWidth * heightWidthRatio > innerHeight) {
-      embedHeight = innerHeight * proportionOfScreenToFill;
-      embedWidth = embedHeight / heightWidthRatio;
+      this.embedHeight = innerHeight * proportionOfScreenToFill;
+      this.embedWidth = this.embedHeight / heightWidthRatio;
     } else {
-      embedWidth = innerWidth * proportionOfScreenToFill;
-      embedHeight = embedWidth * heightWidthRatio;
+      this.embedWidth = innerWidth * proportionOfScreenToFill;
+      this.embedHeight = this.embedWidth * heightWidthRatio;
     }
-    var options = {
-      width: embedWidth,
-      height: embedHeight,
+  }
+
+  loadVideo() {
+    $(this.refs.base).empty();
+    this.calculateDimensions();
+    this.createTwitchPlayer();
+    this.player.play();
+  }
+
+  createTwitchPlayer() {
+    let options = {
+      width: this.embedWidth,
+      height: this.embedHeight,
       video: this.props.id,
       time: this.props.startString,
-      autoplay: false // TODO change this to true when we add on-demand loading
+      autoplay: false
     };
     this.player = new Twitch.Player(this.divId, options);
     this.player.addEventListener(Twitch.Player.PLAY, this.handleFirstPlay);
@@ -77,7 +88,9 @@ class TwitchEmbed extends React.Component {
 
   render() {
     return (
-      <div id={this.divId}></div>
+      <div id={this.divId} ref='base'>
+        <img src={this.props.preview} onClick={this.loadVideo} height={this.embedHeight} width={this.embedWidth} />
+      </div>
     );
   }
 }
@@ -86,7 +99,8 @@ TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
   startTime: React.PropTypes.number.isRequired,
   startString: React.PropTypes.string.isRequired,
-  duration: React.PropTypes.number.isRequired
+  duration: React.PropTypes.number.isRequired,
+  preview: React.PropTypes.string
 };
 
 export default TwitchEmbed;
