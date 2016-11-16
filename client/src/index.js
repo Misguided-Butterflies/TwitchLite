@@ -7,6 +7,7 @@ import VideoList from './VideoList';
 
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
+const baseMultiplier = 7;
 
 class App extends React.Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class App extends React.Component {
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.sortByFollowing = this.sortByFollowing.bind(this);
+    this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
 
@@ -82,6 +84,9 @@ class App extends React.Component {
         bScore += b.votes[key];
       }
 
+      aScore += a.multiplier - baseMultiplier;
+      bScore += b.multiplier - baseMultiplier;
+
       let aOrder = Math.log10(Math.max(Math.abs(aScore), 1));
       let bOrder = Math.log10(Math.max(Math.abs(bScore), 1));
 
@@ -91,7 +96,10 @@ class App extends React.Component {
       let aSeconds = (a.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
       let bSeconds = (b.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
 
-      
+      let aHotness = aSign * aOrder + aSeconds / 45000;
+      let bHotness = bSign * bOrder + bSeconds / 45000;
+
+      return bHotness - aHotness;
     });
   }
 
