@@ -14,27 +14,31 @@ class TwitchEmbed extends React.Component {
     this.handleFirstPause = this.handleFirstPause.bind(this);
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
     this.loadVideo = this.loadVideo.bind(this);
+
+    this.calculateDimensions();
+  }
+
+  calculateDimensions() {
+    if (innerWidth * heightWidthRatio > innerHeight) {
+      this.embedHeight = innerHeight * proportionOfScreenToFill;
+      this.embedWidth = this.embedHeight / heightWidthRatio;
+    } else {
+      this.embedWidth = innerWidth * proportionOfScreenToFill;
+      this.embedHeight = this.embedWidth * heightWidthRatio;
+    }
   }
 
   loadVideo() {
     $(this.refs.base).empty();
+    this.calculateDimensions();
     this.createTwitchPlayer();
     this.player.play();
   }
 
   createTwitchPlayer() {
-    let embedWidth;
-    let embedHeight;
-    if (innerWidth * heightWidthRatio > innerHeight) {
-      embedHeight = innerHeight * proportionOfScreenToFill;
-      embedWidth = embedHeight / heightWidthRatio;
-    } else {
-      embedWidth = innerWidth * proportionOfScreenToFill;
-      embedHeight = embedWidth * heightWidthRatio;
-    }
     let options = {
-      width: embedWidth,
-      height: embedHeight,
+      width: this.embedWidth,
+      height: this.embedHeight,
       video: this.props.id,
       time: this.props.startString,
       autoplay: false
@@ -85,7 +89,7 @@ class TwitchEmbed extends React.Component {
   render() {
     return (
       <div id={this.divId} ref='base'>
-        <img src={this.props.preview} onClick={this.loadVideo} />
+        <img src={this.props.preview} onClick={this.loadVideo} height={this.embedHeight} width={this.embedWidth} />
       </div>
     );
   }
