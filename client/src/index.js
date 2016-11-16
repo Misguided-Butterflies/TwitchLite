@@ -2,7 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
-import Navbar from './Navbar';
+import Menu from './Menu';
 import VideoList from './VideoList';
 
 const numberOfVideosToShowPerPage = 5;
@@ -15,10 +15,14 @@ class App extends React.Component {
       list: []
     };
 
+    //single source of truth for highlights
     this.allHighlights = [];
+    //filtered highlight list for user's followed
+    this.allMyHighlights = null;
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
+    this.sortByFollowing = this.sortByFollowing.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
 
@@ -50,21 +54,42 @@ class App extends React.Component {
   }
 
   sortByMultiplier() {
-    this.allHighlights.sort((a, b) => b.multiplier - a.multiplier);
-    this.updateList(0);
+    if (!this.allMyHighlights) {
+      //if not filtering by following
+      this.allHighlights.sort((a, b) => b.multiplier - a.multiplier);
+      this.updateList(0);
+    } else {
+      //if filtered by following
+      this.allMyHighlights.sort((a, b) => b.multiplier - a.multiplier);
+      this.updateList(0, this.allMyHighlights);
+    }
   }
 
   sortByAge() {
-    this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
-    this.updateList(0);
+    if (!this.allMyHighlights) {
+      console.log('hello world');
+      this.allHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
+      this.updateList(0);
+    } else {
+      this.allMyHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
+      this.updateList(0, this.allMyHighlights);  
+    }
   }
   
   sortByFollowing(followArr) {
-    //FIXME
-    this.updateList(0);
-  }
+    //Toggles whether or not to filter by following stram
+    if (this.allMyHighlights === null) {
+      this.allMyHighlights = this.allHighlights.filter(function (elem) {
+        return followArr.indexOf(elem.channelName) > -1 ? true : false;
+      });
+      this.updateList(0, this.allMyHighlights);
+    } else {
+      this.allMyHighlights = null;
+      this.updateList(0);    
+    }
+  };
 
-  updateList(start) {
+  updateList(start, list = this.allHighlights) {
     this.setState({
       list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
       next: start + numberOfVideosToShowPerPage,
@@ -82,11 +107,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Navbar sortMult={this.sortByMultiplier} sortAge={this.sortByAge} sortFollow={this.sortByFollowing}/>
-        <ButtonToolbar>
-          <Button onClick={this.sortByMultiplier}>Hottest first</Button>
-          <Button onClick={this.sortByAge}>Newest first</Button>
-        </ButtonToolbar>
+        <Menu sortMult={this.sortByMultiplier} sortAge={this.sortByAge} sortFollow={this.sortByFollowing}/>
         <VideoList list={this.state.list} />
       </div>
     );
