@@ -16,6 +16,10 @@ class TwitchEmbed extends React.Component {
   }
 
   componentDidMount() {
+    this.createTwitchPlayer();
+  }
+
+  createTwitchPlayer() {
     let embedWidth;
     let embedHeight;
     if (innerWidth * heightWidthRatio > innerHeight) {
@@ -25,7 +29,7 @@ class TwitchEmbed extends React.Component {
       embedWidth = innerWidth * proportionOfScreenToFill;
       embedHeight = embedWidth * heightWidthRatio;
     }
-    var options = {
+    let options = {
       width: embedWidth,
       height: embedHeight,
       video: this.props.id,
