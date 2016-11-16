@@ -14,22 +14,27 @@ class VideoContainer extends React.Component {
   constructor(props) {
     super(props);
 
+    // this.state = {
+    //   // voteCount:
+    //   userVote: 0 // initial val should be based on props.votes
+    // };
+
     this.sendVote = this.sendVote.bind(this);
   }
 
-  calculateVotes() {
-    // this should be a pure function
-    // add up all the votes from all the users
+  calculateVotes(votes) {
+    var total = 0;
+
+    var votedUsers = Object.keys(votes);
+
+    for (let user of votedUsers) {
+      total += votes[user];
+    }
+
+    return total;
   }
 
-  sendVote() {
-    // Use Axios
-    // post vote data
-    // do we just assume that the video data otherwise is unchanged?
-    // if yes, then we're fine keeping video as a prop
-    // if no, then the prop needs to be used as initial state, which is updated
-    // based on the upvote data
-    // but the former option seems better
+  sendVote(vote) {
     axios.post('/votes', {
       // username
       // video id
