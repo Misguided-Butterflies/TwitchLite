@@ -44,7 +44,7 @@ class Video extends React.Component {
   }
 
   removePlayer() {
-    $(this.refs.video).empty();
+    document.querySelector(this.refs.video).innerHTML = '';
   }
 
   addNewPlayer() {
