@@ -5,14 +5,17 @@ let testVideos = [
     id: 'v97978712',
     start: 7206,
     duration: 6,
+    preview: 'example.png'
   }, {
     id: 'v99478815',
     start: 9342,
     duration: 55,
+    preview: 'example.png'
   }, {
     id: 'v100239687',
     start: 22,
     duration: 9,
+    preview: 'example.png'
   }
 ];
 
