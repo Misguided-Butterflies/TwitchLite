@@ -20,6 +20,16 @@ class App extends React.Component {
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.increaseList = this.increaseList.bind(this);
+
+    $(() => {
+      let $window = $(window);
+      $window.scroll(() => {
+        if ($window.scrollTop() === $(document).height() - $window.height()) {
+          this.increaseList();
+        }
+      });
+    });
   }
 
   /** componentWillMount
@@ -52,7 +62,14 @@ class App extends React.Component {
   updateList(start) {
     this.setState({
       list: this.allHighlights.slice(start, start + numberOfVideosToShowPerPage),
-      start: start,
+      next: start + numberOfVideosToShowPerPage,
+    });
+  }
+
+  increaseList() {
+    this.setState({
+      list: this.allHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
+      next: this.state.next + numberOfVideosToShowPerPage
     });
   }
 

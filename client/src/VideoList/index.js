@@ -10,19 +10,17 @@ const numberOfSecondsToAddToBeginningOfHighlights = 30;
  */
 const VideoList = function(props) {
   return (
-    <div>
-      <div className='video-list'>
-        {props.list.map((video, i) => (
-          <div key={i}>
-            <Video video={{
-              id: video.vodId,
-              preview: video.preview,
-              start: Math.floor((video.highlightStart - video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
-              duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
-            }} />
-          </div>
-        ))}
-      </div>
+    <div className='video-list'>
+      {props.list.map((video, i) => (
+        <div key={i}>
+          <Video video={{
+            id: video.vodId,
+            preview: video.preview,
+            start: Math.floor((video.highlightStart - video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
+            duration: Math.floor((video.highlightEnd - video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+          }} />
+        </div>
+      ))}
     </div>
   );
 };
