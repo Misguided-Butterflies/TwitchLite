@@ -74,33 +74,20 @@ class App extends React.Component {
   }
 
   sortByHotness() {
-    this.allHighlights.sort((a, b) => {
-      let aScore = 0;
-      let bScore = 0;
-      for (key in a.votes) {
-        aScore += a.votes[key];
-      }
-      for (key in b.votes) {
-        bScore += b.votes[key];
-      }
+    this.allHighlights.sort((a, b) => this.calculateHotness(b) - this.calculateHotness(a));
+    this.updateList(0);
+  }
 
-      aScore += a.multiplier - baseMultiplier;
-      bScore += b.multiplier - baseMultiplier;
-
-      let aOrder = Math.log10(Math.max(Math.abs(aScore), 1));
-      let bOrder = Math.log10(Math.max(Math.abs(bScore), 1));
-
-      let aSign = aScore > 0 ? 1 : aScore < 0 ? -1 : 0;
-      let bSign = bScore > 0 ? 1 : bScore < 0 ? -1 : 0;
-
-      let aSeconds = (a.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
-      let bSeconds = (b.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
-
-      let aHotness = aSign * aOrder + aSeconds / 45000;
-      let bHotness = bSign * bOrder + bSeconds / 45000;
-
-      return bHotness - aHotness;
-    });
+  calculateHotness(video) {
+    let score = 0;
+    for (key in video.votes) {
+      score += video.votes[key];
+    }
+    score += video.multiplier - baseMultiplier;
+    let order = Math.log10(Math.max(Math.abs(score), 1));
+    let sign = score > 0 ? 1 : score < 0 ? -1 : 0;
+    let seconds = (video.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
+    return sign * order + seconds / 45000;
   }
 
   sortByMultiplier() {
