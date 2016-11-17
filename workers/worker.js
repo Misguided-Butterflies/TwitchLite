@@ -42,7 +42,6 @@ var createWorker = function(stream, handleHighlight) {
   var end = 0;
   //highlight multiplier
   var multiplier = 0;
-  
 
   //event handler for receiving messages
   worker.on('message', (from, to, message) => {
