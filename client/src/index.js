@@ -81,7 +81,7 @@ class App extends React.Component {
 
   calculateHotness(video) {
     let score = 0;
-    for (key in video.votes) {
+    for (let key in video.votes) {
       score += video.votes[key];
     }
     score += (video.multiplier - baseMultiplier) * mulitplierScalingFactor;
