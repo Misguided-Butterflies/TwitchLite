@@ -16,12 +16,21 @@ class VideoContainer extends React.Component {
 
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
-      userVote: props.video.votes[props.username] || 0
+      userVote: this.getUserVote(props.username, props.video.votes)
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
     this.sendVote = this.sendVote.bind(this);
     this.updateUserVote = this.updateUserVote.bind(this);
+    this.getUserVote = this.getUserVote.bind(this);
+  }
+
+  getUserVote(username, votes) {
+    if (votes.hasOwnProperty(username)) {
+      return votes[username];
+    }
+
+    return 0;
   }
 
   calculateVotes(votes) {
@@ -44,6 +53,8 @@ class VideoContainer extends React.Component {
         userVote: 0
       });
 
+      this.sendVote(this.state.voteCount - vote);
+
       return;
     }
 
@@ -55,16 +66,36 @@ class VideoContainer extends React.Component {
     this.sendVote(vote);
   }
 
+  componentDidUpdate(prevProps) {
+    // This check is here to prevent an infinite loop; we only want to do stuff
+    // if the username has updated
+    // See https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/postrender_with_componentdidupdate.html#another-render-pass
+    if (prevProps.username === this.props.username) {
+      return;
+    }
+
+    this.setState({
+      userVote: this.getUserVote(this.props.username, this.props.video.votes)
+    });
+  }
+
   sendVote(vote) {
-    // axios.post('/votes', {
-    //   // username
-    //   // video id
-    //   // vote
-    // })
-    // .then(updatedVideo => {
-    //   // set state to calculateVotes(updatedVideo.votes); ???
-    //   // no, we need optimistic updates instead
-    // });
+    axios.post('/votes', {
+      vote,
+      username: this.props.username,
+      highlightId: this.props.video._id
+    })
+    .then(response => {
+      return response.data;
+    })
+    .then(updatedVideo => {
+      // set state to calculateVotes(updatedVideo.votes); ???
+      // no, we need optimistic updates instead
+      console.log('updatedVideo votes is', updatedVideo.votes);
+    })
+    .catch(error => {
+      console.error('Error sending vote:', error);
+    });
   }
 
   render() {
@@ -113,6 +144,7 @@ class VideoContainer extends React.Component {
 
 VideoContainer.propTypes = {
   video: React.PropTypes.shape({
+    _id: React.PropTypes.string.isRequired,
     vodId: React.PropTypes.string.isRequired,
     channelName: React.PropTypes.string.isRequired,
     game: React.PropTypes.string.isRequired,
