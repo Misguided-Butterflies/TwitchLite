@@ -67,7 +67,7 @@ class App extends React.Component {
   componentWillMount() {
     axios.get('/highlights')
     .then(response => {
-      this.allHighlights = response;
+      this.allHighlights = response.data;
       this.sortByAge();
     });
   }
