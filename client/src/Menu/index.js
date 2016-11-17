@@ -8,7 +8,6 @@ class Menu extends React.Component {
     this.state = {
       name: ''
     };
-    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
 
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
@@ -34,7 +33,7 @@ class Menu extends React.Component {
   
   componentDidMount() {
     //if logged in, get user's name and following channels. pass it up to main app
-    if (this.status.authenticated) {
+    if (this.props.twitchStatus.authenticated) {
       var name = '';
       var following = [];
       Twitch.api({method: 'user'}, (err, res) => {
@@ -62,7 +61,7 @@ class Menu extends React.Component {
     var auth;
     var user;
     var userLink;
-    if (this.state.name.length > 0 && this.status.authenticated) {
+    if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
       auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
       userLink = <MenuItem onClick={this.props.sort.follow}>Following</MenuItem>;
