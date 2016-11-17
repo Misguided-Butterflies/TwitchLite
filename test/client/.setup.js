@@ -34,6 +34,7 @@ chai.use(chaiEnzyme());
 global.React = React;
 global.chai = chai;
 global.expect = chai.expect;
+global.stub = sinon.stub;
 global.spy = sinon.spy;
 global.mount = enzyme.mount;
 global.shallow = enzyme.shallow;

@@ -1,6 +1,7 @@
 import VideoContainer from '../../client/src/VideoContainer';
 
 let testVideo = {
+  _id: '12345abcdef',
   highlightStart: 1479151790954,
   highlightEnd: 1479151793955,
   multiplier: 5,
@@ -45,7 +46,8 @@ describe('<VideoContainer>', () => {
   it('should be able to update the user\'s vote and total vote count', () => {
     let wrapper = shallow(videoContainer);
 
-    // will have to stub send vote
+    // Stub sendVote so that we don't try to make an actual AJAX request
+    stub(wrapper.instance(), 'sendVote').returns(null);
 
     wrapper.instance().updateUserVote(1);
     expect(wrapper.state().userVote).to.equal(1);
