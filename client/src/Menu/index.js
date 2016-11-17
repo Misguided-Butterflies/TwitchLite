@@ -9,6 +9,9 @@ class Menu extends React.Component {
       name: ''
     };
     Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
+
+    this.logout = this.logout.bind(this);
+    this.login = this.login.bind(this);
   }
   
   login() {
@@ -61,11 +64,11 @@ class Menu extends React.Component {
     var user;
     var userLink;
     if (this.state.name.length > 0 && this.status.authenticated) {
-      auth = <MenuItem onClick={this.logout.bind(this)}>LOGOUT</MenuItem>;
+      auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
       userLink = <MenuItem onClick={this.props.sort.follow}>Following</MenuItem>;
     } else {
-      auth = <MenuItem onClick={this.login.bind(this)}>LOGIN</MenuItem>;
+      auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
       user = null;
       userLink = null;
     }
