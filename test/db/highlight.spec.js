@@ -20,7 +20,7 @@ describe('Highlights Model', function() {
 
   beforeEach(function(done) {
     var clearDB = function() {
-      Highlight.remove({}).exec();
+      Highlight.remove(obj).exec();
       return done();
     };
 
@@ -51,7 +51,7 @@ describe('Highlights Model', function() {
   it('should only add one highlight at once', function(done) {
     insertOne(obj)
     .then( () => {
-      return findAll();
+      return findAll(obj);
     })
     .then(res => {
       expect(res.length).to.equal(1);
