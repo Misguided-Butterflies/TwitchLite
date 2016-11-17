@@ -2,6 +2,7 @@ import React from 'react';
 import 'twitch-embed';
 import TwitchEmbed from '../TwitchEmbed';
 import ReactDOM from 'react-dom';
+import utils from '../utils';
 
 /** Video
  * this is a component for showing a twitch vod highlight.
@@ -17,21 +18,6 @@ import ReactDOM from 'react-dom';
 class Video extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  // twitch player wants a string like "1h3m44s" as the start time. this function converts a number of seconds to that format.
-  getStartString() {
-    let result = '';
-    if (this.props.video.start >= 3600) {
-      result += Math.floor(this.props.video.start / 3600) + 'h';
-    }
-    if (this.props.video.start % 3600 >= 60) {
-      result += Math.floor((this.props.video.start % 3600) / 60) + 'm';
-    }
-    if (this.props.video.start % 60 > 0) {
-      result += (this.props.video.start % 60) + 's';
-    }
-    return result;
   }
 
   componentDidMount() {
@@ -51,7 +37,7 @@ class Video extends React.Component {
     ReactDOM.render(<TwitchEmbed
       id={this.props.video.id}
       startTime={this.props.video.start}
-      startString={this.getStartString()}
+      startString={utils.getStartString(this.props.video.start)}
       duration={this.props.video.duration}
       preview={this.props.video.preview}
     />, this.refs.video);
