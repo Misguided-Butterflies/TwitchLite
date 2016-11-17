@@ -6,6 +6,9 @@ import Menu from './Menu';
 import VideoList from './VideoList';
 
 const numberOfVideosToShowPerPage = 5;
+const dateRedditUsesForTheirAlgorithm = 1134028003000;
+const baseMultiplier = 7;
+const mulitplierScalingFactor = 1; // how many additional votes does it take to have the same weight as 1 additional point of multiplier?
 
 class App extends React.Component {
   constructor(props) {
@@ -21,8 +24,7 @@ class App extends React.Component {
     this.allHighlights = [];
     //tracks which sorting options are chosen
     this.selected = {
-      multiplier: false,
-      age: true,
+      sortType: 'hotness',
       following: false
     };
     //current highlight list, refiltered from allHighlights OTF
@@ -33,6 +35,7 @@ class App extends React.Component {
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.sortByFollowing = this.sortByFollowing.bind(this);
+    this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
 
@@ -40,7 +43,8 @@ class App extends React.Component {
     this.sortFunctions = {
       mult: this.sortByMultiplier,
       age: this.sortByAge,
-      follow: this.sortByFollowing
+      hotness: this.sortByHotness,
+      follow: this.sortByFollowing,
     };
     
     $(() => {
@@ -65,28 +69,43 @@ class App extends React.Component {
       url: '/highlights',
       success: response => {
         this.allHighlights = response;
-        this.sortByAge();
+        this.updateList(0);
       }
     });
   }
 
+  sortByHotness() {
+    this.selected.sortType = 'hotness';
+    this.updateList();
+  }
+
+  calculateHotness(video) {
+    let score = 0;
+    for (key in video.votes) {
+      score += video.votes[key];
+    }
+    score += (video.multiplier - baseMultiplier) * mulitplierScalingFactor;
+    let order = Math.log10(Math.max(Math.abs(score), 1));
+    let sign = score > 0 ? 1 : score < 0 ? -1 : 0;
+    let seconds = (video.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
+    return sign * order + seconds / 45000;
+  }
+
   sortByMultiplier() {
-    this.selected.multiplier = true;
-    this.selected.age = false;
-    this.updateList(0);
+    this.selected.sortType = 'multiplier';
+    this.updateList();
   }
 
   sortByAge() {
-    this.selected.multiplier = false;
-    this.selected.age = true;
-    this.updateList(0);
+    this.selected.sortType = 'age';
+    this.updateList();
   }
   
-  sortByFollowing(followArr) {
+  sortByFollowing() {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
-    this.updateList(0);    
-  };
+    this.updateList();    
+  }
   
   filter() {
     //filters allHighlights into myHighlights
@@ -97,28 +116,31 @@ class App extends React.Component {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
     }
-    if (this.selected.age) {
+    if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
     }
-    if (this.selected.multiplier) {
+    if (this.selected.sortType === 'multiplier') {
       this.myHighlights.sort((a, b) => b.multiplier - a.multiplier);
+    }
+    if (this.selected.sortType === 'hotness') {
+      this.myHighlights.sort((a, b) => this.calculateHotness(b) - this.calculateHotness(a));
     }
   }
 
-  updateList(start) {
+  updateList() {
     //filter list into myHighlights
     this.filter();
     
     //change state
     this.setState({
-      list: this.myHighlights.slice(start, start + numberOfVideosToShowPerPage),
-      next: start + numberOfVideosToShowPerPage,
+      list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
+      next: numberOfVideosToShowPerPage,
     });
   }
 
   increaseList() {
     this.setState({
-      list: this.myHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
+      list: this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)),
       next: this.state.next + numberOfVideosToShowPerPage
     });
   }
@@ -136,7 +158,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)} />
         <VideoList list={this.state.list} />
       </div>
     );
