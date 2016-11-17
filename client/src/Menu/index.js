@@ -8,27 +8,28 @@ class Menu extends React.Component {
     this.state = {
       name: ''
     };
-    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, function(error, status) {
-      this.status = status;
-    }.bind(this));
+    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
+
+    this.logout = this.logout.bind(this);
+    this.login = this.login.bind(this);
   }
   
   login() {
     Twitch.login({
-      response_type: 'token',
-      redirect_uri: 'http://localhost:8000',
+      'response_type': 'token',
+      'redirect_uri': 'http://localhost:8000',
       scope: ['user_read']
     });
   }
   
   logout() {
-    Twitch.logout(function(err) {
+    Twitch.logout(err => {
       this.props.updateUser({
         name: '',
         following: []
       });
       this.setState({name: ''});
-    }.bind(this));
+    });
   }
   
   componentDidMount() {
@@ -46,7 +47,7 @@ class Menu extends React.Component {
           this.props.updateUser({
             name: name,
             following: following
-          })
+          });
           //update menu state with username
           this.setState({
             name: name
@@ -63,11 +64,11 @@ class Menu extends React.Component {
     var user;
     var userLink;
     if (this.state.name.length > 0 && this.status.authenticated) {
-      auth = <MenuItem onClick={this.logout.bind(this)}>LOGOUT</MenuItem>;
+      auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
       userLink = <MenuItem onClick={this.props.sort.follow}>Following</MenuItem>;
     } else {
-      auth = <MenuItem onClick={this.login.bind(this)}>LOGIN</MenuItem>;
+      auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
       user = null;
       userLink = null;
     }
@@ -82,8 +83,9 @@ class Menu extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <NavItem onClick={this.props.sort.mult}>Hottest</NavItem>
+            <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
             <NavItem onClick={this.props.sort.age}>New</NavItem>
+            <NavItem onClick={this.props.sort.mult}>Multiplier</NavItem>
             {userLink}
           </Nav>
           <Nav pullRight>
@@ -97,13 +99,14 @@ class Menu extends React.Component {
       </Navbar>
     );
   }
-};
+}
 
 Menu.propTypes = {
   sort: React.PropTypes.shape({
     mult: React.PropTypes.func,
     age: React.PropTypes.func,
-    follow: React.PropTypes.func
+    follow: React.PropTypes.func,
+    hotness: React.PropTypes.func
   }),
   updateUser: React.PropTypes.func
 };
