@@ -39,6 +39,7 @@ class App extends React.Component {
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
+    this.checkScrollBottom = this.checkScrollBottom.bind(this);
 
     //refrences all sort functions from one object
     this.sortFunctions = {
@@ -48,14 +49,23 @@ class App extends React.Component {
       follow: this.sortByFollowing,
     };
 
-    $(() => {
-      let $window = $(window);
-      $window.scroll(() => {
-        if ($window.scrollTop() === $(document).height() - $window.height()) {
-          this.increaseList();
-        }
-      });
+    window.addEventListener('scroll', () => {
+      this.checkScrollBottom();
     });
+  }
+
+  checkScrollBottom() {
+    var $body = document.body;
+    var $html = document.documentElement;
+
+    var scrollTop = window.pageYOffset;
+    var docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
+      $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
+    var windowHeight = window.innerHeight;
+
+    if (scrollTop === docHeight - windowHeight) {
+      this.increaseList();
+    }
   }
 
   /** componentWillMount
