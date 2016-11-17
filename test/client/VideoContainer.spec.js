@@ -24,7 +24,7 @@ describe('<VideoContainer>', () => {
   let videoContainer;
 
   beforeEach(() => {
-    videoContainer = (<VideoContainer video={testVideo} />);
+    videoContainer = (<VideoContainer video={testVideo} username='batman' />);
   });
 
   it('should be able to calculate total vote counts', () => {
@@ -34,9 +34,34 @@ describe('<VideoContainer>', () => {
     expect(totalCount).to.equal(2);
   });
 
+  it('should initialize state.userVote based on props.username and props.video.votes', () => {
+    let wrapper = shallow(videoContainer);
+
+    // Should be -1 based on the username prop of 'batman' and batman's -1 vote
+    // inside testVideo above
+    expect(wrapper.state().userVote).to.equal(-1);
+  });
+
+  it('should be able to update the user\'s vote and total vote count', () => {
+    let wrapper = shallow(videoContainer);
+
+    wrapper.instance().updateUserVote(1);
+    expect(wrapper.state().userVote).to.equal(1);
+    expect(wrapper.state().voteCount).to.equal(4);
+
+    wrapper.instance().updateUserVote(1);
+    expect(wrapper.state().userVote).to.equal(0);
+    expect(wrapper.state().voteCount).to.equal(3);
+
+    wrapper.instance().updateUserVote(-1);
+    expect(wrapper.state().userVote).to.equal(-1);
+    expect(wrapper.state().voteCount).to.equal(2);
+  });
+
   it('should show an active vote button if the current user has previously voted', () => {
-    // provide videoContainer a user, and make sure that user has a voting record
-    // in the testVideo that also gets passed to videoContainer
-    // now make sure that the upvote button has an active class, or whatever
+    let wrapper = shallow(videoContainer);
+
+    expect(wrapper.find('.downvote.active')).to.have.length(1);
+    expect(wrapper.find('.upvote.active')).to.have.length(0);
   });
 });

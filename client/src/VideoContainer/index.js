@@ -14,17 +14,18 @@ class VideoContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.state = {
-    //   // voteCount:
-    //   userVote: 0 // initial val should be based on props.votes
-    // };
+    this.state = {
+      voteCount: this.calculateVotes(props.video.votes),
+      userVote: props.video.votes[props.username]
+    };
 
+    this.calculateVotes = this.calculateVotes.bind(this);
     this.sendVote = this.sendVote.bind(this);
+    this.updateUserVote = this.updateUserVote.bind(this);
   }
 
   calculateVotes(votes) {
     var total = 0;
-
     var votedUsers = Object.keys(votes);
 
     for (let user of votedUsers) {
@@ -34,22 +35,49 @@ class VideoContainer extends React.Component {
     return total;
   }
 
-  sendVote(vote) {
-    axios.post('/votes', {
-      // username
-      // video id
-      // vote
-    })
-    .then(updatedVideo => {
+  updateUserVote(vote) {
+    if (vote === this.state.userVote) {
+      // If we're trying to update the vote to be what it already is, that means
+      // we're simply toggling the current vote, ie turning it into 0
+      this.setState({
+        voteCount: this.state.voteCount - vote,
+        userVote: 0
+      });
 
+      return;
+    }
+
+    this.setState({
+      voteCount: this.state.voteCount + (vote - this.state.userVote),
+      userVote: vote
     });
+
+    this.sendVote(vote);
+  }
+
+  sendVote(vote) {
+    // axios.post('/votes', {
+    //   // username
+    //   // video id
+    //   // vote
+    // })
+    // .then(updatedVideo => {
+    //   // set state to calculateVotes(updatedVideo.votes); ???
+    //   // no, we need optimistic updates instead
+    // });
   }
 
   render() {
+    let upvoteClass = this.state.userVote === 1 ? 'upvote active' : 'upvote';
+    let downvoteClass = this.state.userVote === -1 ? 'downvote active' : 'downvote';
+
     return (
       <div className='video-container'>
       <h2>{this.props.video.streamTitle}</h2>
       <h3>Playing: {this.props.video.game}</h3>
+      <button className={upvoteClass}>upvote</button>
+      <div className='total-votes'>total votes</div>
+      <button className={downvoteClass}>downvote</button>
       <Video video={{
         id: this.props.video.vodId,
         preview: this.props.video.preview,
@@ -74,6 +102,7 @@ VideoContainer.propTypes = {
     multiplier: React.PropTypes.number.isRequired,
     votes: React.PropTypes.object.isRequired,
   }).isRequired,
+  username: React.PropTypes.string
 };
 
 export default VideoContainer;
