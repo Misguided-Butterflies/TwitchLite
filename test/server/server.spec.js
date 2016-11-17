@@ -104,7 +104,9 @@ describe('server', () => {
       request(app)
         .get('/highlights')
         .expect(res => {
-          expect(res.body).to.have.length(2);
+          // Use >= 2 to not make assumptions about how many real entries
+          // were in our db before this test
+          expect(res.body.length >= 2).to.equal(true);
         })
         .end(err => err ? done(err) : done());
     });
