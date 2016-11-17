@@ -27,12 +27,12 @@ var createWorker = function(stream, handleHighlight) {
     channels: [stream]
   });
 
-  //CHANGEME: multiplier cutoff for highlights, currently set to 3x
+  //CHANGEME: multiplier cutoff for highlights, currently set to 5x
   var cutoff = 5;
   //CHANGEME: time interval for data entry point. eg, msgs / delay. currently set at 10s
   var dataDelay = 10000;
-  //CHANGEME current running average history duration, currently set to 5 min
-  var currAvg = createAvg(30);
+  //CHANGEME current running average history duration, currently set to 20 min
+  var currAvg = createAvg(120);
 
   //current number of messages
   var messages = 0;
@@ -42,6 +42,7 @@ var createWorker = function(stream, handleHighlight) {
   var end = 0;
   //highlight multiplier
   var multiplier = 0;
+  
 
   //event handler for receiving messages
   worker.on('message', (from, to, message) => {
