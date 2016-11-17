@@ -29,7 +29,7 @@ class TwitchEmbed extends React.Component {
   }
 
   loadVideo() {
-    $(this.refs.base).empty();
+    this.refs.base.innerHTML = '';
     this.calculateDimensions();
     this.createTwitchPlayer();
     this.player.play();

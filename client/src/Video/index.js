@@ -44,7 +44,7 @@ class Video extends React.Component {
   }
 
   removePlayer() {
-    $(this.refs.video).empty();
+    this.refs.video.innerHTML = '';
   }
 
   addNewPlayer() {
@@ -65,7 +65,12 @@ class Video extends React.Component {
 }
 
 Video.propTypes = {
-  video: React.PropTypes.object.isRequired,
+  video: React.PropTypes.shape({
+    id: React.PropTypes.string.isRequired,
+    start: React.PropTypes.number.isRequired,
+    duration: React.PropTypes.number.isRequired,
+    preview: React.PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Video;
