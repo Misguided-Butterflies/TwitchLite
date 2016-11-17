@@ -28,7 +28,8 @@ class App extends React.Component {
     this.selected = {
       sortType: 'hotness',
       following: false,
-      search: ''
+      search: '',
+      games: ['Counter-Strike: Global Offensive']
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
@@ -38,6 +39,7 @@ class App extends React.Component {
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.sortByFollowing = this.sortByFollowing.bind(this);
+    this.sortByGame = this.sortByGame.bind(this);
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
@@ -118,12 +120,23 @@ class App extends React.Component {
     this.selected.following = !this.selected.following;
     this.updateList();
   }
-
+  
+  sortByGame(game) {
+    //toggles game filter
+    let gameIndex = this.selected.games.indexOf(game);
+    if (gameIndex > -1) {
+      this.selected.games.splice(gameIndex, 1);
+    } else {
+      this.selected.games.push(game);
+    }
+    this.updateList();
+  }
+  
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
     if (this.selected.following) {
-      var arr = this.state.following;
+      let arr = this.state.following;
       this.myHighlights = this.myHighlights.filter(function (elem) {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
@@ -132,6 +145,12 @@ class App extends React.Component {
       this.myHighlights = this.myHighlights.filter(highlight =>
         (highlight.channelName + highlight.game + highlight.streamTitle).match(new RegExp(utils.escapeRegex(this.selected.search), 'i'))
       );
+
+    if (this.selected.games.length > 0) {
+      let arr = this.selected.games
+      this.myHighlights = this.myHighlights.filter(function (elem) {
+        return arr.indexOf(elem.game) > -1 ? true: false;
+      });
     }
     if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
@@ -171,11 +190,12 @@ class App extends React.Component {
     this.setState(info);
   }
 
+    
   handleSearch(e) {
     this.selected.search = e.target.value;
     this.updateList();
   }
-  
+    
   render() {
     return (
       <div>
