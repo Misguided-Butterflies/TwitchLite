@@ -16,7 +16,7 @@ class VideoContainer extends React.Component {
 
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
-      userVote: props.video.votes[props.username]
+      userVote: props.video.votes[props.username] || 0
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
