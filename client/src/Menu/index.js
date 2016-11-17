@@ -99,4 +99,13 @@ class Menu extends React.Component {
   }
 };
 
+Menu.propTypes = {
+  sort: React.PropTypes.shape({
+    mult: React.PropTypes.func,
+    age: React.PropTypes.func,
+    follow: React.PropTypes.func
+  }),
+  updateUser: React.PropTypes.func
+};
+
 export default Menu;
