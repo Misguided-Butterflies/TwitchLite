@@ -8,6 +8,7 @@ import VideoList from './VideoList';
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
 const baseMultiplier = 7;
+const mulitplierScalingFactor = 1; // how many additional votes does it take to have the same weight as 1 additional point of multiplier?
 
 class App extends React.Component {
   constructor(props) {
@@ -83,7 +84,7 @@ class App extends React.Component {
     for (key in video.votes) {
       score += video.votes[key];
     }
-    score += video.multiplier - baseMultiplier;
+    score += (video.multiplier - baseMultiplier) * mulitplierScalingFactor;
     let order = Math.log10(Math.max(Math.abs(score), 1));
     let sign = score > 0 ? 1 : score < 0 ? -1 : 0;
     let seconds = (video.highlightStart - dateRedditUsesForTheirAlgorithm) / 1000;
@@ -100,7 +101,7 @@ class App extends React.Component {
     this.updateList();
   }
   
-  sortByFollowing(followArr) {
+  sortByFollowing() {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
     this.updateList();    
@@ -139,7 +140,7 @@ class App extends React.Component {
 
   increaseList() {
     this.setState({
-      list: this.myHighlights.slice(0, this.state.next + numberOfVideosToShowPerPage),
+      list: this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)),
       next: this.state.next + numberOfVideosToShowPerPage
     });
   }
