@@ -136,7 +136,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} user={this.updateUser.bind(this)}/>
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
         <VideoList list={this.state.list} />
       </div>
     );

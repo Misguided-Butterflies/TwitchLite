@@ -23,7 +23,7 @@ class Menu extends React.Component {
   
   logout() {
     Twitch.logout(function(err) {
-      this.props.user({
+      this.props.updateUser({
         name: '',
         following: []
       });
@@ -36,14 +36,14 @@ class Menu extends React.Component {
     if (this.status.authenticated) {
       var name = '';
       var following = [];
-      Twitch.api({method: 'user'}, function(err, res) {
+      Twitch.api({method: 'user'}, (err, res) => {
         name = res.name;
-        Twitch.api({method: 'users/' + name + '/follows/channels'}, function(err, list) {
+        Twitch.api({method: 'users/' + name + '/follows/channels'}, (err, list) => {
           for (var elem of list.follows) {
             following.push(elem.channel.name);
           }
           //update userData object in parent app
-          this.props.user({
+          this.props.updateUser({
             name: name,
             following: following
           })
@@ -51,8 +51,8 @@ class Menu extends React.Component {
           this.setState({
             name: name
           });
-        }.bind(this));
-      }.bind(this))
+        });
+      });
     }
   }
   
@@ -96,7 +96,6 @@ class Menu extends React.Component {
         </Navbar.Collapse>
       </Navbar>
     );
-    
   }
 };
 
