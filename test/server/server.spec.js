@@ -29,7 +29,10 @@ var fakeHighlight2 = {
 describe('server', () => {
 
   beforeEach(done => {
-    highlights.remove({})
+    highlights.remove(fakeHighlight)
+    .then(() => {
+      return highlights.remove(fakeHighlight2);
+    })
     .then(() => {
       done();
     });

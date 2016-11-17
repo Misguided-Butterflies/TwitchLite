@@ -20,7 +20,7 @@ describe('Highlights Model', function() {
 
   beforeEach(function(done) {
     var clearDB = function() {
-      Highlight.remove({}).exec();
+      Highlight.remove(obj).exec();
       return done();
     };
 
