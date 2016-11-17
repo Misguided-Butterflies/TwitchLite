@@ -1,12 +1,13 @@
 import React from 'react';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Modal, Button, FormControl, FormGroup} from 'react-bootstrap';
 
 class Menu extends React.Component {
   constructor(props) {
     super(props);
     //init twitch js api
     this.state = {
-      name: ''
+      name: '',
+      showGames: false
     };
 
     this.logout = this.logout.bind(this);
@@ -71,6 +72,12 @@ class Menu extends React.Component {
       userLink = null;
     }
     
+    //change view for displaying games menu
+    let close = () => {this.setState({show: false})};
+    let open = () => {this.setState({show: true})};
+    console.log(this.props.games);
+    
+    
     return (
       <Navbar inverse collapseOnSelect>
         <Navbar.Header>
@@ -81,6 +88,8 @@ class Menu extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
+            <Button>Games</Button>
+            
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
             <NavItem onClick={this.props.sort.age}>New</NavItem>
             <NavItem onClick={this.props.sort.mult}>Multiplier</NavItem>

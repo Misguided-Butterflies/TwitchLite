@@ -28,6 +28,8 @@ class App extends React.Component {
     
     //single source of truth for highlights
     this.allHighlights = [];
+    //logs all games for which we have a highlight. passes this to menu component
+    this.allGames = {};
     //tracks which sorting options are chosen
     this.selected = {
       sortType: 'hotness',
@@ -81,13 +83,30 @@ class App extends React.Component {
    * runs once when component loads
    * fetches all highlights from the database
    * sorts those highlights by newest first
+   * writes to allGames array
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
+<<<<<<< 0dd521768886015ebdd0dfde0021460044ae7a66
     axios.get('/highlights')
     .then(response => {
       this.allHighlights = response.data;
       this.sortByAge();
+=======
+    $.ajax({
+      method: 'GET',
+      url: '/highlights',
+      success: response => {
+        this.allHighlights = response;
+        for (let highlight of response) {
+          if (!this.allGames[highlight.game]) {
+            this.allGames[highlight.game] = 0;
+          }
+          this.allGames[highlight.game]++;
+        }
+        this.updateList(0);
+      }
+>>>>>>> working on game
     });
   }
 
@@ -203,8 +222,13 @@ class App extends React.Component {
     return (
       <div>
         <Header />
+<<<<<<< 0dd521768886015ebdd0dfde0021460044ae7a66
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status}/>
         <VideoList list={this.state.list} username={this.state.name} />
+=======
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} games={this.allGames}/>
+        <VideoList list={this.state.list} />
+>>>>>>> working on game
       </div>
     );
   }
