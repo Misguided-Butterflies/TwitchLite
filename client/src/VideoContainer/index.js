@@ -89,9 +89,7 @@ class VideoContainer extends React.Component {
       return response.data;
     })
     .then(updatedVideo => {
-      // set state to calculateVotes(updatedVideo.votes); ???
-      // no, we need optimistic updates instead
-      console.log('updatedVideo votes is', updatedVideo.votes);
+      
     })
     .catch(error => {
       console.error('Error sending vote:', error);
