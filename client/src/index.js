@@ -19,7 +19,7 @@ class App extends React.Component {
     this.state = {
       list: [],
       name: '',
-      following: []
+      following: [],
     };
 
     //single source of truth for highlights
