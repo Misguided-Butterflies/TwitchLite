@@ -17,7 +17,7 @@ class Menu extends React.Component {
   login() {
     Twitch.login({
       'response_type': 'token',
-      'redirect_uri': 'http://localhost:8000',
+      'redirect_uri': location.origin,
       scope: ['user_read']
     });
   }
