@@ -106,7 +106,7 @@ class App extends React.Component {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
     this.updateList(0);    
-  };
+  }
   
   filter() {
     //filters allHighlights into myHighlights
