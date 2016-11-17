@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
 
 class Menu extends React.Component {
   constructor(props) {
@@ -57,7 +57,6 @@ class Menu extends React.Component {
     }
   }
   
-  
   render() {
     //change user view depending on whether or not user is logged in
     var auth;
@@ -89,6 +88,11 @@ class Menu extends React.Component {
             {userLink}
           </Nav>
           <Nav pullRight>
+            <NavItem>
+              <FormGroup>
+                <FormControl placeholder='Search' onChange={this.props.sort.search}/>
+              </FormGroup>
+            </NavItem>
             <NavDropdown title="User" id="basic-nav-dropdown">
               {user}
               <MenuItem divider />
@@ -106,7 +110,8 @@ Menu.propTypes = {
     mult: React.PropTypes.func,
     age: React.PropTypes.func,
     follow: React.PropTypes.func,
-    hotness: React.PropTypes.func
+    hotness: React.PropTypes.func,
+    search: React.PropTypes.func,
   }),
   updateUser: React.PropTypes.func
 };

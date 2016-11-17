@@ -5,6 +5,7 @@ import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
 import axios from 'axios';
+import utils from './utils';
 
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
@@ -26,7 +27,8 @@ class App extends React.Component {
     //tracks which sorting options are chosen
     this.selected = {
       sortType: 'hotness',
-      following: false
+      following: false,
+      search: ''
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
@@ -40,6 +42,7 @@ class App extends React.Component {
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
 
     //refrences all sort functions from one object
     this.sortFunctions = {
@@ -47,6 +50,7 @@ class App extends React.Component {
       age: this.sortByAge,
       hotness: this.sortByHotness,
       follow: this.sortByFollowing,
+      search: this.handleSearch
     };
 
     window.addEventListener('scroll', () => {
@@ -124,6 +128,11 @@ class App extends React.Component {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
     }
+    if (this.selected.search) {
+      this.myHighlights = this.myHighlights.filter(highlight =>
+        (highlight.channelName + highlight.game + highlight.streamTitle).match(new RegExp(utils.escapeRegex(this.selected.search), 'i'))
+      );
+    }
     if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
     }
@@ -162,6 +171,14 @@ class App extends React.Component {
     this.setState(info);
   }
 
+<<<<<<< d0b083e092e4aeecba59de540c7f471225fcce29
+=======
+  handleSearch(e) {
+    this.selected.search = e.target.value;
+    this.updateList();
+  }
+  
+>>>>>>> Add search bar and functionality
   render() {
     return (
       <div>
