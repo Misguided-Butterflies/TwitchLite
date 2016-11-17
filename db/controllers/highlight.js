@@ -47,6 +47,8 @@ var updateVote = function(voteData) {
   .then(highlight => {
     highlight.votes[voteData.username] = voteData.vote;
 
+    // See http://mongoosejs.com/docs/schematypes.html#mixed
+    highlight.markModified('votes');
     return highlight.save();
   })
   .catch(error => {
