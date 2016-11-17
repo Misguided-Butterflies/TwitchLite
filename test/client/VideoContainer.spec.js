@@ -45,6 +45,8 @@ describe('<VideoContainer>', () => {
   it('should be able to update the user\'s vote and total vote count', () => {
     let wrapper = shallow(videoContainer);
 
+    // will have to stub send vote
+
     wrapper.instance().updateUserVote(1);
     expect(wrapper.state().userVote).to.equal(1);
     expect(wrapper.state().voteCount).to.equal(4);
@@ -63,5 +65,12 @@ describe('<VideoContainer>', () => {
 
     expect(wrapper.find('.downvote.active')).to.have.length(1);
     expect(wrapper.find('.upvote.active')).to.have.length(0);
+  });
+
+  it('should not render any voting buttons if no user is supplied', () => {
+    let wrapper = shallow(<VideoContainer video={testVideo} />);
+
+    expect(wrapper.find('.downvote')).to.have.length(0);
+    expect(wrapper.find('.upvote')).to.have.length(0);
   });
 });

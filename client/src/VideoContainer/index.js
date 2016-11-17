@@ -75,9 +75,31 @@ class VideoContainer extends React.Component {
       <div className='video-container'>
       <h2>{this.props.video.streamTitle}</h2>
       <h3>Playing: {this.props.video.game}</h3>
-      <button className={upvoteClass}>upvote</button>
-      <div className='total-votes'>total votes</div>
-      <button className={downvoteClass}>downvote</button>
+      {
+        this.props.username ?
+        (
+          <button
+            onClick={this.updateUserVote.bind(this, 1)}
+            className={upvoteClass}
+          >
+            upvote
+          </button>
+        ) :
+        null
+      }
+      <div className='vote-count'>{this.state.voteCount}</div>
+      {
+        this.props.username ?
+        (
+          <button
+            onClick={this.updateUserVote.bind(this, -1)}
+            className={downvoteClass}
+          >
+            downvote
+          </button>
+        ) :
+        null
+      }
       <Video video={{
         id: this.props.video.vodId,
         preview: this.props.video.preview,
