@@ -22,6 +22,10 @@ class App extends React.Component {
       following: [],
     };
 
+    
+    //initialize twitch SDK
+    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
+    
     //single source of truth for highlights
     this.allHighlights = [];
     //tracks which sorting options are chosen
@@ -34,14 +38,13 @@ class App extends React.Component {
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
 
-
-
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.sortByFollowing = this.sortByFollowing.bind(this);
     this.sortByGame = this.sortByGame.bind(this);
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.updateUser = this.updateUser.bind(this);
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -200,7 +203,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status}/>
         <VideoList list={this.state.list} username={this.state.name} />
       </div>
     );
