@@ -4,6 +4,7 @@ import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
+import axios from 'axios';
 
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
@@ -29,8 +30,8 @@ class App extends React.Component {
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
-    
- 
+
+
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
@@ -38,6 +39,7 @@ class App extends React.Component {
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.increaseList = this.increaseList.bind(this);
+    this.checkScrollBottom = this.checkScrollBottom.bind(this);
 
     //refrences all sort functions from one object
     this.sortFunctions = {
@@ -46,15 +48,24 @@ class App extends React.Component {
       hotness: this.sortByHotness,
       follow: this.sortByFollowing,
     };
-    
-    $(() => {
-      let $window = $(window);
-      $window.scroll(() => {
-        if ($window.scrollTop() === $(document).height() - $window.height()) {
-          this.increaseList();
-        }
-      });
+
+    window.addEventListener('scroll', () => {
+      this.checkScrollBottom();
     });
+  }
+
+  checkScrollBottom() {
+    var $body = document.body;
+    var $html = document.documentElement;
+
+    var scrollTop = window.pageYOffset;
+    var docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
+      $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
+    var windowHeight = window.innerHeight;
+
+    if (scrollTop === docHeight - windowHeight) {
+      this.increaseList();
+    }
   }
 
   /** componentWillMount
@@ -64,13 +75,10 @@ class App extends React.Component {
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
-    $.ajax({
-      method: 'GET',
-      url: '/highlights',
-      success: response => {
-        this.allHighlights = response;
-        this.updateList(0);
-      }
+    axios.get('/highlights')
+    .then(response => {
+      this.allHighlights = response.data;
+      this.sortByAge();
     });
   }
 
@@ -100,13 +108,13 @@ class App extends React.Component {
     this.selected.sortType = 'age';
     this.updateList();
   }
-  
+
   sortByFollowing() {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
-    this.updateList();    
+    this.updateList();
   }
-  
+
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
@@ -130,7 +138,7 @@ class App extends React.Component {
   updateList() {
     //filter list into myHighlights
     this.filter();
-    
+
     //change state
     this.setState({
       list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
@@ -153,13 +161,13 @@ class App extends React.Component {
     //updates userData object with info
     this.setState(info);
   }
-  
+
   render() {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)} />
-        <VideoList list={this.state.list} />
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
+        <VideoList list={this.state.list} username={this.state.name} />
       </div>
     );
   }
