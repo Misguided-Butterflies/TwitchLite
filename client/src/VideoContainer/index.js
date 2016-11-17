@@ -87,7 +87,7 @@ class VideoContainer extends React.Component {
       return response.data;
     })
     .then(updatedVideo => {
-      
+
     })
     .catch(error => {
       console.error('Error sending vote:', error);
@@ -100,39 +100,39 @@ class VideoContainer extends React.Component {
 
     return (
       <div className='video-container'>
-      <h2>{this.props.video.streamTitle}</h2>
-      <h3>Playing: {this.props.video.game}</h3>
-      {
-        this.props.username ?
-        (
-          <button
-            onClick={this.updateUserVote.bind(this, 1)}
-            className={upvoteClass}
-          >
-            upvote
-          </button>
-        ) :
-        null
-      }
-      <div className='vote-count'>{this.state.voteCount}</div>
-      {
-        this.props.username ?
-        (
-          <button
-            onClick={this.updateUserVote.bind(this, -1)}
-            className={downvoteClass}
-          >
-            downvote
-          </button>
-        ) :
-        null
-      }
-      <Video video={{
-        id: this.props.video.vodId,
-        preview: this.props.video.preview,
-        start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
-        duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
-      }} />
+        <h2>{this.props.video.streamTitle}</h2>
+        <h3>Playing: {this.props.video.game}</h3>
+        {
+          this.props.username ?
+          (
+            <button
+              onClick={this.updateUserVote.bind(this, 1)}
+              className={upvoteClass}
+            >
+              upvote
+            </button>
+          ) :
+          null
+        }
+        <div className='vote-count'>{this.state.voteCount}</div>
+        {
+          this.props.username ?
+          (
+            <button
+              onClick={this.updateUserVote.bind(this, -1)}
+              className={downvoteClass}
+            >
+              downvote
+            </button>
+          ) :
+          null
+        }
+        <Video video={{
+          id: this.props.video.vodId,
+          preview: this.props.video.preview,
+          start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
+          duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+        }} />        
       </div>
     );
   }
