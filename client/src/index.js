@@ -23,8 +23,7 @@ class App extends React.Component {
     this.allHighlights = [];
     //tracks which sorting options are chosen
     this.selected = {
-      multiplier: false,
-      age: true,
+      sortType: 'hotness',
       following: false
     };
     //current highlight list, refiltered from allHighlights OTF
@@ -43,7 +42,8 @@ class App extends React.Component {
     this.sortFunctions = {
       mult: this.sortByMultiplier,
       age: this.sortByAge,
-      follow: this.sortByFollowing
+      hotness: this.sortByHotness,
+      follow: this.sortByFollowing,
     };
     
     $(() => {
@@ -68,14 +68,14 @@ class App extends React.Component {
       url: '/highlights',
       success: response => {
         this.allHighlights = response;
-        this.sortByAge();
+        this.updateList(0);
       }
     });
   }
 
   sortByHotness() {
-    this.allHighlights.sort((a, b) => this.calculateHotness(b) - this.calculateHotness(a));
-    this.updateList(0);
+    this.selected.sortType = 'hotness';
+    this.updateList();
   }
 
   calculateHotness(video) {
@@ -91,21 +91,19 @@ class App extends React.Component {
   }
 
   sortByMultiplier() {
-    this.selected.multiplier = true;
-    this.selected.age = false;
-    this.updateList(0);
+    this.selected.sortType = 'multiplier';
+    this.updateList();
   }
 
   sortByAge() {
-    this.selected.multiplier = false;
-    this.selected.age = true;
-    this.updateList(0);
+    this.selected.sortType = 'age';
+    this.updateList();
   }
   
   sortByFollowing(followArr) {
     //Toggles whether or not to filter by following stram
     this.selected.following = !this.selected.following;
-    this.updateList(0);    
+    this.updateList();    
   }
   
   filter() {
@@ -117,22 +115,25 @@ class App extends React.Component {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
     }
-    if (this.selected.age) {
+    if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
     }
-    if (this.selected.multiplier) {
+    if (this.selected.sortType === 'multiplier') {
       this.myHighlights.sort((a, b) => b.multiplier - a.multiplier);
+    }
+    if (this.selected.sortType === 'hotness') {
+      this.myHighlights.sort((a, b) => this.calculateHotness(b) - this.calculateHotness(a));
     }
   }
 
-  updateList(start) {
+  updateList() {
     //filter list into myHighlights
     this.filter();
     
     //change state
     this.setState({
-      list: this.myHighlights.slice(start, start + numberOfVideosToShowPerPage),
-      next: start + numberOfVideosToShowPerPage,
+      list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
+      next: numberOfVideosToShowPerPage,
     });
   }
 
@@ -156,7 +157,7 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)} />
         <VideoList list={this.state.list} />
       </div>
     );
