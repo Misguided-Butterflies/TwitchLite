@@ -139,7 +139,6 @@ class Menu extends React.Component {
           <Nav>
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
             <NavItem onClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
-            <NavItem onClick={this.props.sort.mult}>Multiplier</NavItem>
             {followedChannelLink}
             {followedGameLink}
           </Nav>
@@ -163,7 +162,6 @@ class Menu extends React.Component {
 
 Menu.propTypes = {
   sort: React.PropTypes.shape({
-    mult: React.PropTypes.func,
     age: React.PropTypes.func,
     follow: React.PropTypes.func,
     hotness: React.PropTypes.func,

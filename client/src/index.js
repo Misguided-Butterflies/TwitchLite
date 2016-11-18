@@ -43,7 +43,6 @@ class App extends React.Component {
     //current highlight list, refiltered from tempHighlights when option is selected
     this.myHighlights = null;
 
-    this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
     this.sortByFollowedChannels = this.sortByFollowedChannels.bind(this);
     this.sortByFollowedGames = this.sortByFollowedGames.bind(this);
@@ -57,7 +56,6 @@ class App extends React.Component {
 
     //refrences all sort functions from one object
     this.sortFunctions = {
-      mult: this.sortByMultiplier,
       age: this.sortByAge,
       hotness: this.sortByHotness,
       followedChannels: this.sortByFollowedChannels,
@@ -136,11 +134,6 @@ class App extends React.Component {
     return sign * order + seconds / 45000;
   }
 
-  sortByMultiplier() {
-    this.selected.sortType = 'multiplier';
-    this.updateList();
-  }
-
   sortByAge() {
     //updates tempHighlights with new data, clears new highlight count
     this.tempHighlights = this.allHighlights.slice(0);
@@ -183,9 +176,6 @@ class App extends React.Component {
     }
     if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
-    }
-    if (this.selected.sortType === 'multiplier') {
-      this.myHighlights.sort((a, b) => b.multiplier - a.multiplier);
     }
     if (this.selected.sortType === 'hotness') {
       this.myHighlights.sort((a, b) => this.calculateHotness(b) - this.calculateHotness(a));
