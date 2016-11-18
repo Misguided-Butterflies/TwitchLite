@@ -95,7 +95,7 @@ describe('server', () => {
       request(app)
         .get('/highlights')
         .expect(res => {
-          expect(res.body[0].vodId).to.equal(fakeHighlight.vodId);
+          expect(res.body[res.body.length - 1].vodId).to.equal(fakeHighlight2.vodId);
         })
         .end(err => err ? done(err) : done());
     });
@@ -107,6 +107,17 @@ describe('server', () => {
           // Use >= 2 to not make assumptions about how many real entries
           // were in our db before this test
           expect(res.body.length >= 2).to.equal(true);
+        })
+        .end(err => err ? done(err) : done());
+    });
+  });
+
+  describe('GET /emotes', () => {
+    it('should get emotes', done => {
+      request(app)
+        .get('/emotes')
+        .expect(res => {
+          expect(JSON.parse(res.body).Kappa).to.equal('25');
         })
         .end(err => err ? done(err) : done());
     });
