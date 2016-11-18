@@ -13,7 +13,8 @@ let testHighlights = [
     vodId: 'v101060439',
     channelName: 'comancedota',
     preview: 'example.png',
-    votes: {}
+    votes: {},
+    messages: [],
   }, {
     _id: '12345abcdef2',
     highlightStart: 1479151790914,
@@ -26,7 +27,8 @@ let testHighlights = [
     vodId: 'v101042097',
     channelName: 'cartmanzbs',
     preview: 'example.png',
-    votes: {}
+    votes: {},
+    messages: [],
   }, {
     _id: '12345abcd3',
     highlightStart: 1479151778948,
@@ -39,7 +41,8 @@ let testHighlights = [
     vodId: 'v101042878',
     channelName: 'kubon_',
     preview: 'example.png',
-    votes: {}
+    votes: {},
+    messages: [],
   }
 ];
 

@@ -46,7 +46,7 @@ var createWorker = function(stream, handleHighlight) {
     messagesDataPoint.push({
       time: Date.now(),
       text: message,
-      from: from['display-name']
+      from: from['display-name'] || from['name']
     });
     messagesCount++;
   });
