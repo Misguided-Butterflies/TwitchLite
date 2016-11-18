@@ -171,14 +171,11 @@ class App extends React.Component {
     this.setState(info);
   }
 
-<<<<<<< d0b083e092e4aeecba59de540c7f471225fcce29
-=======
   handleSearch(e) {
     this.selected.search = e.target.value;
     this.updateList();
   }
   
->>>>>>> Add search bar and functionality
   render() {
     return (
       <div>
