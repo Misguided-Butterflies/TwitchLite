@@ -40,6 +40,7 @@ class Video extends React.Component {
       startString={utils.getStartString(this.props.video.start)}
       duration={this.props.video.duration}
       preview={this.props.video.preview}
+      handleTimeChange={this.props.handleTimeChange}
     />, this.refs.video);
   }
 
