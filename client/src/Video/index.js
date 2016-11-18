@@ -24,9 +24,16 @@ class Video extends React.Component {
     this.addNewPlayer();
   }
 
-  componentDidUpdate() {
-    this.removePlayer();
-    this.addNewPlayer();
+  componentDidUpdate(oldProps) {
+    // Only stop and re-render the video player if the video itself gets updated
+    // This check prevents the video from getting re-rendered even when an
+    // unrelated state change happens in a parent component (namely, the
+    // messagesPointer state property)
+    if (oldProps.video.id !== this.props.video.id ||
+      oldProps.video.start !== this.props.video.start) {
+      this.removePlayer();
+      this.addNewPlayer();
+    }
   }
 
   removePlayer() {
