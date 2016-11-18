@@ -11,7 +11,8 @@ var HighlightSchema = mongoose.Schema({
   highlightStart: Number,
   highlightEnd: Number,
   votes: { type: mongoose.Schema.Types.Mixed, default: {} },
-  multiplier: Number
+  multiplier: Number,
+  messages: { type: Array, default: [] },
 }, {
   // See http://stackoverflow.com/a/31794645
   minimize: false
