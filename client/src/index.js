@@ -7,6 +7,7 @@ import VideoList from './VideoList';
 import axios from 'axios';
 import utils from './utils';
 
+const timeBetweenNewHighlightsCheck = 2000;
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
 const baseMultiplier = 7;
@@ -21,7 +22,6 @@ class App extends React.Component {
       name: '',
       followedChannels: [],
       followedGames: [],
-      interval: undefined,
       newHighlights: 0
     };
 
@@ -93,7 +93,7 @@ class App extends React.Component {
    */
   componentWillMount() {
     this.updateAllHighlights();
-    var updateInterval = setInterval(this.updateAllHighlights, 2000);
+    var updateInterval = setInterval(this.updateAllHighlights, timeBetweenNewHighlightsCheck);
     this.setState({interval: updateInterval});
   }
   
