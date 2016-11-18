@@ -1,3 +1,6 @@
+import axios from 'axios';
+import fs from 'fs';
+
 let utils = {};
 
 utils.escapeRegex = function(s) {
@@ -17,6 +20,22 @@ utils.getStartString = function(seconds) {
     result += (seconds % 60) + 's';
   }
   return result;
+};
+
+utils.getTwitchEmotes = function() {
+  return new Promise((resolve, reject) => {
+    fs.readFile('emotes.json', (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(data));
+      }
+    });
+  });
+};
+
+utils.getTwitchEmoteImageUrl = function(emoteId) {
+  return `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/1.0`;
 };
 
 export default utils;
