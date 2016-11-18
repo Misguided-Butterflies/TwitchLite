@@ -67,7 +67,7 @@ var createWorker = function(stream, handleHighlight) {
         highlightEnd: highlightEnd,
         channelName: stream,
         multiplier: currentHighlightMultiplier,
-        messages: highlightMessages
+        messages: highlightMessages.reduce((result, next) => result.concat(next))
       });
       highlightEnd = 0;
       currentHighlightMultiplier = 0;
