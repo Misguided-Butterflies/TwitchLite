@@ -2,8 +2,6 @@ import React from 'react';
 import Video from '../Video';
 import axios from 'axios';
 
-const numberOfSecondsToAddToBeginningOfHighlights = 30;
-
 /** VideoComponent
  * this is a component that wraps <Video> and handles all other UI and logic
  * for rendering a <Video>
@@ -132,8 +130,8 @@ class VideoContainer extends React.Component {
       <Video video={{
         id: this.props.video.vodId,
         preview: this.props.video.preview,
-        start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
-        duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+        start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
+        duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
       }} />
       </div>
     );
