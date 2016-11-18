@@ -146,8 +146,8 @@ class VideoContainer extends React.Component {
           video={{
             id: this.props.video.vodId,
             preview: this.props.video.preview,
-            start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
-            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+            start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
+            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
           }}
           handleTimeChange={this.handleTimeChange}
         />
