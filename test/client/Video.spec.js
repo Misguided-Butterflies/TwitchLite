@@ -22,7 +22,7 @@ let testVideos = [
 describe('<Video>', () => {
   let video;
   beforeEach(() => {
-    video = (<Video video={testVideos[0]} />);
+    video = (<Video video={testVideos[0]} handleTimeChange={() => ''} />);
   });
 
   it('should have a class .video', () => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import Video from '../Video';
+import ChatsContainer from '../ChatsContainer';
 import axios from 'axios';
 
 /** VideoComponent
@@ -14,13 +15,15 @@ class VideoContainer extends React.Component {
 
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
-      userVote: this.getUserVote(props.username, props.video.votes)
+      userVote: this.getUserVote(props.username, props.video.votes),
+      messagesPointer: 0
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
     this.sendVote = this.sendVote.bind(this);
     this.updateUserVote = this.updateUserVote.bind(this);
     this.getUserVote = this.getUserVote.bind(this);
+    this.handleTimeChange = this.handleTimeChange.bind(this);
   }
 
   getUserVote(username, votes) {
@@ -29,6 +32,19 @@ class VideoContainer extends React.Component {
     }
 
     return 0;
+  }
+
+  handleTimeChange(msSinceHighlightStart) {
+    var newPointer = this.state.messagesPointer;
+
+    while (this.props.video.messages[newPointer] &&
+      this.props.video.messages[newPointer].time <= this.props.video.highlightStart + msSinceHighlightStart) {
+      newPointer++;
+    }
+
+    this.setState({
+      messagesPointer: newPointer
+    });
   }
 
   calculateVotes(votes) {
@@ -87,7 +103,7 @@ class VideoContainer extends React.Component {
       return response.data;
     })
     .then(updatedVideo => {
-      
+
     })
     .catch(error => {
       console.error('Error sending vote:', error);
@@ -100,39 +116,43 @@ class VideoContainer extends React.Component {
 
     return (
       <div className='video-container'>
-      <h2>{this.props.video.streamTitle}</h2>
-      <h3>Playing: {this.props.video.game}</h3>
-      {
-        this.props.username ?
-        (
-          <button
-            onClick={this.updateUserVote.bind(this, 1)}
-            className={upvoteClass}
-          >
-            upvote
-          </button>
-        ) :
-        null
-      }
-      <div className='vote-count'>{this.state.voteCount}</div>
-      {
-        this.props.username ?
-        (
-          <button
-            onClick={this.updateUserVote.bind(this, -1)}
-            className={downvoteClass}
-          >
-            downvote
-          </button>
-        ) :
-        null
-      }
-      <Video video={{
-        id: this.props.video.vodId,
-        preview: this.props.video.preview,
-        start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
-        duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
-      }} />
+        <h2>{this.props.video.streamTitle}</h2>
+        <h3>Playing: {this.props.video.game}</h3>
+        {
+          this.props.username ?
+          (
+            <button
+              onClick={this.updateUserVote.bind(this, 1)}
+              className={upvoteClass}
+            >
+              upvote
+            </button>
+          ) :
+          null
+        }
+        <div className='vote-count'>{this.state.voteCount}</div>
+        {
+          this.props.username ?
+          (
+            <button
+              onClick={this.updateUserVote.bind(this, -1)}
+              className={downvoteClass}
+            >
+              downvote
+            </button>
+          ) :
+          null
+        }
+        <Video
+          video={{
+            id: this.props.video.vodId,
+            preview: this.props.video.preview,
+            start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
+            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
+          }}
+          handleTimeChange={this.handleTimeChange}
+        />
+        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} />
       </div>
     );
   }
@@ -151,6 +171,7 @@ VideoContainer.propTypes = {
     highlightEnd: React.PropTypes.number.isRequired,
     multiplier: React.PropTypes.number.isRequired,
     votes: React.PropTypes.object.isRequired,
+    messages: React.PropTypes.array.isRequired
   }).isRequired,
   username: React.PropTypes.string
 };
