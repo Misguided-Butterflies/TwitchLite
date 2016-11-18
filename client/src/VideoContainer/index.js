@@ -34,10 +34,11 @@ class VideoContainer extends React.Component {
     return 0;
   }
 
-  handleTimeChange(msSinceStart) {
+  handleTimeChange(msSinceHighlightStart) {
     var newPointer = this.state.messagesPointer;
+
     while (this.props.video.messages[newPointer] &&
-      this.props.video.messages[newPointer].time <= this.props.video.highlightStart + msSinceStart) {
+      this.props.video.messages[newPointer].time <= this.props.video.highlightStart + msSinceHighlightStart) {
       newPointer++;
     }
 

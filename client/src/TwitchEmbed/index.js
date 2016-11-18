@@ -63,7 +63,10 @@ class TwitchEmbed extends React.Component {
   checkChatTime() {
     if (this.active) {
       // Multiply by 1000 to convert from s -> ms
-      this.props.handleTimeChange(this.player.getCurrentTime() * 1000);
+      // Get current time is relative to start of stream, not start of highlight
+      // Thus we have to subtract this.props.startTime ( * 1000, because it is
+      // also in seconds) to get the delta we're after
+      this.props.handleTimeChange((this.player.getCurrentTime() * 1000) - this.props.startTime * 1000);
       return;
     }
 
