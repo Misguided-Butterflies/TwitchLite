@@ -8,6 +8,10 @@
 }
 
 .chats-container {
-  max-height: 4em;
-  overflow: scroll;
+  /*max-height: 4em;*/
+  /*overflow: scroll;*/
+}
+
+.chat-from {
+  color: purple;
 }
