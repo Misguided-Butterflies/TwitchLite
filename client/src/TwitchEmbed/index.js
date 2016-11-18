@@ -14,6 +14,7 @@ class TwitchEmbed extends React.Component {
     this.handleFirstPause = this.handleFirstPause.bind(this);
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
     this.loadVideo = this.loadVideo.bind(this);
+    this.checkChatTime = this.checkChatTime.bind(this);
 
     this.calculateDimensions();
   }
@@ -54,11 +55,24 @@ class TwitchEmbed extends React.Component {
     this.player.removeEventListener(Twitch.Player.PLAY, this.handleFirstPlay);
     this.player.addEventListener(Twitch.Player.PLAY, this.handleAdditionalPlay);
     setTimeout(this.handleHighlightEnd, this.props.duration * 1000);
+    this.chatInterval = setInterval(this.checkChatTime, 100);
+  }
+
+  checkChatTime() {
+    if (this.active) {
+      // Multiply by 1000 to convert from s -> ms
+      this.props.handleTimeChange(this.player.getCurrentTime() * 1000);
+      return;
+    }
+
+    clearInterval(this.chatInterval);
   }
 
   // runs on subsequent play events, including seeking and buffering. checks to see if we're still inside the highlight duration,
   // and sets the highlight to inactive if not.
   handleAdditionalPlay() {
+    clearInterval(this.chatInterval);
+    this.chatInterval = setInterval(this.checkChatTime, 100);
     let currentTime = this.player.getCurrentTime();
     if (currentTime < this.props.startTime || currentTime > this.props.startTime + this.props.duration) {
       this.active = false;
