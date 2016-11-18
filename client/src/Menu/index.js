@@ -1,14 +1,13 @@
 import React from 'react';
 import JSONP from 'browser-jsonp';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Modal, Button, FormControl, FormGroup} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
 
 class Menu extends React.Component {
   constructor(props) {
     super(props);
     //init twitch js api
     this.state = {
-      name: '',
-      showGames: false
+      name: ''
     };
 
     this.logout = this.logout.bind(this);
@@ -27,7 +26,7 @@ class Menu extends React.Component {
     Twitch.logout(err => {
       this.props.updateUser({
         name: '',
-        following: [],
+        followedChannels: [],
         followedGames: []
       });
       this.setState({name: ''});
