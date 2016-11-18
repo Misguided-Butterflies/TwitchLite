@@ -25,6 +25,10 @@ class Video extends React.Component {
   }
 
   componentDidUpdate(oldProps) {
+    // Only stop and re-render the video player if the video itself gets updated
+    // This check prevents the video from getting re-rendered even when an
+    // unrelated state change happens in a parent component (namely, the
+    // messagesPointer state property)
     if (oldProps.video.id !== this.props.video.id ||
       oldProps.video.start !== this.props.video.start) {
       this.removePlayer();
@@ -43,6 +47,7 @@ class Video extends React.Component {
       startString={utils.getStartString(this.props.video.start)}
       duration={this.props.video.duration}
       preview={this.props.video.preview}
+      handleTimeChange={this.props.handleTimeChange}
     />, this.refs.video);
   }
 
@@ -60,6 +65,7 @@ Video.propTypes = {
     duration: React.PropTypes.number.isRequired,
     preview: React.PropTypes.string.isRequired,
   }).isRequired,
+  handleTimeChange: React.PropTypes.func.isRequired
 };
 
 export default Video;
