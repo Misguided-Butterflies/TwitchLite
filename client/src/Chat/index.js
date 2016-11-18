@@ -3,7 +3,7 @@ import React from 'react';
 const Chat = ({message}) => {
   return (
     <div className='chat'>
-      <span className='chat-from'>{message.from}</span>
+      <span className='chat-from'>{message.from}: </span>
       <span className='chat-text'>{message.text}</span>
     </div>
   );
