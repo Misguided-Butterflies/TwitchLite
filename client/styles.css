@@ -6,3 +6,8 @@
 .downvote.active {
   background-color: #ccc;
 }
+
+.chats-container {
+  max-height: 4em;
+  overflow: scroll;
+}
