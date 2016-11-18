@@ -24,9 +24,12 @@ class Video extends React.Component {
     this.addNewPlayer();
   }
 
-  componentDidUpdate() {
-    this.removePlayer();
-    this.addNewPlayer();
+  componentDidUpdate(oldProps) {
+    if (oldProps.video.id !== this.props.video.id ||
+      oldProps.video.start !== this.props.video.start) {
+      this.removePlayer();
+      this.addNewPlayer();
+    }
   }
 
   removePlayer() {
