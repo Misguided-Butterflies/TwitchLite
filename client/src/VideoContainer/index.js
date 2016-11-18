@@ -151,7 +151,7 @@ class VideoContainer extends React.Component {
           }}
           handleTimeChange={this.handleTimeChange}
         />
-
+        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} />
       </div>
     );
   }
