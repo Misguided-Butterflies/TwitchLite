@@ -21,6 +21,7 @@ class VideoContainer extends React.Component {
     this.sendVote = this.sendVote.bind(this);
     this.updateUserVote = this.updateUserVote.bind(this);
     this.getUserVote = this.getUserVote.bind(this);
+    this.handleTimeChange = this.handleTimeChange.bind(this);
   }
 
   getUserVote(username, votes) {
@@ -29,6 +30,12 @@ class VideoContainer extends React.Component {
     }
 
     return 0;
+  }
+
+  handleTimeChange(timeStamp) {
+    // should increment state.pointer while current message <= timeStamp
+    // then, when done, save that updated pointer in state
+    // when passing messages down to <ChatsContainer>, pass down this.props.messages.slice(0, this.state.pointer)
   }
 
   calculateVotes(votes) {
@@ -127,12 +134,16 @@ class VideoContainer extends React.Component {
           ) :
           null
         }
-        <Video video={{
-          id: this.props.video.vodId,
-          preview: this.props.video.preview,
-          start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
-          duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
-        }} />        
+        <Video
+          video={{
+            id: this.props.video.vodId,
+            preview: this.props.video.preview,
+            start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000) - numberOfSecondsToAddToBeginningOfHighlights,
+            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000) + numberOfSecondsToAddToBeginningOfHighlights
+          }}
+          handleTimeChange={this.handleTimeChange}
+        />
+
       </div>
     );
   }
