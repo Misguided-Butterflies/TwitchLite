@@ -162,6 +162,7 @@ VideoContainer.propTypes = {
     highlightEnd: React.PropTypes.number.isRequired,
     multiplier: React.PropTypes.number.isRequired,
     votes: React.PropTypes.object.isRequired,
+    messages: React.PropTypes.array.isRequired
   }).isRequired,
   username: React.PropTypes.string
 };

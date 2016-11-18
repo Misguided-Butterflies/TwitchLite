@@ -12,6 +12,7 @@ let testVideo = {
   vodId: 'v101060439',
   channelName: 'comancedota',
   preview: 'example.png',
+  messages: [],
   votes: {
     me: 1,
     you: 0,
