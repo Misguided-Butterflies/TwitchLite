@@ -57,6 +57,7 @@ Video.propTypes = {
     duration: React.PropTypes.number.isRequired,
     preview: React.PropTypes.string.isRequired,
   }).isRequired,
+  handleTimeChange: React.PropTypes.func.isRequired
 };
 
 export default Video;

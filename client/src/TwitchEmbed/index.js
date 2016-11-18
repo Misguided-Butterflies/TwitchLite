@@ -100,7 +100,8 @@ TwitchEmbed.propTypes = {
   startTime: React.PropTypes.number.isRequired,
   startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired,
-  preview: React.PropTypes.string
+  preview: React.PropTypes.string,
+  handleTimeChange: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;
