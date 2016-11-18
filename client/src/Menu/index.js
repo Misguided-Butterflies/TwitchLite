@@ -1,14 +1,15 @@
 import React from 'react';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
+import JSONP from 'browser-jsonp';
+import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Modal, Button, FormControl, FormGroup} from 'react-bootstrap';
 
 class Menu extends React.Component {
   constructor(props) {
     super(props);
     //init twitch js api
     this.state = {
-      name: ''
+      name: '',
+      showGames: false
     };
-    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
 
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
@@ -26,34 +27,86 @@ class Menu extends React.Component {
     Twitch.logout(err => {
       this.props.updateUser({
         name: '',
-        following: []
+        following: [],
+        followedGames: []
       });
       this.setState({name: ''});
     });
   }
   
-  componentDidMount() {
-    //if logged in, get user's name and following channels. pass it up to main app
-    if (this.status.authenticated) {
-      var name = '';
-      var following = [];
+
+  getTwitchUser(obj) {
+    //promisified Twitch get user, gets token
+    return new Promise((succ, fail) => {
       Twitch.api({method: 'user'}, (err, res) => {
-        name = res.name;
-        Twitch.api({method: 'users/' + name + '/follows/channels'}, (err, list) => {
-          for (var elem of list.follows) {
-            following.push(elem.channel.name);
+        if (err) {
+          fail(err);
+        } else {
+          obj.name = res.name;
+          obj.token = Twitch.getToken();
+          succ(obj);
+        }
+      });
+    });
+  }
+  
+  getTwitchFollowedChannels(obj) {
+    //promisified get user's followed channels
+    let followedChannels = [];
+    return new Promise((succ, fail) => {
+      Twitch.api({method: 'users/' + obj.name + '/follows/channels'}, (err, list) => {
+        if (err) {
+          fail(err)
+        } else {
+          for (let elem of list.follows) {
+            followedChannels.push(elem.channel.name);
           }
+          obj.followedChannels = followedChannels;
+          succ(obj);
+        }
+      });
+    });
+  }
+  
+  getTwitchFollowedGames(obj) {
+    //promisified get user's followed games
+    let followedGames = [];
+    return new Promise((succ, fail) => {
+      JSONP({
+        url: 'https://api.twitch.tv/api/users/' + obj.name + '/follows/games',
+        data: { oauth_token: obj.token },
+        success: function(data) { 
+          for (let elem of data.follows) {
+            followedGames.push(elem.name);
+          }
+          obj.followedGames = followedGames;
+          succ(obj);
+        }
+      });
+    })
+  }
+  
+  componentDidMount() {
+    //if logged in, get user's name and followed things. pass it up to main app
+    var that = this;
+    if (this.props.twitchStatus.authenticated) {
+      this.getTwitchUser({})
+        .then(this.getTwitchFollowedChannels)
+        .then(this.getTwitchFollowedGames)
+        .then(
+        function(data) {
           //update userData object in parent app
-          this.props.updateUser({
-            name: name,
-            following: following
+          that.props.updateUser({
+            name: data.name,
+            followedChannels: data.followedChannels,
+            followedGames: data.followedGames
           });
           //update menu state with username
-          this.setState({
-            name: name
+          that.setState({
+            name: data.name
           });
-        });
-      });
+        }
+      );
     }
   }
   
@@ -61,15 +114,18 @@ class Menu extends React.Component {
     //change user view depending on whether or not user is logged in
     var auth;
     var user;
-    var userLink;
-    if (this.state.name.length > 0 && this.status.authenticated) {
+    var followedChannelLink;
+    var followedGameLink;
+    if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
       auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
-      userLink = <MenuItem onClick={this.props.sort.follow}>Following</MenuItem>;
+      followedChannelLink = <MenuItem onClick={this.props.sort.followedChannels}>Followed Channels</MenuItem>;
+      followedGameLink = <MenuItem onClick={this.props.sort.followedGames}>Followed Games</MenuItem>
     } else {
       auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
       user = null;
-      userLink = null;
+      followedChannelLink = null;
+      followedGameLink = null;
     }
     
     return (
@@ -85,7 +141,8 @@ class Menu extends React.Component {
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
             <NavItem onClick={this.props.sort.age}>New</NavItem>
             <NavItem onClick={this.props.sort.mult}>Multiplier</NavItem>
-            {userLink}
+            {followedChannelLink}
+            {followedGameLink}
           </Nav>
           <Nav pullRight>
             <NavItem>

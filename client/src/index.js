@@ -19,27 +19,33 @@ class App extends React.Component {
     this.state = {
       list: [],
       name: '',
-      following: [],
+      followedChannels: [],
+      followedGames: []
     };
 
+    
+    //initialize twitch SDK
+    Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
+    
     //single source of truth for highlights
     this.allHighlights = [];
     //tracks which sorting options are chosen
     this.selected = {
       sortType: 'hotness',
-      following: false,
-      search: ''
+      followedChannels: false,
+      followedGames: false,
+      search: '',
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
 
-
-
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
-    this.sortByFollowing = this.sortByFollowing.bind(this);
+    this.sortByFollowedChannels = this.sortByFollowedChannels.bind(this);
+    this.sortByFollowedGames = this.sortByFollowedGames.bind(this);
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
+    this.updateUser = this.updateUser.bind(this);
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -49,7 +55,8 @@ class App extends React.Component {
       mult: this.sortByMultiplier,
       age: this.sortByAge,
       hotness: this.sortByHotness,
-      follow: this.sortByFollowing,
+      followedChannels: this.sortByFollowedChannels,
+      followedGames: this.sortByFollowedGames,
       search: this.handleSearch
     };
 
@@ -113,20 +120,32 @@ class App extends React.Component {
     this.updateList();
   }
 
-  sortByFollowing() {
-    //Toggles whether or not to filter by following stram
-    this.selected.following = !this.selected.following;
+  sortByFollowedChannels() {
+    //Toggles whether or not to filter by following channels
+    this.selected.followedChannels = !this.selected.followedChannels;
     this.updateList();
   }
-
+  
+  sortByFollowedGames() {
+    //Toggles whether or not to filter by following games
+    this.selected.followedGames = !this.selected.followedGames;
+    this.updateList();
+  }
+  
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
-    if (this.selected.following) {
-      var arr = this.state.following;
+    if (this.selected.followedChannels) {
+      let arr = this.state.followedChannels;
       this.myHighlights = this.myHighlights.filter(function (elem) {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
+    }
+    if (this.selected.followedGames) {
+      let arr = this.state.followedGames;
+      this.myHighlights = this.myHighlights.filter(function (elem) {
+        return arr.indexOf(elem.game) > -1 ? true : false;
+      })
     }
     if (this.selected.search) {
       this.myHighlights = this.myHighlights.filter(highlight =>
@@ -165,22 +184,24 @@ class App extends React.Component {
   updateUser(info) {
     //if user is logging out, sets following filter to false
     if (info.name === '') {
-      this.selected.following = false;
+      this.selected.followedChannels = false;
+      this.selected.followedGames = false;
     }
     //updates userData object with info
     this.setState(info);
   }
 
+    
   handleSearch(e) {
     this.selected.search = e.target.value;
     this.updateList();
   }
-  
+    
   render() {
     return (
       <div>
         <Header />
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser.bind(this)}/>
+        <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status}/>
         <VideoList list={this.state.list} username={this.state.name} />
       </div>
     );
