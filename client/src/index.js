@@ -19,7 +19,8 @@ class App extends React.Component {
     this.state = {
       list: [],
       name: '',
-      following: [],
+      followedChannels: [],
+      followedGames: []
     };
 
     
@@ -28,22 +29,20 @@ class App extends React.Component {
     
     //single source of truth for highlights
     this.allHighlights = [];
-    //logs all games for which we have a highlight. passes this to menu component
-    this.allGames = {};
     //tracks which sorting options are chosen
     this.selected = {
       sortType: 'hotness',
-      following: false,
+      followedChannels: false,
+      followedGames: false,
       search: '',
-      games: ['Counter-Strike: Global Offensive']
     };
     //current highlight list, refiltered from allHighlights OTF
     this.myHighlights = null;
 
     this.sortByMultiplier = this.sortByMultiplier.bind(this);
     this.sortByAge = this.sortByAge.bind(this);
-    this.sortByFollowing = this.sortByFollowing.bind(this);
-    this.sortByGame = this.sortByGame.bind(this);
+    this.sortByFollowedChannels = this.sortByFollowedChannels.bind(this);
+    this.sortByFollowedGames = this.sortByFollowedGames.bind(this);
     this.sortByHotness = this.sortByHotness.bind(this);
     this.updateList = this.updateList.bind(this);
     this.updateUser = this.updateUser.bind(this);
@@ -56,7 +55,8 @@ class App extends React.Component {
       mult: this.sortByMultiplier,
       age: this.sortByAge,
       hotness: this.sortByHotness,
-      follow: this.sortByFollowing,
+      followedChannels: this.sortByFollowedChannels,
+      followedGames: this.sortByFollowedGames,
       search: this.handleSearch
     };
 
@@ -83,30 +83,13 @@ class App extends React.Component {
    * runs once when component loads
    * fetches all highlights from the database
    * sorts those highlights by newest first
-   * writes to allGames array
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
-<<<<<<< 0dd521768886015ebdd0dfde0021460044ae7a66
     axios.get('/highlights')
     .then(response => {
       this.allHighlights = response.data;
       this.sortByAge();
-=======
-    $.ajax({
-      method: 'GET',
-      url: '/highlights',
-      success: response => {
-        this.allHighlights = response;
-        for (let highlight of response) {
-          if (!this.allGames[highlight.game]) {
-            this.allGames[highlight.game] = 0;
-          }
-          this.allGames[highlight.game]++;
-        }
-        this.updateList(0);
-      }
->>>>>>> working on game
     });
   }
 
@@ -137,42 +120,37 @@ class App extends React.Component {
     this.updateList();
   }
 
-  sortByFollowing() {
-    //Toggles whether or not to filter by following stram
-    this.selected.following = !this.selected.following;
+  sortByFollowedChannels() {
+    //Toggles whether or not to filter by following channels
+    this.selected.followedChannels = !this.selected.followedChannels;
     this.updateList();
   }
   
-  sortByGame(game) {
-    //toggles game filter
-    let gameIndex = this.selected.games.indexOf(game);
-    if (gameIndex > -1) {
-      this.selected.games.splice(gameIndex, 1);
-    } else {
-      this.selected.games.push(game);
-    }
+  sortByFollowedGames() {
+    //Toggles whether or not to filter by following games
+    this.selected.followedGames = !this.selected.followedGames;
     this.updateList();
   }
   
   filter() {
     //filters allHighlights into myHighlights
     this.myHighlights = this.allHighlights.slice(0);
-    if (this.selected.following) {
-      let arr = this.state.following;
+    if (this.selected.followedChannels) {
+      let arr = this.state.followedChannels;
       this.myHighlights = this.myHighlights.filter(function (elem) {
         return arr.indexOf(elem.channelName) > -1 ? true : false;
       });
+    }
+    if (this.selected.followedGames) {
+      let arr = this.state.followedGames;
+      this.myHighlights = this.myHighlights.filter(function (elem) {
+        return arr.indexOf(elem.game) > -1 ? true : false;
+      })
     }
     if (this.selected.search) {
       this.myHighlights = this.myHighlights.filter(highlight =>
         (highlight.channelName + highlight.game + highlight.streamTitle).match(new RegExp(utils.escapeRegex(this.selected.search), 'i'))
       );
-
-    if (this.selected.games.length > 0) {
-      let arr = this.selected.games
-      this.myHighlights = this.myHighlights.filter(function (elem) {
-        return arr.indexOf(elem.game) > -1 ? true: false;
-      });
     }
     if (this.selected.sortType === 'age') {
       this.myHighlights.sort((a, b) => b.highlightStart - a.highlightStart);
@@ -206,7 +184,8 @@ class App extends React.Component {
   updateUser(info) {
     //if user is logging out, sets following filter to false
     if (info.name === '') {
-      this.selected.following = false;
+      this.selected.followedChannels = false;
+      this.selected.followedGames = false;
     }
     //updates userData object with info
     this.setState(info);
@@ -222,13 +201,8 @@ class App extends React.Component {
     return (
       <div>
         <Header />
-<<<<<<< 0dd521768886015ebdd0dfde0021460044ae7a66
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status}/>
         <VideoList list={this.state.list} username={this.state.name} />
-=======
-        <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} games={this.allGames}/>
-        <VideoList list={this.state.list} />
->>>>>>> working on game
       </div>
     );
   }
