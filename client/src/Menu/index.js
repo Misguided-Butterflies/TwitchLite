@@ -68,7 +68,7 @@ class Menu extends React.Component {
   }
   
   getTwitchFollowedGames(obj) {
-    //promisified get user's followed games
+    //promisified get user's followed games from twitch api
     let followedGames = [];
     return new Promise((succ, fail) => {
       JSONP({
@@ -138,7 +138,7 @@ class Menu extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
-            <NavItem onClick={this.props.sort.age}>New</NavItem>
+            <NavItem onClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
             <NavItem onClick={this.props.sort.mult}>Multiplier</NavItem>
             {followedChannelLink}
             {followedGameLink}
@@ -169,7 +169,9 @@ Menu.propTypes = {
     hotness: React.PropTypes.func,
     search: React.PropTypes.func,
   }),
-  updateUser: React.PropTypes.func
+  updateUser: React.PropTypes.func,
+  twitchStatus: React.PropTypes.object,
+  newHighlights: React.PropTypes.number
 };
 
 export default Menu;
