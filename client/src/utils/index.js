@@ -1,6 +1,3 @@
-import axios from 'axios';
-import fs from 'browserfs';
-
 let utils = {};
 
 utils.escapeRegex = function(s) {
@@ -20,25 +17,6 @@ utils.getStartString = function(seconds) {
     result += (seconds % 60) + 's';
   }
   return result;
-};
-
-
-/** usage: 
- * utils.getTwitchEmotes().then(emotes => {
- *   console.log(emotes.Kappa); // => 25
- *   console.log(utils.getTwitchEmoteImageUrl(emotes.Kappa)); // => 'https://static-cdn.jtvnw.net/emoticons/v1/25/1.0'
- * });
- */
-utils.getTwitchEmotes = function() {
-  return new Promise((resolve, reject) => {
-    fs.readFile('emotes.json', (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(JSON.parse(data));
-      }
-    });
-  });
 };
 
 utils.getTwitchEmoteImageUrl = function(emoteId) {
