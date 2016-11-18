@@ -22,6 +22,13 @@ utils.getStartString = function(seconds) {
   return result;
 };
 
+
+/** usage: 
+ * utils.getTwitchEmotes().then(emotes => {
+ *   console.log(emotes.Kappa); // => 25
+ *   console.log(utils.getTwitchEmoteImageUrl(emotes.Kappa)); // => 'https://static-cdn.jtvnw.net/emoticons/v1/25/1.0'
+ * });
+ */
 utils.getTwitchEmotes = function() {
   return new Promise((resolve, reject) => {
     fs.readFile('emotes.json', (err, data) => {
