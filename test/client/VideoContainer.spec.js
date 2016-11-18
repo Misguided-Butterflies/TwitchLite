@@ -2,17 +2,33 @@ import VideoContainer from '../../client/src/VideoContainer';
 
 let testVideo = {
   _id: '12345abcdef',
-  highlightStart: 1479151790954,
-  highlightEnd: 1479151793955,
+  highlightStart: 20,
+  highlightEnd: 40,
   multiplier: 5,
   link: 'https://www.twitch.tv/comanchedota/v/101060439',
   game: 'Dota 2',
   streamTitle: 'some stream,',
-  streamStart: 1479145561000,
+  streamStart: 1,
   vodId: 'v101060439',
   channelName: 'comancedota',
   preview: 'example.png',
-  messages: [],
+  messages: [
+    {
+      text: 'some chat message',
+      time: 22,
+      from: 'batman'
+    },
+    {
+      text: 'some chat message',
+      time: 30,
+      from: 'dad 76'
+    },
+    {
+      text: 'some chat message',
+      time: 35,
+      from: 'winston'
+    }
+  ],
   votes: {
     me: 1,
     you: 0,
@@ -34,6 +50,15 @@ describe('<VideoContainer>', () => {
     var totalCount = wrapper.instance().calculateVotes(testVideo.votes);
 
     expect(totalCount).to.equal(2);
+  });
+
+  it('should update state.messagesPointer when handleTimeChange is called', () => {
+    let wrapper = shallow(videoContainer);
+    expect(wrapper.state().messagesPointer).to.equal(0);
+    wrapper.instance().handleTimeChange(3);
+    expect(wrapper.state().messagesPointer).to.equal(1);
+    wrapper.instance().handleTimeChange(18);
+    expect(wrapper.state().messagesPointer).to.equal(3);
   });
 
   it('should initialize state.userVote based on props.username and props.video.votes', () => {

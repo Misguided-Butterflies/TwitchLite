@@ -1,5 +1,6 @@
 import React from 'react';
 import Video from '../Video';
+import ChatsContainer from '../ChatsContainer';
 import axios from 'axios';
 
 /** VideoComponent
@@ -14,7 +15,8 @@ class VideoContainer extends React.Component {
 
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
-      userVote: this.getUserVote(props.username, props.video.votes)
+      userVote: this.getUserVote(props.username, props.video.votes),
+      messagesPointer: 0
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
@@ -32,10 +34,16 @@ class VideoContainer extends React.Component {
     return 0;
   }
 
-  handleTimeChange(timeStamp) {
-    // should increment state.pointer while current message <= timeStamp
-    // then, when done, save that updated pointer in state
-    // when passing messages down to <ChatsContainer>, pass down this.props.messages.slice(0, this.state.pointer)
+  handleTimeChange(msSinceStart) {
+    var newPointer = this.state.messagesPointer;
+    while (this.props.video.messages[newPointer] &&
+      this.props.video.messages[newPointer].time <= this.props.video.highlightStart + msSinceStart) {
+      newPointer++;
+    }
+
+    this.setState({
+      messagesPointer: newPointer
+    });
   }
 
   calculateVotes(votes) {
