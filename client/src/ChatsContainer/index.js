@@ -3,7 +3,7 @@ import Chat from '../Chat';
 
 const ChatsContainer = ({messages}) => {
   return (
-    <div>
+    <div className='chats-container'>
       {
         messages.map(message => (
           <Chat message={message} />
