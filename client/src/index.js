@@ -24,7 +24,7 @@ class App extends React.Component {
       followedGames: [],
       newHighlights: 0
     };
-
+    this.getEmotes();
     
     //initialize twitch SDK
     Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
@@ -67,6 +67,15 @@ class App extends React.Component {
 
     window.addEventListener('scroll', () => {
       this.checkScrollBottom();
+    });
+  }
+
+  getEmotes() {
+    axios.get('/emotes')
+    .then(response => {
+      this.setState({
+        emotes: JSON.parse(response.data)
+      });
     });
   }
 
@@ -174,7 +183,7 @@ class App extends React.Component {
       let arr = this.state.followedGames;
       this.myHighlights = this.myHighlights.filter(function (elem) {
         return arr.indexOf(elem.game) > -1 ? true : false;
-      })
+      });
     }
     if (this.selected.search) {
       this.myHighlights = this.myHighlights.filter(highlight =>
@@ -230,7 +239,7 @@ class App extends React.Component {
       <div>
         <Header />
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} newHighlights={this.state.newHighlights}/>
-        <VideoList list={this.state.list} username={this.state.name} />
+        <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes}/>
       </div>
     );
   }
