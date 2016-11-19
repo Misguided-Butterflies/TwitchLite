@@ -28,8 +28,9 @@ var config = {
         }
       },
       {
-        test: /].svg$/,
-        loader: 'svg-inline'
+        test: /\.svg$/,
+        loader: 'svg-inline',
+        include: path.join(__dirname, 'client/src')
       }
     ]
   }
