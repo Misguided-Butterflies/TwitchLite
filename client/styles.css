@@ -22,3 +22,16 @@
 .chat-header {
   margin: 0;
 }
+
+.streamer-game {
+  margin-top: 0;
+}
+
+.stream-title {
+  margin-top: 10px;
+}
+
+.row {
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+}
