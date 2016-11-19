@@ -1,3 +1,24 @@
+/* purple: #6441a4 */
+
+button {
+	border: 1px solid #6441a4;
+	border-radius: 4px;
+	background: #fff;
+	color: #6441a4;
+	padding: 0.75em;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+button:hover,
+button:active,
+button:focus,
+button.active {
+  background: #6441a4;
+  color: #fff;
+}
+
 .centered {
   text-align: center;
 }
@@ -8,6 +29,7 @@
 }
 
 .chats-container {
+  max-height: 4em;
   overflow: scroll;
 }
 
@@ -21,4 +43,8 @@
 
 .chat-header {
   margin: 0;
+}
+
+.navbar {
+  border-radius: 0;
 }
