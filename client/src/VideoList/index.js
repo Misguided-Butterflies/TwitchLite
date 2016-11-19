@@ -10,7 +10,7 @@ const VideoList = function(props) {
   return (
     <div className='video-list'>
       {props.list.map((video, i) => (
-        <VideoContainer key={i} video={video} username={props.username} emotes={props.emotes}/>
+        <VideoContainer key={i} video={video} username={props.username} />
       ))}
     </div>
   );
@@ -18,7 +18,6 @@ const VideoList = function(props) {
 
 VideoList.propTypes = {
   list: React.PropTypes.array.isRequired,
-  emotes: React.PropTypes.object.isRequired,
   username: React.PropTypes.string
 };
 
