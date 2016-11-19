@@ -8,9 +8,9 @@ class Header extends React.Component {
 
   render() {
     return (
-      <PageHeader className='centered'>
-        <span className='title'>TwitchLite</span>
-      </PageHeader>
+      <div className='app-header'>
+        <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
+      </div>
     );
   }
 }
