@@ -22,22 +22,19 @@ h3 {
 }
 
 button {
-	border: 1px solid #6441a4;
 	border-radius: 4px;
-	background: #fff;
-	color: #6441a4;
-	padding: 0.75em;
+  border: none;
+	background: #6441a4;
+	color: #fff;
 	transition: all 0.2s ease;
 	cursor: pointer;
 	text-transform: uppercase;
 }
 
-button:hover,
+button,
 button:active,
-button:focus,
-button.active {
-  background: #6441a4;
-  color: #fff;
+button:focus {
+  padding: 0.75em;
 }
 
 .centered {
@@ -46,7 +43,17 @@ button.active {
 
 .upvote.active,
 .downvote.active {
-  background-color: #ccc;
+  /*background-color: #ccc;*/
+}
+
+.upvote:hover icon,
+.downvote:hover icon {
+
+}
+
+.icon {
+  fill: #fff;
+  transition: all 0.2s ease;
 }
 
 .video-list {
