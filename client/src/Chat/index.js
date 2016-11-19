@@ -12,7 +12,7 @@ class Chat extends React.Component {
       .split(' ')
       .map(word =>
         this.props.emotes[word]
-        ? '<img src="' + utils.getTwitchEmoteImageUrl(this.props.emotes[word]) + '"/>'
+        ? `<img src="${utils.getTwitchEmoteImageUrl(this.props.emotes[word])}" title=${word} />`
         : word
       ).join(' ');
   }
