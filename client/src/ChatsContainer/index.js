@@ -4,12 +4,14 @@ import Chat from '../Chat';
 const ChatsContainer = (props) => {
   return (
     <div className='chats-container'>
-      <h3 className='chat-header'>Chat</h3>
-      {
-        props.messages.map(message => (
-          <Chat key={message.from + message.time} message={message} emotes={props.emotes} />
-        ))
-      }
+      <div className='chats-container-inner'>
+        <h3 className='chat-header'>Chat</h3>
+        {
+          props.messages.map(message => (
+            <Chat key={message.from + message.time} message={message} emotes={props.emotes} />
+          ))
+        }
+      </div>
     </div>
   );
 };
