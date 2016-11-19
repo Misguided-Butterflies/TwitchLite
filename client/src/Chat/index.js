@@ -1,15 +1,6 @@
 import React from 'react';
 import utils from '../utils';
 
-// const Chat = ({message}) => {
-//   return (
-//     <div className='chat'>
-//       <span className='chat-from'>{message.from}: </span>
-//       <span className='chat-text'>{message.text}</span>
-//     </div>
-//   );
-// };
-
 class Chat extends React.Component {
   constructor(props) {
     super(props);
