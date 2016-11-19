@@ -125,6 +125,10 @@ class Menu extends React.Component {
     this.props.sort.followedGames();
   }
   
+  refresh() {
+    window.location.reload();
+  }
+  
   render() {
     //change user view depending on whether or not user is logged in
     let auth;
@@ -149,7 +153,7 @@ class Menu extends React.Component {
       <Navbar inverse collapseOnSelect>
         <Navbar.Header>
             <Navbar.Brand>
-              <a>TwitchLite</a>
+              <a onClick={this.refresh.bind(this)}>TwitchLite</a>
             </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
