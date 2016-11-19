@@ -15,3 +15,7 @@
 .chat-from {
   color: purple;
 }
+
+.filter-active {
+  background-color: #6441a5;
+}
