@@ -93,6 +93,14 @@ button:focus {
   margin-top: 2em;
 }
 
+<<<<<<< ff9c1a3abb2556c6e9d065368a4c2e309a9d4c1a
+=======
+.video-subtitle {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+>>>>>>> Fix styles of chat replay
 .video {
   background: #000;
   overflow: hidden;
@@ -103,21 +111,14 @@ button:focus {
 }
 
 .chats-container {
-  border: 1px solid blue;
-  max-height: 100%;
-
   overflow: scroll;
-  position: relative;
-}
 
-.chats-container-inner {
-  border: 1px solid green;
-  /*position: fixed;*/
-  bottom: 0;
+  /* Placeholder; should be dynamically calculated instead */
+  height: 544px;
 }
 
 .chat-from {
-  color: purple;
+  color: #6441a4;
 }
 
 .filter-active {
