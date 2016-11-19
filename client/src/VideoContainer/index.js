@@ -152,7 +152,7 @@ class VideoContainer extends React.Component {
           }}
           handleTimeChange={this.handleTimeChange}
         />
-        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} />
+        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes}/>
       </div>
     );
   }
@@ -173,6 +173,7 @@ VideoContainer.propTypes = {
     votes: React.PropTypes.object.isRequired,
     messages: React.PropTypes.array.isRequired
   }).isRequired,
+  emotes: React.PropTypes.object.isRequired,
   username: React.PropTypes.string
 };
 
