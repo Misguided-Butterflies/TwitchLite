@@ -116,8 +116,8 @@ class VideoContainer extends React.Component {
   }
 
   render() {
-    let upvoteClass = this.state.userVote === 1 ? 'video-button active' : 'video-button';
-    let downvoteClass = this.state.userVote === -1 ? 'video-button active' : 'video-button';
+    let upvoteClass = this.state.userVote === 1 ? 'video-button upvote active' : 'video-button';
+    let downvoteClass = this.state.userVote === -1 ? 'video-button downvote active' : 'video-button';
 
     return (
       <div className='video-container'>
