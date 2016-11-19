@@ -26,6 +26,10 @@ var config = {
         query: {
           presets: ['es2015', 'react']
         }
+      },
+      {
+        test: /].svg$/,
+        loader: 'svg-inline'
       }
     ]
   }
