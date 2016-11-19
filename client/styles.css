@@ -46,6 +46,15 @@ button:focus {
   text-align: center;
 }
 
+.video-buttons {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  height: 11em;
+  left: -1.5em;
+}
+
 .video-button {
   width: 3em;
   height: 3em;
@@ -58,6 +67,10 @@ button:focus {
 	transition: all 0.2s ease;
 	cursor: pointer;
 	text-transform: uppercase;
+}
+
+.video-button + .video-button {
+  margin-top: 1em;
 }
 
 .vote-count {
@@ -73,7 +86,7 @@ button:focus {
 }
 
 .video-button.active {
-  /*background-color: #ccc;*/
+  background-color: #341174;
 }
 
 .video-button:hover icon {
@@ -81,12 +94,17 @@ button:focus {
 }
 
 .video-list {
-  padding: 2em;
+  padding: 4em;
+  background: linear-gradient(to bottom, #17141f, #07040f);
+  background-attachment: fixed;
 }
 
 .video-container {
+  border-radius: 4px;
+  background: #fff;
   padding: 2em;
-  border: 1px solid red;
+  border: 1px solid #555;
+  position: relative;
 }
 
 .video-container + .video-container {
@@ -97,7 +115,7 @@ button:focus {
 =======
 .video-subtitle {
   margin-top: 0.5em;
-  margin-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 >>>>>>> Fix styles of chat replay
