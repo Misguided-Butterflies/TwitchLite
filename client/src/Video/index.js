@@ -2,6 +2,7 @@ import React from 'react';
 import 'twitch-embed';
 import TwitchEmbed from '../TwitchEmbed';
 import ReactDOM from 'react-dom';
+import utils from '../utils';
 
 /** Video
  * this is a component for showing a twitch vod highlight.
@@ -19,36 +20,35 @@ class Video extends React.Component {
     super(props);
   }
 
-  // twitch player wants a string like "1h3m44s" as the start time. this function converts a number of seconds to that format.
-  getStartString() {
-    let result = '';
-    if (this.props.video.start >= 3600) {
-      result += Math.floor(this.props.video.start / 3600) + 'h';
-    }
-    if (this.props.video.start % 3600 >= 60) {
-      result += Math.floor((this.props.video.start % 3600) / 60) + 'm';
-    }
-    if (this.props.video.start % 60 > 0) {
-      result += (this.props.video.start % 60) + 's';
-    }
-    return result;
-  }
-
   componentDidMount() {
     this.addNewPlayer();
   }
 
-  componentDidUpdate() {
-    this.removePlayer();
-    this.addNewPlayer();
+  componentDidUpdate(oldProps) {
+    // Only stop and re-render the video player if the video itself gets updated
+    // This check prevents the video from getting re-rendered even when an
+    // unrelated state change happens in a parent component (namely, the
+    // messagesPointer state property)
+    if (oldProps.video.id !== this.props.video.id ||
+      oldProps.video.start !== this.props.video.start) {
+      this.removePlayer();
+      this.addNewPlayer();
+    }
   }
 
   removePlayer() {
-    $(this.refs.video).empty();
+    this.refs.video.innerHTML = '';
   }
 
   addNewPlayer() {
-    ReactDOM.render(<TwitchEmbed id={this.props.video.id} startTime={this.props.video.start} startString={this.getStartString()} duration={this.props.video.duration} />, this.refs.video);
+    ReactDOM.render(<TwitchEmbed
+      id={this.props.video.id}
+      startTime={this.props.video.start}
+      startString={utils.getStartString(this.props.video.start)}
+      duration={this.props.video.duration}
+      preview={this.props.video.preview}
+      handleTimeChange={this.props.handleTimeChange}
+    />, this.refs.video);
   }
 
   render() {
@@ -59,7 +59,13 @@ class Video extends React.Component {
 }
 
 Video.propTypes = {
-  video: React.PropTypes.object.isRequired,
+  video: React.PropTypes.shape({
+    id: React.PropTypes.string.isRequired,
+    start: React.PropTypes.number.isRequired,
+    duration: React.PropTypes.number.isRequired,
+    preview: React.PropTypes.string.isRequired,
+  }).isRequired,
+  handleTimeChange: React.PropTypes.func.isRequired
 };
 
 export default Video;

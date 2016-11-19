@@ -1,6 +1,6 @@
 var ObjectId = mongoose.Types.ObjectId;
 var Highlight = require('../../db/models/highlight');
-var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
+var { findAll, findOne, insertOne, updateVote } = require('../../db/controllers/highlight');
 
 var obj = {
   _id: new ObjectId(),
@@ -8,7 +8,9 @@ var obj = {
   channelName: 'dk doublelunch',
   vodId: 'v101',
   game: 'pong',
+  preview: 'https://example.com/example.png',
   streamStart: 1,
+  streamTitle: 'double dk lunch wut',
   highlightStart: 2,
   highlightEnd: 3,
   multiplier: 4.2
@@ -18,7 +20,7 @@ describe('Highlights Model', function() {
 
   beforeEach(function(done) {
     var clearDB = function() {
-      Highlight.remove({}).exec();
+      Highlight.remove(obj).exec();
       return done();
     };
 
@@ -41,7 +43,7 @@ describe('Highlights Model', function() {
     insertOne(obj)
     .then(created => {
       expect(created.game).to.equal('pong');
-      expect(created.vote.length).to.equal(0);
+      expect(created.votes).to.eql({});
       done();
     });
   });
@@ -49,7 +51,7 @@ describe('Highlights Model', function() {
   it('should only add one highlight at once', function(done) {
     insertOne(obj)
     .then( () => {
-      return findAll();
+      return findAll(obj);
     })
     .then(res => {
       expect(res.length).to.equal(1);
@@ -79,6 +81,66 @@ describe('Highlights Model', function() {
     .then(results => {
       expect(results.length).to.equal(1);
       done();
+    });
+  });
+
+  describe('upvotes', function() {
+    it('should be able to update upvotes multiple times', function(done) {
+      insertOne(obj)
+      .then( () => {
+        return updateVote({
+          highlightId: obj._id,
+          username: 'a_seagull',
+          vote: -1
+        });
+      })
+      .then(updatedHighlight => {
+        expect(updatedHighlight.votes['a_seagull']).to.equal(-1);
+
+        return updateVote({
+          highlightId: obj._id,
+          username: 'a_seagull',
+          vote: 1
+        });
+      })
+      .then(updatedHighlight => {
+        expect(updatedHighlight.votes['a_seagull']).to.equal(1);
+
+        return updateVote({
+          highlightId: obj._id,
+          username: 'a_seagull',
+          vote: 0
+        });
+      })
+      .then(updatedHighlight => {
+        expect(updatedHighlight.votes['a_seagull']).to.equal(0);
+
+        done();
+      });
+    });
+
+    it('should be able to store upvotes from multiple users', function(done) {
+      insertOne(obj)
+      .then( () => {
+        return updateVote({
+          highlightId: obj._id,
+          username: 'a_seagull',
+          vote: 1
+        });
+      })
+      .then(updatedHighlight => {
+        return updateVote({
+          highlightId: obj._id,
+          username: 'miro',
+          vote: -1
+        });
+      })
+      .then(updatedHighlight => {
+        expect(updatedHighlight.votes['a_seagull']).to.equal(1);
+        expect(updatedHighlight.votes['miro']).to.equal(-1);
+
+        done();
+      });
     });
   });
 });

@@ -10,8 +10,12 @@ var HighlightSchema = mongoose.Schema({
   streamTitle: String,
   highlightStart: Number,
   highlightEnd: Number,
-  vote: {type: [{type: String}], default: []},
-  multiplier: Number
+  votes: { type: mongoose.Schema.Types.Mixed, default: {} },
+  multiplier: Number,
+  messages: { type: Array, default: [] },
+}, {
+  // See http://stackoverflow.com/a/31794645
+  minimize: false
 });
 
 var HighlightModel = mongoose.model('Highlight', HighlightSchema);

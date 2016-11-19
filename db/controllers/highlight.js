@@ -40,4 +40,20 @@ var remove = function(highlightData) {
   return Highlight.remove(highlightData);
 };
 
-module.exports = {findAll, findOne, insertOne, remove};
+var updateVote = function(voteData) {
+  // voteData should be in the form: { highlightId: 'abcd', username: 'batman', vote: -1 }
+  // where -1 could also be 0 or 1, to indicate the user's vote
+  return findOne(voteData.highlightId)
+  .then(highlight => {
+    highlight.votes[voteData.username] = voteData.vote;
+
+    // See http://mongoosejs.com/docs/schematypes.html#mixed
+    highlight.markModified('votes');
+    return highlight.save();
+  })
+  .catch(error => {
+    console.error(`Error saving upvote data into highlight with id ${voteData.highlightId}: ${error}`);
+  });
+};
+
+module.exports = {findAll, findOne, insertOne, remove, updateVote};
