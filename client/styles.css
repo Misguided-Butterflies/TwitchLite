@@ -37,23 +37,47 @@ button:focus {
   padding: 0.75em;
 }
 
+.icon {
+  fill: #fff;
+  transition: all 0.2s ease;
+}
+
 .centered {
   text-align: center;
 }
 
-.upvote.active,
-.downvote.active {
+.video-button {
+  width: 3em;
+  height: 3em;
+
+  /* Copy of button styles */
+  border-radius: 4px;
+  border: none;
+	background: #6441a4;
+	color: #fff;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+.vote-count {
+  cursor: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vote-count span {
+  font-size: 1em;
+  font-size: 16px;
+}
+
+.video-button.active {
   /*background-color: #ccc;*/
 }
 
-.upvote:hover icon,
-.downvote:hover icon {
+.video-button:hover icon {
 
-}
-
-.icon {
-  fill: #fff;
-  transition: all 0.2s ease;
 }
 
 .video-list {
