@@ -3,6 +3,10 @@ import Video from '../Video';
 import ChatsContainer from '../ChatsContainer';
 import axios from 'axios';
 import {Row, Col} from 'react-bootstrap';
+import InlineSVG from 'svg-inline-react';
+
+import upvoteSVG from '../icons/upvote.svg';
+import downvoteSVG from '../icons/downvote.svg';
 
 /** VideoComponent
  * this is a component that wraps <Video> and handles all other UI and logic
@@ -112,54 +116,58 @@ class VideoContainer extends React.Component {
   }
 
   render() {
-    let upvoteClass = this.state.userVote === 1 ? 'upvote active' : 'upvote';
-    let downvoteClass = this.state.userVote === -1 ? 'downvote active' : 'downvote';
+    let upvoteClass = this.state.userVote === 1 ? 'video-button upvote active' : 'video-button';
+    let downvoteClass = this.state.userVote === -1 ? 'video-button downvote active' : 'video-button';
 
     return (
       <div className='video-container'>
         <h2>{this.props.video.streamTitle}</h2>
-        <h3>{this.props.video.channelName} playing {this.props.video.game}</h3>
+        <h3 className='video-subtitle'>{this.props.video.channelName} playing {this.props.video.game}</h3>
+        <div className='video-buttons'>
+        {
+          this.props.username ?
+          (
+            <button
+            onClick={this.updateUserVote.bind(this, 1)}
+            className={upvoteClass}
+            >
+            <InlineSVG src={upvoteSVG} />
+            </button>
+          ) :
+          null
+        }
+        <div className='video-button vote-count'>
+        <span>
+        {this.state.voteCount}
+        </span>
+        </div>
+        {
+          this.props.username ?
+          (
+            <button
+            onClick={this.updateUserVote.bind(this, -1)}
+            className={downvoteClass}
+            >
+            <InlineSVG src={downvoteSVG} />
+            </button>
+          ) :
+          null
+        }
+        </div>
         <Row>
-          <Col md={1}>
-            {
-              this.props.username ?
-              (
-                <button
-                  onClick={this.updateUserVote.bind(this, 1)}
-                  className={upvoteClass}
-                >
-                  upvote
-                </button>
-              ) :
-              null
-            }
-            <div className='vote-count'>{this.state.voteCount}</div>
-            {
-              this.props.username ?
-              (
-                <button
-                  onClick={this.updateUserVote.bind(this, -1)}
-                  className={downvoteClass}
-                >
-                  downvote
-                </button>
-              ) :
-              null
-            }
-          </Col>
-          <Col md={8}>
-            <Video
-              video={{
-                id: this.props.video.vodId,
-                preview: this.props.video.preview,
-                start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
-                duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
-              }}
-              handleTimeChange={this.handleTimeChange}
-            />
+          <Col md={9}>
+          <Video
+            video={{
+              id: this.props.video.vodId,
+              preview: this.props.video.preview,
+              start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
+              duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
+            }}
+            handleTimeChange={this.handleTimeChange}
+          />
           </Col>
           <Col md={3}>
-            <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
+          <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
           </Col>
         </Row>
       </div>
