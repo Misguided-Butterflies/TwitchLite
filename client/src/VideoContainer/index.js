@@ -118,7 +118,9 @@ class VideoContainer extends React.Component {
     return (
       <div className='video-container'>
         <h2>{this.props.video.streamTitle}</h2>
-        <h3>Playing: {this.props.video.game}</h3>
+        <h3>{this.props.video.channelName} playing {this.props.video.game}</h3>
+        <Row>
+        <Col md={1}>
         {
           this.props.username ?
           (
@@ -132,8 +134,6 @@ class VideoContainer extends React.Component {
           null
         }
         <div className='vote-count'>{this.state.voteCount}</div>
-        <Row>
-        <Col md={1}>
         {
           this.props.username ?
           (
