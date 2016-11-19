@@ -120,47 +120,47 @@ class VideoContainer extends React.Component {
         <h2>{this.props.video.streamTitle}</h2>
         <h3>{this.props.video.channelName} playing {this.props.video.game}</h3>
         <Row>
-        <Col md={1}>
-        {
-          this.props.username ?
-          (
-            <button
-              onClick={this.updateUserVote.bind(this, 1)}
-              className={upvoteClass}
-            >
-              upvote
-            </button>
-          ) :
-          null
-        }
-        <div className='vote-count'>{this.state.voteCount}</div>
-        {
-          this.props.username ?
-          (
-            <button
-              onClick={this.updateUserVote.bind(this, -1)}
-              className={downvoteClass}
-            >
-              downvote
-            </button>
-          ) :
-          null
-        }
-        </Col>
-        <Col md={8}>
-        <Video
-          video={{
-            id: this.props.video.vodId,
-            preview: this.props.video.preview,
-            start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
-            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
-          }}
-          handleTimeChange={this.handleTimeChange}
-        />
-        </Col>
-        <Col md={3}>
-        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
-        </Col>
+          <Col md={1}>
+            {
+              this.props.username ?
+              (
+                <button
+                  onClick={this.updateUserVote.bind(this, 1)}
+                  className={upvoteClass}
+                >
+                  upvote
+                </button>
+              ) :
+              null
+            }
+            <div className='vote-count'>{this.state.voteCount}</div>
+            {
+              this.props.username ?
+              (
+                <button
+                  onClick={this.updateUserVote.bind(this, -1)}
+                  className={downvoteClass}
+                >
+                  downvote
+                </button>
+              ) :
+              null
+            }
+          </Col>
+          <Col md={8}>
+            <Video
+              video={{
+                id: this.props.video.vodId,
+                preview: this.props.video.preview,
+                start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
+                duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
+              }}
+              handleTimeChange={this.handleTimeChange}
+            />
+          </Col>
+          <Col md={3}>
+            <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
+          </Col>
         </Row>
       </div>
     );
