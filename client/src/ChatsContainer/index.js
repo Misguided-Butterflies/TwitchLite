@@ -1,13 +1,13 @@
 import React from 'react';
 import Chat from '../Chat';
 
-const ChatsContainer = (props) => {
+const ChatsContainer = ({messages}) => {
   return (
     <div className='chats-container'>
       <h3>Chat</h3>
       {
-        props.messages.map(message => (
-          <Chat key={message.from + message.time} message={message} emotes={props.emotes}/>
+        messages.map(message => (
+          <Chat key={message.from + message.time} message={message} />
         ))
       }
     </div>
@@ -15,7 +15,6 @@ const ChatsContainer = (props) => {
 };
 
 ChatsContainer.propTypes = {
-  emotes: React.PropTypes.object.isRequired,
   messages: React.PropTypes.array.isRequired
 };
 
