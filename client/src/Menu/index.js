@@ -7,11 +7,15 @@ class Menu extends React.Component {
     super(props);
     //init twitch js api
     this.state = {
-      name: ''
+      name: '',
+      filterByFollowedChannels: false,
+      filterByFollowedGames: false
     };
 
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
+    this.clickFollowedChannels = this.clickFollowedChannels.bind(this);
+    this.clickFollowedGames = this.clickFollowedGames.bind(this);
   }
   
   login() {
@@ -109,22 +113,36 @@ class Menu extends React.Component {
     }
   }
   
+  clickFollowedChannels () {
+    let prev = this.state.filterByFollowedChannels;
+    this.setState({filterByFollowedChannels: !prev});
+    this.props.sort.followedChannels();
+  }
+  
+  clickFollowedGames() {
+    let prev = this.state.filterByFollowedGames;
+    this.setState({filterByFollowedGames: !prev});
+    this.props.sort.followedGames();
+  }
+  
   render() {
     //change user view depending on whether or not user is logged in
-    var auth;
-    var user;
-    var followedChannelLink;
-    var followedGameLink;
+    let auth;
+    let user;
+    let followedChannelsLink;
+    let followedGamesLink;
+    let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
+    let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
       auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
-      followedChannelLink = <MenuItem onClick={this.props.sort.followedChannels}>Followed Channels</MenuItem>;
-      followedGameLink = <MenuItem onClick={this.props.sort.followedGames}>Followed Games</MenuItem>
+      followedChannelsLink = <MenuItem onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</MenuItem>;
+      followedGamesLink = <MenuItem onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</MenuItem>
     } else {
       auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
       user = null;
-      followedChannelLink = null;
-      followedGameLink = null;
+      followedChannelsLink = null;
+      followedGamesLink = null;
     }
     
     return (
@@ -139,8 +157,8 @@ class Menu extends React.Component {
           <Nav>
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
             <NavItem onClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
-            {followedChannelLink}
-            {followedGameLink}
+            {followedChannelsLink}
+            {followedGamesLink}
           </Nav>
           <Nav pullRight>
             <NavItem>
