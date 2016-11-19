@@ -1,4 +1,25 @@
 /* purple: #6441a4 */
+/* black: #222 */
+/* gray: #555 */
+/* default_spacing: 2em */
+
+body {
+  color: #222;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1em;
+  color: #555;
+}
 
 button {
 	border: 1px solid #6441a4;
@@ -28,10 +49,40 @@ button.active {
   background-color: #ccc;
 }
 
+.video-list {
+  padding: 2em;
+}
+
+.video-container {
+  padding: 2em;
+  border: 1px solid red;
+}
+
+.video-container + .video-container {
+  margin-top: 2em;
+}
+
+.video {
+  background: #000;
+  overflow: hidden;
+}
+
+.video-preview {
+  filter: blur(5px);
+}
+
 .chats-container {
-  max-height: 4em;
+  border: 1px solid blue;
+  max-height: 100%;
+
   overflow: scroll;
-  position: fixed;
+  position: relative;
+}
+
+.chats-container-inner {
+  border: 1px solid green;
+  /*position: fixed;*/
+  bottom: 0;
 }
 
 .chat-from {
@@ -48,4 +99,5 @@ button.active {
 
 .navbar {
   border-radius: 0;
+  margin-bottom: 0;
 }
