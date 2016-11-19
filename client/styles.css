@@ -18,3 +18,7 @@
 .filter-active {
   background-color: #6441a5;
 }
+
+.chat-header {
+  margin: 0;
+}
