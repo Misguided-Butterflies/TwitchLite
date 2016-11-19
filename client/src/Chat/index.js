@@ -7,6 +7,10 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
+    this.replaceEmotes();
+  }
+
+  replaceEmotes() {
     this.refs.text.innerHTML =
       this.props.message.text
       .split(' ')
