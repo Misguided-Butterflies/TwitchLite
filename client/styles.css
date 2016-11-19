@@ -8,8 +8,7 @@
 }
 
 .chats-container {
-  /*max-height: 4em;*/
-  /*overflow: scroll;*/
+  overflow: scroll;
 }
 
 .chat-from {

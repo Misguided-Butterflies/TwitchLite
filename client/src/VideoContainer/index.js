@@ -2,6 +2,7 @@ import React from 'react';
 import Video from '../Video';
 import ChatsContainer from '../ChatsContainer';
 import axios from 'axios';
+import {Row, Col} from 'react-bootstrap';
 
 /** VideoComponent
  * this is a component that wraps <Video> and handles all other UI and logic
@@ -131,6 +132,8 @@ class VideoContainer extends React.Component {
           null
         }
         <div className='vote-count'>{this.state.voteCount}</div>
+        <Row>
+        <Col md={1}>
         {
           this.props.username ?
           (
@@ -143,6 +146,8 @@ class VideoContainer extends React.Component {
           ) :
           null
         }
+        </Col>
+        <Col md={8}>
         <Video
           video={{
             id: this.props.video.vodId,
@@ -152,7 +157,11 @@ class VideoContainer extends React.Component {
           }}
           handleTimeChange={this.handleTimeChange}
         />
+        </Col>
+        <Col md={3}>
         <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
+        </Col>
+        </Row>
       </div>
     );
   }
