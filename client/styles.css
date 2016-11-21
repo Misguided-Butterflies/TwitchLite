@@ -160,7 +160,9 @@ button:focus {
   overflow: scroll;
 
   /* Placeholder; should be dynamically calculated instead */
-  height: 544px;
+  height: 12em;
+  margin: 2em 0;
+  padding: 0 2em;
 }
 
 .chat-from {
