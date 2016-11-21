@@ -128,6 +128,8 @@ button:focus {
 .video {
   background: #000;
   overflow: hidden;
+  width: 100%;
+  padding-bottom: 33%;
 }
 
 .video-preview {
