@@ -100,18 +100,32 @@ class TwitchEmbed extends React.Component {
 
   render() {
     return (
-      <div id={this.divId} ref='base'>
+      <div className='twitch-embed' id={this.divId} ref='base'>
         <img
           src={this.props.preview}
           onClick={this.loadVideo}
-          height={this.props.embedHeight}
-          width={this.props.embedWidth}
           className='video-preview'
         />
       </div>
     );
   }
 }
+
+/*
+render() {
+  return (
+    <div id={this.divId} ref='base'>
+      <img
+        src={this.props.preview}
+        onClick={this.loadVideo}
+        height={this.props.embedHeight}
+        width={this.props.embedWidth}
+        className='video-preview'
+      />
+    </div>
+  );
+}
+*/
 
 TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
