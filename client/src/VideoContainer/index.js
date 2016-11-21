@@ -121,8 +121,10 @@ class VideoContainer extends React.Component {
 
     return (
       <div className='video-container'>
-        <h2>{this.props.video.streamTitle}</h2>
-        <h3 className='video-subtitle'>{this.props.video.channelName} playing {this.props.video.game}</h3>
+        <div className='video-top'>
+          <h2>{this.props.video.streamTitle}</h2>
+          <h3 className='video-subtitle'>{this.props.video.channelName} playing {this.props.video.game}</h3>
+        </div>
         <div className='video-buttons'>
         {
           this.props.username ?
