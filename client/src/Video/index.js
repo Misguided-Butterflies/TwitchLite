@@ -48,8 +48,6 @@ class Video extends React.Component {
       duration={this.props.video.duration}
       preview={this.props.video.preview}
       handleTimeChange={this.props.handleTimeChange}
-      embedWidth={968}
-      embedHeight={544}
     />, this.refs.video);
   }
 

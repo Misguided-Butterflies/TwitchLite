@@ -16,19 +16,26 @@ class TwitchEmbed extends React.Component {
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
     this.loadVideo = this.loadVideo.bind(this);
     this.checkChatTime = this.checkChatTime.bind(this);
+    this.getDimensions = this.getDimensions.bind(this);
+  }
 
+  getDimensions() {
+    return {
+      width: this.refs.base.offsetWidth,
+      height: this.refs.base.offsetHeight
+    };
   }
 
   loadVideo() {
     this.refs.base.innerHTML = '';
-    this.createTwitchPlayer();
+    this.createTwitchPlayer(this.getDimensions());
     this.player.play();
   }
 
-  createTwitchPlayer() {
+  createTwitchPlayer({width, height}) {
     let options = {
-      width: this.props.embedWidth,
-      height: this.props.embedHeight,
+      width,
+      height,
       video: this.props.id,
       time: this.props.startString,
       autoplay: false
@@ -111,21 +118,6 @@ class TwitchEmbed extends React.Component {
   }
 }
 
-/*
-render() {
-  return (
-    <div id={this.divId} ref='base'>
-      <img
-        src={this.props.preview}
-        onClick={this.loadVideo}
-        height={this.props.embedHeight}
-        width={this.props.embedWidth}
-        className='video-preview'
-      />
-    </div>
-  );
-}
-*/
 
 TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
@@ -133,9 +125,7 @@ TwitchEmbed.propTypes = {
   startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
-  handleTimeChange: React.PropTypes.func.isRequired,
-  embedHeight: React.PropTypes.number.isRequired,
-  embedWidth: React.PropTypes.number.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;
