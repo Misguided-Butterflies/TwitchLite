@@ -112,6 +112,8 @@ class TwitchEmbed extends React.Component {
           src={this.props.preview}
           onClick={this.loadVideo}
           className='video-preview'
+          alt='Stream Preview'
+          title='Stream Preview'
         />
       </div>
     );
