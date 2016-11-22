@@ -21,7 +21,11 @@ class ChatsContainer extends React.Component {
 
   render() {
     return (
-      <div className='chats-container' ref='container'>
+      <div
+        className='chats-container'
+        ref='container'
+        style={{height: this.props.videoHeight}}
+      >
         {
           this.props.messages.map(message => (
             <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
@@ -35,7 +39,8 @@ class ChatsContainer extends React.Component {
 
 ChatsContainer.propTypes = {
   emotes: React.PropTypes.object.isRequired,
-  messages: React.PropTypes.array.isRequired
+  messages: React.PropTypes.array.isRequired,
+  videoHeight: React.PropTypes.number
 };
 
 export default ChatsContainer;
