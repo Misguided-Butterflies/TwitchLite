@@ -2,6 +2,10 @@ import React from 'react';
 import JSONP from 'browser-jsonp';
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
 
+/** Menu
+ * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
+ * the actual sorting functions must be passed in.
+ */
 class Menu extends React.Component {
   constructor(props) {
     super(props);
