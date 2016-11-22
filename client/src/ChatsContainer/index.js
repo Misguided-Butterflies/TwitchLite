@@ -22,12 +22,11 @@ class ChatsContainer extends React.Component {
   render() {
     return (
       <div className='chats-container' ref='container'>
-      <h4 className='chat-header'>Chat Replay</h4>
-      {
-        this.props.messages.map(message => (
-          <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
-        ))
-      }
+        {
+          this.props.messages.map(message => (
+            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
+          ))
+        }
       </div>
     );
   }
