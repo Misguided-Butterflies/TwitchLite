@@ -218,6 +218,16 @@ button:focus {
   transition: background 0.2s ease;
 }
 
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-control {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
 .filter-active {
   background-color: #341174;
 }
