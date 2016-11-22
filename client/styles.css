@@ -81,27 +81,6 @@ button:focus {
 	text-transform: uppercase;
 }
 
-@media screen and (min-width: 56em) {
-  .video-buttons {
-    flex-flow: column nowrap;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    height: 11em;
-    left: -1.5em;
-    width: 3.5em;
-  }
-
-  .video-button {
-    display: block;
-  }
-
-  .video-button + .video-button {
-    margin-top: 1em;
-  }
-}
-
 .upvote i,
 .downvote i {
   position: relative;
@@ -142,7 +121,7 @@ button:focus {
   background: #fff;
   /*padding: 2em;*/
   position: relative;
-  padding-bottom: 2em;
+  padding: 2em 0;
 }
 
 .video-container + .video-container {
@@ -150,7 +129,7 @@ button:focus {
 }
 
 .video-top {
-  padding: 2em;
+  padding: 0 2em;
 }
 
 .video-subtitle {
@@ -208,4 +187,63 @@ button:focus {
 .navbar {
   border-radius: 0;
   margin-bottom: 0;
+}
+
+@media screen and (min-width: 56em) {
+  .video-list {
+    padding: 2em;
+  }
+
+  .video-container {
+    padding: 2em;
+  }
+
+  .video-buttons {
+    flex-flow: column nowrap;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    height: 11em;
+    left: -2em;
+    width: 3.5em;
+  }
+
+  .video-button + .video-button {
+    margin-top: 1em;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .video-list {
+    padding: 4em;
+  }
+
+  .video-top {
+    padding-bottom: 2em;
+  }
+
+  .video-outer,
+  .chats-container {
+    vertical-align: top;
+    display: inline-block;
+  }
+
+  .video-outer {
+    width: 70%;
+  }
+
+  .chats-container {
+    margin-top: 0;
+    padding: 0;
+    margin-left: 2em;
+    width: calc(30% - 2em);
+  }
+}
+
+@media screen and (min-width: 72em) {
+  /* put video and chat side by side */
+  .video {
+    /*width: 75%;*/
+  }
 }
