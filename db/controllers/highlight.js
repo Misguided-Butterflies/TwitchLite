@@ -20,13 +20,24 @@ var findOne = function(id) {
 // insertOne inserts a highlight into the db if it doesn't yet exist
 var insertOne = function(highlightData) {
   return findAll({
-    channelName: highlightData.channelName,
-    highlightStart: highlightData.highlightStart,
-    highlightEnd: highlightData.highlightEnd
+    vodId: highlightData.vodId,
+    highlightEnd: {
+      $gt: highlightData.highlightStart
+    }
   })
   .then(results => {
     if (results.length) {
-      return results[0];
+      if (results.length > 1) {
+        throw new Error('too many similar results when inserting' + highlightData + ' into the database: ' + results);
+      }
+
+      let highlight = results[0];
+
+      highlight.messages = highlight.messages.concat(highlightData.messages.filter(message => message.time > highlight.highlightEnd));
+      highlight.highlightEnd = highlightData.highlightEnd;
+      highlight.multiplier = Math.max(highlight.multiplier, highlightData.multiplier);
+      return highlight.save();
+
     } else {
       return Highlight.create(highlightData);
     }

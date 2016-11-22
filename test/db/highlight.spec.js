@@ -1,6 +1,6 @@
 var ObjectId = mongoose.Types.ObjectId;
 var Highlight = require('../../db/models/highlight');
-var { findAll, findOne, insertOne, updateVote } = require('../../db/controllers/highlight');
+var { findAll, findOne, insertOne, updateVote, remove } = require('../../db/controllers/highlight');
 
 var obj = {
   _id: new ObjectId(),
@@ -11,32 +11,60 @@ var obj = {
   preview: 'https://example.com/example.png',
   streamStart: 1,
   streamTitle: 'double dk lunch wut',
-  highlightStart: 2,
-  highlightEnd: 3,
-  multiplier: 4.2
+  highlightStart: 20,
+  highlightEnd: 30,
+  multiplier: 4.2,
+  messages: [
+    {
+      time: 21,
+      from: 'batman',
+      text: 'na na na na'
+    }, {
+      time: 26,
+      from: 'robin',
+      text: 'Kappa'
+    }
+  ]
 };
 
+var objBase = {
+  vodId: obj.vodId,
+  highlightStart: obj.highlightStart
+};
+
+var obj2 = {
+  _id: new ObjectId(),
+  link: 'this.that.com',
+  channelName: 'dk doublelunch',
+  vodId: 'v101',
+  game: 'pong',
+  preview: 'https://example.com/example.png',
+  streamStart: 1,
+  streamTitle: 'double dk lunch wut',
+  highlightStart: 25,
+  highlightEnd: 40,
+  multiplier: 6,
+  messages: [
+    {
+      time: 26,
+      from: 'robin',
+      text: 'Kappa'
+    }, {
+      time: 33,
+      from: 'hungry_hungry_hippo',
+      text: 'HeyGuys feed me'
+    }
+  ]
+};
+ 
 describe('Highlights Model', function() {
 
   beforeEach(function(done) {
-    var clearDB = function() {
-      Highlight.remove(obj).exec();
-      return done();
-    };
-
-    if (mongoose.connection.readyState === 0) {
-      mongoose.connect(process.env.MONGODB_URI, function(err) {
-        return clearDB();
-      });
-    } else {
-      return clearDB();
-    }
-
+    mongoose.connect(process.env.MONGODB_URI).then(() => done());
   });
 
   afterEach(function(done) {
-    mongoose.disconnect();
-    return done();
+    remove({vodId: obj.vodId}).then(() => mongoose.disconnect()).then(() => done());
   });
 
   it('is able to add a highlight', function(done) {
@@ -51,7 +79,7 @@ describe('Highlights Model', function() {
   it('should only add one highlight at once', function(done) {
     insertOne(obj)
     .then( () => {
-      return findAll(obj);
+      return findAll(objBase);
     })
     .then(res => {
       expect(res.length).to.equal(1);
@@ -64,7 +92,7 @@ describe('Highlights Model', function() {
     .then( () => {
       return findOne(obj._id);
     })
-    .then(res => {
+    .then(res => { 
       expect(res.game).to.equal('pong');
       done();
     });
@@ -76,10 +104,24 @@ describe('Highlights Model', function() {
       return insertOne(obj);
     })
     .then( () => {
-      return findAll(obj);
+      return findAll(objBase);
     })
     .then(results => {
       expect(results.length).to.equal(1);
+      done();
+    });
+  });
+
+  it('should combine similar highlights', function(done) {
+    insertOne(obj)
+    .then(() => insertOne(obj2))
+    .then(() => findOne(obj._id))
+    .then(res => {
+      expect(res.highlightStart).to.equal(obj.highlightStart);
+      expect(res._id.toString()).to.equal(obj._id.toString());
+      expect(res.highlightEnd).to.equal(obj2.highlightEnd);
+      expect(res.multiplier).to.equal(obj2.multiplier);
+      expect(res.messages.length).to.equal(3);
       done();
     });
   });
