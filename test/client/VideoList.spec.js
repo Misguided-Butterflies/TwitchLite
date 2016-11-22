@@ -49,7 +49,7 @@ let testHighlights = [
 describe('<VideoList>', () => {
   let list;
   beforeEach(() => {
-    list = (<VideoList list={testHighlights} username='batman' />);
+    list = (<VideoList list={testHighlights} username='batman' emotes={{}} />);
   });
 
   it('should render one video per item in the list', () => {
