@@ -1,6 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {Button, ButtonToolbar} from 'react-bootstrap';
 import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
@@ -25,10 +24,10 @@ class App extends React.Component {
       newHighlights: 0
     };
     this.getEmotes();
-    
+
     //initialize twitch SDK
     Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
-    
+
     //single source of truth for highlights
     this.allHighlights = [];
     //tracks which sorting options are chosen
@@ -102,7 +101,7 @@ class App extends React.Component {
     var updateInterval = setInterval(this.updateHighlightCount, timeBetweenNewHighlightsCheck);
     this.setState({interval: updateInterval});
   }
-  
+
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
@@ -127,7 +126,7 @@ class App extends React.Component {
       }
     });
   }
-  
+
   sortByHotness() {
     this.selected.sortType = 'hotness';
     this.updateList();
@@ -160,13 +159,13 @@ class App extends React.Component {
     this.selected.followedChannels = !this.selected.followedChannels;
     this.updateList();
   }
-  
+
   sortByFollowedGames() {
     //Toggles whether or not to filter by following games
     this.selected.followedGames = !this.selected.followedGames;
     this.updateList();
   }
-  
+
   filter() {
     //get highlights from allHighlights
     this.myHighlights = this.allHighlights.slice(0);
@@ -222,7 +221,7 @@ class App extends React.Component {
     this.setState(info);
   }
 
-    
+
   handleSearch(e) {
     this.selected.search = e.target.value;
     this.updateList();

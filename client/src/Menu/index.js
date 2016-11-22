@@ -1,6 +1,5 @@
 import React from 'react';
 import JSONP from 'browser-jsonp';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
 
 /** Menu
  * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
@@ -138,44 +137,42 @@ class Menu extends React.Component {
     let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
     let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
-      auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
-      user = <MenuItem >{this.state.name}</MenuItem>;
+      auth = <div onClick={this.logout}>LOGOUT</div>;
+      user = <div >{this.state.name}</div>;
       followedChannelsLink = (
-        <MenuItem onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</MenuItem>
+        <div onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</div>
       );
       followedGamesLink = (
-        <MenuItem onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</MenuItem>
+        <div onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</div>
       );
     } else {
-      auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
+      auth = <div onClick={this.login}>LOGIN</div>;
       user = null;
       followedChannelsLink = null;
       followedGamesLink = null;
     }
 
     return (
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
-            <NavItem onClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
+      <nav className='navbar'>
+          <div>
+            <div onClick={this.props.sort.hotness}>Hottest</div>
+            <div onClick={this.props.sort.age}>New ({this.props.newHighlights})</div>
             {followedChannelsLink}
             {followedGamesLink}
-          </Nav>
-          <Nav pullRight>
-            <NavItem>
-              <FormGroup>
-                <FormControl placeholder='Search' onChange={this.props.sort.search}/>
-              </FormGroup>
-            </NavItem>
-            <NavDropdown title="User" id="basic-nav-dropdown">
+          </div>
+          <div>
+            <div>
+              <form>
+                <input placeholder='Search' onChange={this.props.sort.search}/>
+              </form>
+            </div>
+            <div title="User" id="basic-nav-dropdown">
               {user}
-              <MenuItem divider />
+              <div divider />
               {auth}
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+            </div>
+          </div>
+      </nav>
     );
   }
 }
