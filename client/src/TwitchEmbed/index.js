@@ -27,8 +27,10 @@ class TwitchEmbed extends React.Component {
   }
 
   loadVideo() {
+    const dimensions = this.getDimensions();
     this.refs.base.innerHTML = '';
-    this.createTwitchPlayer(this.getDimensions());
+    this.props.handleHeightCalculation(dimensions.height);
+    this.createTwitchPlayer(dimensions);
     this.player.play();
   }
 
@@ -127,7 +129,8 @@ TwitchEmbed.propTypes = {
   startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
-  handleTimeChange: React.PropTypes.func.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired,
+  handleHeightCalculation: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;

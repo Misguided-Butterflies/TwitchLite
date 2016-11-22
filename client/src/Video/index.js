@@ -48,6 +48,7 @@ class Video extends React.Component {
       duration={this.props.video.duration}
       preview={this.props.video.preview}
       handleTimeChange={this.props.handleTimeChange}
+      handleHeightCalculation={this.props.handleHeightCalculation}
     />, this.refs.video);
   }
 
@@ -67,7 +68,8 @@ Video.propTypes = {
     duration: React.PropTypes.number.isRequired,
     preview: React.PropTypes.string.isRequired,
   }).isRequired,
-  handleTimeChange: React.PropTypes.func.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired,
+  handleHeightCalculation: React.PropTypes.func.isRequired
 };
 
 export default Video;

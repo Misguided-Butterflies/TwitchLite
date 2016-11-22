@@ -21,7 +21,9 @@ class VideoContainer extends React.Component {
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
       userVote: this.getUserVote(props.username, props.video.votes),
-      messagesPointer: 0
+      messagesPointer: 0,
+      // null indicates there is no custom height to set yet
+      videoHeight: null
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
@@ -29,6 +31,13 @@ class VideoContainer extends React.Component {
     this.updateUserVote = this.updateUserVote.bind(this);
     this.getUserVote = this.getUserVote.bind(this);
     this.handleTimeChange = this.handleTimeChange.bind(this);
+    this.handleHeightCalculation = this.handleHeightCalculation.bind(this);
+  }
+
+  handleHeightCalculation(videoHeight) {
+    this.setState({
+      videoHeight
+    });
   }
 
   getUserVote(username, votes) {
@@ -133,6 +142,7 @@ class VideoContainer extends React.Component {
             duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
           }}
           handleTimeChange={this.handleTimeChange}
+          handleHeightCalculation={this.handleHeightCalculation}
         />
         <div className='video-buttons'>
           {
@@ -163,7 +173,11 @@ class VideoContainer extends React.Component {
             null
           }
         </div>
-        <ChatsContainer messages={this.props.video.messages.slice(0, this.state.messagesPointer)} emotes={this.props.emotes} />
+        <ChatsContainer
+          messages={this.props.video.messages.slice(0, this.state.messagesPointer)}
+          emotes={this.props.emotes}
+          videoHeight={this.state.videoHeight}
+        />
       </div>
     );
   }
