@@ -1,4 +1,5 @@
 /* purple: #6441a4 */
+/* purple dark: #341174 */
 /* black: #222 */
 /* gray: #555 */
 /* default_spacing: 2em */
@@ -199,8 +200,26 @@ button:focus {
 }
 
 .navbar {
+  border: none;
+  background: #6441a4;
+  color: #fff;
   border-radius: 0;
   margin-bottom: 0;
+}
+
+.navbar li a {
+  color: #fff !important;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.navbar li {
+  transition: background 0.2s ease;
+}
+
+.filter-active {
+  background-color: #341174;
 }
 
 @media screen and (min-width: 56em) {
