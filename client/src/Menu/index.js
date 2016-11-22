@@ -44,14 +44,14 @@ class Menu extends React.Component {
 
   getTwitchUser(obj) {
     //promisified Twitch get user, gets token
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       Twitch.api({method: 'user'}, (err, res) => {
         if (err) {
-          fail(err);
+          reject(err);
         } else {
           obj.name = res.name;
           obj.token = Twitch.getToken();
-          succ(obj);
+          resolve(obj);
         }
       });
     });
@@ -60,16 +60,16 @@ class Menu extends React.Component {
   getTwitchFollowedChannels(obj) {
     //promisified get user's followed channels
     let followedChannels = [];
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       Twitch.api({method: 'users/' + obj.name + '/follows/channels'}, (err, list) => {
         if (err) {
-          fail(err)
+          reject(err);
         } else {
           for (let elem of list.follows) {
             followedChannels.push(elem.channel.name);
           }
           obj.followedChannels = followedChannels;
-          succ(obj);
+          resolve(obj);
         }
       });
     });
@@ -78,19 +78,19 @@ class Menu extends React.Component {
   getTwitchFollowedGames(obj) {
     //promisified get user's followed games from twitch api
     let followedGames = [];
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       JSONP({
         url: 'https://api.twitch.tv/api/users/' + obj.name + '/follows/games',
-        data: { oauth_token: obj.token },
+        data: { 'oauth_token': obj.token },
         success: function(data) {
           for (let elem of data.follows) {
             followedGames.push(elem.name);
           }
           obj.followedGames = followedGames;
-          succ(obj);
+          resolve(obj);
         }
       });
-    })
+    });
   }
 
   componentDidMount() {
@@ -140,8 +140,12 @@ class Menu extends React.Component {
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
       auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
       user = <MenuItem >{this.state.name}</MenuItem>;
-      followedChannelsLink = <MenuItem onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</MenuItem>;
-      followedGamesLink = <MenuItem onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</MenuItem>
+      followedChannelsLink = (
+        <MenuItem onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</MenuItem>
+      );
+      followedGamesLink = (
+        <MenuItem onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</MenuItem>
+      );
     } else {
       auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
       user = null;
@@ -182,6 +186,8 @@ Menu.propTypes = {
     follow: React.PropTypes.func,
     hotness: React.PropTypes.func,
     search: React.PropTypes.func,
+    followedGames: React.PropTypes.func,
+    followedChannels: React.PropTypes.func
   }),
   updateUser: React.PropTypes.func,
   twitchStatus: React.PropTypes.object,
