@@ -4,6 +4,11 @@ import 'twitch-embed';
 const proportionOfScreenToFill = .75;
 const heightWidthRatio = 9 / 16;
 
+/** TwitchEmbed
+ * this is the component for the actual twitch video player on the page.
+ * it starts out as a preview image that turns into a twitch video embed when clicked on.
+ * when clicked, the appropriate twitch player embed loads as described by the props.
+ */
 class TwitchEmbed extends React.Component {
   constructor(props) {
     super(props);
