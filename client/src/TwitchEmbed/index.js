@@ -16,31 +16,28 @@ class TwitchEmbed extends React.Component {
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
     this.loadVideo = this.loadVideo.bind(this);
     this.checkChatTime = this.checkChatTime.bind(this);
-
-    this.calculateDimensions();
+    this.getDimensions = this.getDimensions.bind(this);
   }
 
-  calculateDimensions() {
-    if (innerWidth * heightWidthRatio > innerHeight) {
-      this.embedHeight = innerHeight * proportionOfScreenToFill;
-      this.embedWidth = this.embedHeight / heightWidthRatio;
-    } else {
-      this.embedWidth = innerWidth * proportionOfScreenToFill;
-      this.embedHeight = this.embedWidth * heightWidthRatio;
-    }
+  getDimensions() {
+    return {
+      width: this.refs.base.offsetWidth,
+      height: this.refs.base.offsetHeight
+    };
   }
 
   loadVideo() {
+    const dimensions = this.getDimensions();
     this.refs.base.innerHTML = '';
-    this.calculateDimensions();
-    this.createTwitchPlayer();
+    this.props.handleHeightCalculation(dimensions.height);
+    this.createTwitchPlayer(dimensions);
     this.player.play();
   }
 
-  createTwitchPlayer() {
+  createTwitchPlayer({width, height}) {
     let options = {
-      width: this.embedWidth,
-      height: this.embedHeight,
+      width,
+      height,
       video: this.props.id,
       time: this.props.startString,
       autoplay: false
@@ -112,18 +109,19 @@ class TwitchEmbed extends React.Component {
 
   render() {
     return (
-      <div id={this.divId} ref='base'>
+      <div className='twitch-embed' id={this.divId} ref='base'>
         <img
           src={this.props.preview}
           onClick={this.loadVideo}
-          height={this.embedHeight}
-          width={this.embedWidth}
           className='video-preview'
+          alt='Stream Preview'
+          title='Stream Preview'
         />
       </div>
     );
   }
 }
+
 
 TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
@@ -131,7 +129,8 @@ TwitchEmbed.propTypes = {
   startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
-  handleTimeChange: React.PropTypes.func.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired,
+  handleHeightCalculation: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;
