@@ -30,7 +30,6 @@ var insertOne = function(highlightData) {
       if (results.length > 1) {
         throw new Error('too many similar results when inserting' + highlightData + ' into the database: ' + results);
       }
-
       let highlight = results[0];
 
       highlight.messages = highlight.messages.concat(highlightData.messages.filter(message => message.time > highlight.highlightEnd));
@@ -43,12 +42,12 @@ var insertOne = function(highlightData) {
     }
   })
   .catch(error => {
-    console.error('Error finding highlight in database:', error);
+    console.error('Error inserting highlight into database:', error);
   });
 };
 
 var remove = function(highlightData) {
-  return Highlight.remove(highlightData);
+  return Highlight.remove(highlightData).exec();
 };
 
 var updateVote = function(voteData) {

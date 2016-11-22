@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 // See explanation in db test .setup.js
 mongoose.models = {};
 mongoose.modelSchemas = {};
-var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
+var { findAll, findOne, insertOne, remove } = require('../../db/controllers/highlight');
 
 var sampleChannel = 'twitch';
 
@@ -91,13 +91,31 @@ describe('workerMaster', function() {
     var highlightData = {
       highlightStart: 1,
       highlightEnd: 2,
-      channelName: 'twitch'
+      channelName: 'twitch',
+      messages: [],
+      multiplier: 3
     };
 
-    it('should return a Promise', function() {
-      var result = workerMaster.saveHighlight(highlightData);
+    var highlightDataBase = {
+      highlightStart: highlightData.highlightStart,
+      highlightEnd: highlightData.highlightEnd,
+      channelName: highlightData.channelName,
+    };
 
-      expect(result).to.be.an.instanceOf(Promise);
+    beforeEach(function(done) {
+      mongoose.connect(process.env.MONGODB_URI)
+      .then(() => done());
+    });
+
+    afterEach(function(done) {
+      remove(highlightDataBase)
+      .then(() => mongoose.disconnect())
+      .then(() => done())
+      .catch(err => console.log('in after each catch') || done(err));
+    });
+
+    it('should return a Promise', function() {
+      expect(workerMaster.saveHighlight(highlightData)).to.be.an.instanceOf(Promise);
     });
 
     it('should save highlights to the database if the stream is still recording', function(done) {
@@ -115,10 +133,7 @@ describe('workerMaster', function() {
 
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
-      mongoose.connect(process.env.MONGODB_URI)
-      .then( stuff => {
-        return workerMaster.saveHighlight(highlightData);
-      })
+      workerMaster.saveHighlight(highlightData)
       .then( savedHighlight => {
         return findOne(savedHighlight._id);
       })
@@ -127,12 +142,10 @@ describe('workerMaster', function() {
         expect(retrievedHighlight.highlightEnd).to.equal(highlightData.highlightEnd);
         expect(retrievedHighlight.channel).to.equal(highlightData.channel);
         workerMaster.getStreamVodData.restore();
-        mongoose.disconnect();
         done();
       })
       .catch(error => {
         console.error('There was an error testing highlight saving to database:', error);
-        mongoose.disconnect();
       });
     });
 
@@ -150,22 +163,17 @@ describe('workerMaster', function() {
       });
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
-      mongoose.connect(process.env.MONGODB_URI)
-      .then( stuff => {
-        return workerMaster.saveHighlight(highlightData);
-      })
+      workerMaster.saveHighlight(highlightData)
       .then( savedHighlight => {
         return findOne(savedHighlight._id);
       })
       .then(retrievedHighlight => {
         expect(retrievedHighlight).to.equal(null);
         workerMaster.getStreamVodData.restore();
-        mongoose.disconnect();
         done();
       })
       .catch(error => {
         console.error('There was an error testing highlight not saving to database:', error);
-        mongoose.disconnect();
       });
 
     });
