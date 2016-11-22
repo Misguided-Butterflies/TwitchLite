@@ -244,9 +244,12 @@ button:focus {
   }
 }
 
-@media screen and (min-width: 72em) {
-  /* put video and chat side by side */
-  .video {
-    /*width: 75%;*/
+/*
+  Enforce size of .chats-container on small screens to prevent the
+  calculated-at-embed-time dimensions from being used at small screen sizes
+*/
+@media screen and (max-width: 64em) {
+  .chats-container {
+    height: 12em !important;
   }
 }
