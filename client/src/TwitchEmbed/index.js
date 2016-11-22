@@ -20,6 +20,7 @@ class TwitchEmbed extends React.Component {
   }
 
   getDimensions() {
+    // Get the dimensions of the container element (which is handled in CSS)
     return {
       width: this.refs.base.offsetWidth,
       height: this.refs.base.offsetHeight
@@ -29,7 +30,11 @@ class TwitchEmbed extends React.Component {
   loadVideo() {
     const dimensions = this.getDimensions();
     this.refs.base.innerHTML = '';
+    // Pass up the video height so that <ChatsContainer> can resize
+    // itself appropriately
     this.props.handleHeightCalculation(dimensions.height);
+    // But use both width AND height when setting the dimensions of
+    // the video player itself
     this.createTwitchPlayer(dimensions);
     this.player.play();
   }

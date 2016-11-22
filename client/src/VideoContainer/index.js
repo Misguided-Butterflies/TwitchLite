@@ -21,6 +21,8 @@ class VideoContainer extends React.Component {
     this.state = {
       voteCount: this.calculateVotes(props.video.votes),
       userVote: this.getUserVote(props.username, props.video.votes),
+      // messagesPointer is the index of the message that should
+      // have been displayed at any given point while the video plays
       messagesPointer: 0,
       // null indicates there is no custom height to set yet
       videoHeight: null
