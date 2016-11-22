@@ -11,6 +11,10 @@ class ChatsContainer extends React.Component {
     super(props);
 
     this.scrollDown = this.scrollDown.bind(this);
+    this.msg = [{
+      from: "TheFIyingFooI",
+      text: "Professional!!!!",
+      time: 1479498125996}];
   }
 
   scrollDown() {

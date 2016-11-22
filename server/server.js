@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var highlight = require('../db/controllers/highlight.js');
+var chat = require('../db/controllers/chat.js');
 var fs = require('fs');
 
 var db = mongoose.connect(process.env.MONGODB_URI);
@@ -29,6 +30,13 @@ app.get('/highlights/count', function(req, res) {
   highlight.findCount()
   .then(data => {
     res.send('' + data);
+  })
+})
+
+app.get('/highlights/chat', function(req, res) {
+  chat.findOne(req.query.id)
+  .then(data => {
+    res.json(data);
   })
 })
 
