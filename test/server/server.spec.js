@@ -11,6 +11,7 @@ var fakeHighlight = {
   streamTitle: 'Playin Magic yo!',
   highlightStart: 1235,
   highlightEnd: 1236,
+  // messages: []
 };
 
 var fakeHighlight2 = {
@@ -24,6 +25,7 @@ var fakeHighlight2 = {
   streamTitle: 'Playin Magic',
   highlightStart: 12355,
   highlightEnd: 12376,
+  // messages: []
 };
 
 describe('server', () => {

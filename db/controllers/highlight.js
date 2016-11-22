@@ -20,24 +20,34 @@ var findOne = function(id) {
 // insertOne inserts a highlight into the db if it doesn't yet exist
 var insertOne = function(highlightData) {
   return findAll({
-    channelName: highlightData.channelName,
-    highlightStart: highlightData.highlightStart,
-    highlightEnd: highlightData.highlightEnd
+    vodId: highlightData.vodId,
+    highlightEnd: {
+      $gt: highlightData.highlightStart
+    }
   })
   .then(results => {
     if (results.length) {
-      return results[0];
+      if (results.length > 1) {
+        throw new Error('too many similar results when inserting' + highlightData + ' into the database: ' + results);
+      }
+      let oldHighlight = results[0];
+
+      oldHighlight.messages = oldHighlight.messages.concat(highlightData.messages.filter(message => message.time > oldHighlight.highlightEnd));
+      oldHighlight.highlightEnd = highlightData.highlightEnd;
+      oldHighlight.multiplier = Math.max(oldHighlight.multiplier, highlightData.multiplier);
+      return oldHighlight.save();
+
     } else {
       return Highlight.create(highlightData);
     }
   })
   .catch(error => {
-    console.error('Error finding highlight in database:', error);
+    console.error('Error inserting highlight into database:', error);
   });
 };
 
 var remove = function(highlightData) {
-  return Highlight.remove(highlightData);
+  return Highlight.remove(highlightData).exec();
 };
 
 var updateVote = function(voteData) {
