@@ -141,7 +141,6 @@ class VideoContainer extends React.Component {
     let upvoteClass = this.state.userVote === 1 ? 'video-button upvote active' : 'video-button upvote';
     let downvoteClass = this.state.userVote === -1 ? 'video-button downvote active' : 'video-button downvote';
 
-
     return (
       <div className='video-container'>
         <div className='video-top'>
@@ -189,7 +188,7 @@ class VideoContainer extends React.Component {
           }
         </div>
         <ChatsContainer
-          messages={this.props.video.messages.slice(0, this.state.messagesPointer)}
+          messages={this.state.messages.slice(0, this.state.messagesPointer)}
           emotes={this.props.emotes}
           videoHeight={this.state.videoHeight}
         />
