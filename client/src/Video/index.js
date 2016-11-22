@@ -53,7 +53,9 @@ class Video extends React.Component {
 
   render() {
     return (
-      <div className='video' ref='video'></div>
+      <div className='video-outer'>
+        <div className='video' ref='video'></div>
+      </div>
     );
   }
 }
