@@ -119,13 +119,12 @@ button:focus {
 .video-container {
   border-radius: 4px;
   background: #fff;
-  /*padding: 2em;*/
   position: relative;
   padding: 2em 0;
 }
 
 .video-container + .video-container {
-  margin-top: 2em;
+  margin-top: 4em;
 }
 
 .video-top {
