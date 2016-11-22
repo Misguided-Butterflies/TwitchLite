@@ -197,6 +197,10 @@ button:focus {
     padding: 2em;
   }
 
+  .video-top {
+    padding-left: 0;
+  }
+
   .video-buttons {
     flex-flow: column nowrap;
     position: absolute;
