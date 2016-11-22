@@ -24,6 +24,14 @@ app.get('/highlights', function(req, res) {
   });
 });
 
+app.get('/highlights/count', function(req, res) {
+  //returns a up-to-date highlight count
+  highlight.findCount()
+  .then(data => {
+    res.send('' + data);
+  })
+})
+
 app.get('/emotes', function(req, res) {
   fs.readFile('emotes.json', (err, data) => {
     if (err) {

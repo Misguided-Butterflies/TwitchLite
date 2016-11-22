@@ -66,4 +66,9 @@ var updateVote = function(voteData) {
   });
 };
 
-module.exports = {findAll, findOne, insertOne, remove, updateVote};
+var findCount = function() {
+  //gets total number of highlights out there
+  return Highlight.count({});
+}
+
+module.exports = {findAll, findOne, insertOne, remove, updateVote, findCount};
