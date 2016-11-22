@@ -5,6 +5,8 @@
 
 body {
   color: #222;
+  font-size: 16px;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -22,13 +24,13 @@ h3 {
 }
 
 button {
-	border-radius: 4px;
+  border-radius: 4px;
   border: none;
-	background: #6441a4;
-	color: #fff;
-	transition: all 0.2s ease;
-	cursor: pointer;
-	text-transform: uppercase;
+  background: #6441a4;
+  color: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 button,
@@ -56,30 +58,36 @@ button:focus {
 }
 
 .video-buttons {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  height: 11em;
-  left: -1.5em;
+  margin-top: 2em;
+  width: 100%;
+  display: flex;
+  flex-flow: row-reverse wrap;
+  justify-content: center;
 }
 
 .video-button {
+  display: inline-block;
   width: 3em;
   height: 3em;
+  margin: 0 0.5em;
 
   /* Copy of button styles */
   border-radius: 4px;
   border: none;
-	background: #6441a4;
-	color: #fff;
-	transition: all 0.2s ease;
-	cursor: pointer;
-	text-transform: uppercase;
+  background: #6441a4;
+  color: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
-.video-button + .video-button {
-  margin-top: 1em;
+.upvote i,
+.downvote i {
+  position: relative;
+}
+
+.downvote i {
+  top: 4px;
 }
 
 .vote-count {
@@ -103,7 +111,7 @@ button:focus {
 }
 
 .video-list {
-  padding: 4em;
+  padding: 2em 0em;
   background: linear-gradient(to bottom, #17141f, #07040f);
   background-attachment: fixed;
 }
@@ -111,34 +119,56 @@ button:focus {
 .video-container {
   border-radius: 4px;
   background: #fff;
-  padding: 2em;
-  border: 1px solid #555;
   position: relative;
+  padding: 2em 0;
 }
 
 .video-container + .video-container {
-  margin-top: 2em;
+  margin-top: 4em;
+}
+
+.video-top {
+  padding: 0 2em 2em;
 }
 
 .video-subtitle {
   margin-top: 0.5em;
-  margin-bottom: 2em;
 }
 
 .video {
   background: #000;
   overflow: hidden;
+  width: 100%;
+  position: relative;
+
+  /*
+   9/16 (video aspect ratio) is about .5625, so this padding-bottom will keep
+   the element's proportions accurate
+  */
+  padding-bottom: 56%;
+}
+
+.twitch-embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .video-preview {
   filter: blur(5px);
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 .chats-container {
   overflow: scroll;
 
-  /* Placeholder; should be dynamically calculated instead */
-  height: 544px;
+  height: 12em;
+  margin-top: 1em;
+  padding: 0 2em;
 }
 
 .chat-from {
@@ -156,4 +186,70 @@ button:focus {
 .navbar {
   border-radius: 0;
   margin-bottom: 0;
+}
+
+@media screen and (min-width: 56em) {
+  .video-list {
+    padding: 2em;
+  }
+
+  .video-container {
+    padding: 2em;
+  }
+
+  .video-top {
+    padding-left: 0;
+  }
+
+  .video-buttons {
+    flex-flow: column nowrap;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    height: 11em;
+    left: -2em;
+    width: 3.5em;
+  }
+
+  .video-button + .video-button {
+    margin-top: 1em;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .video-list {
+    padding: 4em;
+  }
+
+  .video-top {
+    padding-bottom: 2em;
+  }
+
+  .video-outer,
+  .chats-container {
+    vertical-align: top;
+    display: inline-block;
+  }
+
+  .video-outer {
+    width: 70%;
+  }
+
+  .chats-container {
+    margin-top: 0;
+    padding: 0;
+    margin-left: 2em;
+    width: calc(30% - 2em);
+  }
+}
+
+/*
+  Enforce size of .chats-container on small screens to prevent the
+  calculated-at-embed-time dimensions from being used at small screen sizes
+*/
+@media screen and (max-width: 64em) {
+  .chats-container {
+    height: 12em !important;
+  }
 }
