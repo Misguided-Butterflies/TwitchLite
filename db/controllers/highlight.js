@@ -30,12 +30,12 @@ var insertOne = function(highlightData) {
       if (results.length > 1) {
         throw new Error('too many similar results when inserting' + highlightData + ' into the database: ' + results);
       }
-      let highlight = results[0];
+      let oldHighlight = results[0];
 
-      highlight.messages = highlight.messages.concat(highlightData.messages.filter(message => message.time > highlight.highlightEnd));
-      highlight.highlightEnd = highlightData.highlightEnd;
-      highlight.multiplier = Math.max(highlight.multiplier, highlightData.multiplier);
-      return highlight.save();
+      oldHighlight.messages = oldHighlight.messages.concat(highlightData.messages.filter(message => message.time > oldHighlight.highlightEnd));
+      oldHighlight.highlightEnd = highlightData.highlightEnd;
+      oldHighlight.multiplier = Math.max(oldHighlight.multiplier, highlightData.multiplier);
+      return oldHighlight.save();
 
     } else {
       return Highlight.create(highlightData);
