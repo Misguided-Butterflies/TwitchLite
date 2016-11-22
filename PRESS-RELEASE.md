@@ -22,7 +22,7 @@ Once the project moves into development, the press release can be used as a touc
 ## Appeals to busy Twitch subscribers who want a more digested, streamlined viewing experience. ##
 
 ## Summary ##
-  Keep up to date on the latest developments of your favorite streams by watching a digest of the latest events. Events are automatically selected from videos according to their impact and are usually between 15 seconds to 2 minutes long. Users are able to watch multiple videos consecutively with smooth transitions.
+  Keep up to date on the latest developments of your favorite streams by watching a digest of the latest highlights. Highlights are automatically selected from videos according to their impact and are usually between 40 to 90 seconds long. Users are able to watch multiple videos consecutively with smooth transitions.
 
 ## Problem ##
   To keep up with all of one's Twitch subscriptions, one must watch many hours of video content each week.
@@ -33,13 +33,13 @@ Once the project moves into development, the press release can be used as a touc
 ## Quote from You ##
   "TwitchLite will reinvent the way we all watch gamers."
   
-
 ## How to Get Started ##
-  Login with your Twitch account. Videos will be formatted in short clips that you can click on and view. You can upvote videos to help make them more visible to others. 
+  Visit [our site](twitchlite.herokuapp.com).
+  Login with your Twitch account. Videos will be formatted in short clips that you can click on and view. You can upvote videos to help make them more visible to others.
 
 ## Customer Quote ##
   "TwitchLite streamlined my Twitch viewing experience."
 
 ## Closing and Call to Action ##
-  [insert link here]
+  [Visit our site!](twitchlite.herokuapp.com)
   Don't waste time; use TwitchLite! 
