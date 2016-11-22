@@ -21,7 +21,7 @@ class Menu extends React.Component {
     this.clickFollowedChannels = this.clickFollowedChannels.bind(this);
     this.clickFollowedGames = this.clickFollowedGames.bind(this);
   }
-  
+
   login() {
     Twitch.login({
       'response_type': 'token',
@@ -29,7 +29,7 @@ class Menu extends React.Component {
       scope: ['user_read']
     });
   }
-  
+
   logout() {
     Twitch.logout(err => {
       this.props.updateUser({
@@ -40,7 +40,7 @@ class Menu extends React.Component {
       this.setState({name: ''});
     });
   }
-  
+
 
   getTwitchUser(obj) {
     //promisified Twitch get user, gets token
@@ -56,7 +56,7 @@ class Menu extends React.Component {
       });
     });
   }
-  
+
   getTwitchFollowedChannels(obj) {
     //promisified get user's followed channels
     let followedChannels = [];
@@ -74,7 +74,7 @@ class Menu extends React.Component {
       });
     });
   }
-  
+
   getTwitchFollowedGames(obj) {
     //promisified get user's followed games from twitch api
     let followedGames = [];
@@ -82,7 +82,7 @@ class Menu extends React.Component {
       JSONP({
         url: 'https://api.twitch.tv/api/users/' + obj.name + '/follows/games',
         data: { oauth_token: obj.token },
-        success: function(data) { 
+        success: function(data) {
           for (let elem of data.follows) {
             followedGames.push(elem.name);
           }
@@ -92,7 +92,7 @@ class Menu extends React.Component {
       });
     })
   }
-  
+
   componentDidMount() {
     //if logged in, get user's name and followed things. pass it up to main app
     var that = this;
@@ -116,23 +116,19 @@ class Menu extends React.Component {
       );
     }
   }
-  
+
   clickFollowedChannels () {
     let prev = this.state.filterByFollowedChannels;
     this.setState({filterByFollowedChannels: !prev});
     this.props.sort.followedChannels();
   }
-  
+
   clickFollowedGames() {
     let prev = this.state.filterByFollowedGames;
     this.setState({filterByFollowedGames: !prev});
     this.props.sort.followedGames();
   }
-  
-  refresh() {
-    window.location.reload();
-  }
-  
+
   render() {
     //change user view depending on whether or not user is logged in
     let auth;
@@ -152,15 +148,9 @@ class Menu extends React.Component {
       followedChannelsLink = null;
       followedGamesLink = null;
     }
-    
+
     return (
       <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-            <Navbar.Brand>
-              <a onClick={this.refresh.bind(this)}>TwitchLite</a>
-            </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
             <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
