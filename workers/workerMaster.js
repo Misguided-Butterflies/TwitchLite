@@ -1,6 +1,7 @@
 // Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
 // or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
 var { findAll, findOne, insertOne, remove } = require('../db/controllers/highlight');
+var chat = require('../db/controllers/chat');
 var fetch = require('node-fetch');
 var worker = require('./worker');
 
@@ -149,11 +150,23 @@ var workerMaster = {
   },
 
   purgeOldDbEntries: function() {
-    return remove({
+    let currentTime = Date.now();
+    return findAll({
       streamStart: {
-        $lt: Date.now() - maximumHighlightAge
+        $lt: currentTime - maximumHighlightAge
       }
-    });
+    })
+    .then(highlights => highlights.map(highlight => highlight._id))
+    .then(highlightIds => chat.remove({
+      highlightId: {
+        $in: highlightIds
+      }
+    }))
+    .then(() => remove({
+      streamStart: {
+        $lt: currentTime - maximumHighlightAge
+      }
+    }));
   }
 };
 
