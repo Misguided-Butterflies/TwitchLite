@@ -227,7 +227,7 @@ describe('workerMaster', function() {
     });
   });
 
-  describe('purgeOldDbEntries', function() {
+  xdescribe('purgeOldDbEntries', function() {
     var highlightData = {
       highlightStart: 1,
       highlightEnd: 2,
@@ -250,8 +250,21 @@ describe('workerMaster', function() {
     sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
     it('should remove old db entries', function(done) {
-      done();
-    })
+      workerMaster.saveHighlight(highlightData)
+      .then(() => findAll({
+        highlightStart: 1
+      }))
+      .then(foundHighlights => expect(foundHighlights).to.have.length(1))
+      .then(() => workerMaster.purgeOldDbEntries())
+      .then(() => findAll({
+        highlightStart: 1
+      }))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(0);
+        workerMaster.getStreamVodData.restore();
+        done();
+      });
+    });
   });
 
 });
