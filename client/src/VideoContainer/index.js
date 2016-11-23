@@ -129,10 +129,9 @@ class VideoContainer extends React.Component {
   }
 
   fetchChat() {
-    //gets chat messages via axios, currently feeds placeholder stuff
+    //gets chat messages via axios
     axios.get('/highlights/chat/?id=' + this.props.video._id)
     .then(response => {
-      console.log(response);
       this.setState({messages: response.data.messages, messagesPointer: 0});
     });
   }
