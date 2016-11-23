@@ -25,6 +25,21 @@ h3 {
   color: #555;
 }
 
+img {
+  max-width: 100%;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+
 button {
   border-radius: 4px;
   border: none;
@@ -44,10 +59,6 @@ button:focus {
 .app-header {
   text-align: center;
   padding: 2em;
-}
-
-.logo {
-  max-width: 40em;
 }
 
 .icon {
@@ -200,23 +211,60 @@ button:focus {
   margin: 0;
 }
 
-.navbar {
+.nav {
   border: none;
   background: #6441a4;
   color: #fff;
   border-radius: 0;
   margin-bottom: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+
+  /* padding-left is covered by the .nav-logo-container */
+  padding-right: 2em;
 }
 
-.navbar li a {
+.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-section {
+
+}
+
+.nav-section li {
+  display: inline-block;
+  padding: 1.25em 1em;
+  cursor: pointer;
+}
+
+.nav-button,
+.nav-button:active {
   color: #fff !important;
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 1px;
+  padding: 0;
 }
 
-.navbar li {
+.nav li {
   transition: background 0.2s ease;
+}
+
+.nav-logo-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  background: #341174;
+  width: 8em;
+  padding: 0 2em;
+}
+
+.logo {
+  display: block;
 }
 
 .form-group {

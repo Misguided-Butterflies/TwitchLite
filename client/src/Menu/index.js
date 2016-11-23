@@ -1,5 +1,6 @@
 import React from 'react';
 import JSONP from 'browser-jsonp';
+import NavItem from '../NavItem';
 
 /** Menu
  * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
@@ -137,40 +138,45 @@ class Menu extends React.Component {
     let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
     let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
-      auth = <div onClick={this.logout}>LOGOUT</div>;
-      user = <div >{this.state.name}</div>;
+      auth = <NavItem handleClick={this.logout}>LOGOUT</NavItem>;
+      user = <NavItem>{this.state.name}</NavItem>;
       followedChannelsLink = (
-        <div onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</div>
+        <NavItem handleClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</NavItem>
       );
       followedGamesLink = (
-        <div onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</div>
+        <NavItem handleClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</NavItem>
       );
     } else {
-      auth = <div onClick={this.login}>LOGIN</div>;
+      auth = <NavItem handleClick={this.login}>LOGIN</NavItem>;
       user = null;
       followedChannelsLink = null;
       followedGamesLink = null;
     }
-
+    // <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
     return (
-      <nav className='navbar'>
-          <div>
-            <div onClick={this.props.sort.hotness}>Hottest</div>
-            <div onClick={this.props.sort.age}>New ({this.props.newHighlights})</div>
+      <nav className='nav'>
+        <div className='nav-left'>
+          <div className='nav-logo-container'>
+            <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
+          </div>
+          <ul className='nav-section'>
+            <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
+            <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
             {followedChannelsLink}
             {followedGamesLink}
-          </div>
+          </ul>
+        </div>
+        <div className='nav-right'>
           <div>
-            <div>
-              <form>
-                <input placeholder='Search' onChange={this.props.sort.search}/>
-              </form>
-            </div>
-            <div title="User" id="basic-nav-dropdown">
-              {user}
-              {auth}
-            </div>
+            <form>
+              <input placeholder='Search' onChange={this.props.sort.search}/>
+            </form>
           </div>
+          <ul className='nav-section'>
+            {user}
+            {auth}
+          </ul>
+        </div>
       </nav>
     );
   }
