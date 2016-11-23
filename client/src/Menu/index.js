@@ -18,8 +18,8 @@ class Menu extends React.Component {
 
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
-    this.clickFollowedChannels = this.clickFollowedChannels.bind(this);
-    this.clickFollowedGames = this.clickFollowedGames.bind(this);
+    this.handleClickFollowedChannels = this.handleClickFollowedChannels.bind(this);
+    this.handleClickFollowedGames = this.handleClickFollowedGames.bind(this);
   }
 
   login() {
@@ -117,13 +117,13 @@ class Menu extends React.Component {
     }
   }
 
-  clickFollowedChannels () {
+  handleClickFollowedChannels () {
     let prev = this.state.filterByFollowedChannels;
     this.setState({filterByFollowedChannels: !prev});
     this.props.sort.followedChannels();
   }
 
-  clickFollowedGames() {
+  handleClickFollowedGames() {
     let prev = this.state.filterByFollowedGames;
     this.setState({filterByFollowedGames: !prev});
     this.props.sort.followedGames();
@@ -141,10 +141,10 @@ class Menu extends React.Component {
       auth = <NavItem handleClick={this.logout}>LOGOUT</NavItem>;
       user = <NavItem>{this.state.name}</NavItem>;
       followedChannelsLink = (
-        <NavItem handleClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</NavItem>
+        <NavItem handleClick={this.handleClickFollowedChannels} className={followedChannelsClass}>Followed Channels</NavItem>
       );
       followedGamesLink = (
-        <NavItem handleClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</NavItem>
+        <NavItem handleClick={this.handleClickFollowedGames} className={followedGamesClass}>Followed Games</NavItem>
       );
     } else {
       auth = <NavItem handleClick={this.login}>LOGIN</NavItem>;
@@ -152,7 +152,7 @@ class Menu extends React.Component {
       followedChannelsLink = null;
       followedGamesLink = null;
     }
-    // <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
+
     return (
       <nav className='nav'>
         <div className='nav-left'>
