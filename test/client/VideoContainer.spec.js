@@ -54,6 +54,7 @@ describe('<VideoContainer>', () => {
 
   it('should update state.messagesPointer when handleTimeChange is called', () => {
     let wrapper = shallow(videoContainer);
+    wrapper.setState({messages: testVideo.messages});
     expect(wrapper.state().messagesPointer).to.equal(0);
     wrapper.instance().handleTimeChange(3);
     expect(wrapper.state().messagesPointer).to.equal(1);
