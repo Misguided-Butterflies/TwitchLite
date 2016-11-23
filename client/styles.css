@@ -235,23 +235,25 @@ button:focus {
 
 }
 
-.nav-section li {
+.nav-item {
   display: inline-block;
   padding: 1.25em 1em;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-item.active {
+  background: #341174;
 }
 
 .nav-button,
 .nav-button:active {
   color: #fff !important;
   text-transform: uppercase;
+  background: transparent;
   font-size: 12px;
   letter-spacing: 1px;
   padding: 0;
-}
-
-.nav li {
-  transition: background 0.2s ease;
 }
 
 .nav-logo-container {
