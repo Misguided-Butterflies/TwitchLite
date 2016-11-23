@@ -25,7 +25,8 @@ class VideoContainer extends React.Component {
       // have been displayed at any given point while the video plays
       messagesPointer: 0,
       // null indicates there is no custom height to set yet
-      videoHeight: null
+      videoHeight: null,
+      messages: []
     };
 
     this.calculateVotes = this.calculateVotes.bind(this);
@@ -33,6 +34,7 @@ class VideoContainer extends React.Component {
     this.updateUserVote = this.updateUserVote.bind(this);
     this.getUserVote = this.getUserVote.bind(this);
     this.handleTimeChange = this.handleTimeChange.bind(this);
+    this.fetchChat = this.fetchChat.bind(this);
     this.handleHeightCalculation = this.handleHeightCalculation.bind(this);
   }
 
@@ -53,8 +55,8 @@ class VideoContainer extends React.Component {
   handleTimeChange(msSinceHighlightStart) {
     var newPointer = this.state.messagesPointer;
 
-    while (this.props.video.messages[newPointer] &&
-      this.props.video.messages[newPointer].time <= this.props.video.highlightStart + msSinceHighlightStart) {
+    while (this.state.messages[newPointer] &&
+      this.state.messages[newPointer].time <= this.props.video.highlightStart + msSinceHighlightStart) {
       newPointer++;
     }
 
@@ -126,6 +128,15 @@ class VideoContainer extends React.Component {
     });
   }
 
+  fetchChat() {
+    //gets chat messages via axios
+    axios.get('/highlights/chat/?id=' + this.props.video._id)
+    .then(response => {
+      this.setState({messages: response.data.messages, messagesPointer: 0});
+    });
+  }
+  
+  
   render() {
     let upvoteClass = this.state.userVote === 1 ? 'video-button upvote active' : 'video-button upvote';
     let downvoteClass = this.state.userVote === -1 ? 'video-button downvote active' : 'video-button downvote';
@@ -141,7 +152,8 @@ class VideoContainer extends React.Component {
             id: this.props.video.vodId,
             preview: this.props.video.preview,
             start: Math.floor((this.props.video.highlightStart - this.props.video.streamStart) / 1000),
-            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000)
+            duration: Math.floor((this.props.video.highlightEnd - this.props.video.highlightStart) / 1000),
+            fetchChat: this.fetchChat
           }}
           handleTimeChange={this.handleTimeChange}
           handleHeightCalculation={this.handleHeightCalculation}
@@ -176,10 +188,11 @@ class VideoContainer extends React.Component {
           }
         </div>
         <ChatsContainer
-          messages={this.props.video.messages.slice(0, this.state.messagesPointer)}
+          messages={this.state.messages.slice(0, this.state.messagesPointer)}
           emotes={this.props.emotes}
           videoHeight={this.state.videoHeight}
         />
+
       </div>
     );
   }

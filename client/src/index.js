@@ -7,7 +7,7 @@ import VideoList from './VideoList';
 import axios from 'axios';
 import utils from './utils';
 
-const timeBetweenNewHighlightsCheck = 2000;
+const timeBetweenNewHighlightsCheck = 5000;
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
 const baseMultiplier = 7;
@@ -38,9 +38,7 @@ class App extends React.Component {
       followedGames: false,
       search: '',
     };
-    //stores current list of highlights without newly added highlights
-    this.tempHighlights = null;
-    //current highlight list, refiltered from tempHighlights when option is selected
+    //current highlight list, filtered from allHighlights when option is selected
     this.myHighlights = null;
 
     this.sortByAge = this.sortByAge.bind(this);
@@ -50,6 +48,7 @@ class App extends React.Component {
     this.updateList = this.updateList.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.updateAllHighlights = this.updateAllHighlights.bind(this);
+    this.updateHighlightCount = this.updateHighlightCount.bind(this);
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -94,13 +93,13 @@ class App extends React.Component {
   /** componentWillMount
    * runs once when component loads
    * fetches all highlights from the database first
-   * sets an interval for fetching highlights to 2s
+   * sets an interval for fetching highlight count to 5s
    * creates an interval object to later clear if needed
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
     this.updateAllHighlights();
-    var updateInterval = setInterval(this.updateAllHighlights, timeBetweenNewHighlightsCheck);
+    var updateInterval = setInterval(this.updateHighlightCount, timeBetweenNewHighlightsCheck);
     this.setState({interval: updateInterval});
   }
   
@@ -109,18 +108,21 @@ class App extends React.Component {
   }
 
   //checks for new highlights, put into allHighlights
-  //writes to tempHighlights object to store currently viewed highlights
   updateAllHighlights() {
     axios.get('/highlights')
     .then(response => {
       this.allHighlights = response.data;
-      if (this.tempHighlights === null) {
-        //if this is first time updating highlights
-        this.tempHighlights = this.allHighlights.slice(0);
-        this.sortByAge();
-      } else {
-        //otherwise- calculate number of new highlights
-        let diff = this.allHighlights.length - this.tempHighlights.length;
+      this.setState({newHighlights: 0});
+      this.sortByAge();
+    });
+  }
+  
+  //gets count of new highlights
+  updateHighlightCount() {
+    axios.get('/highlights/count')
+    .then(response => {
+      let diff = parseInt(response.data) - this.allHighlights.length;
+      if (diff > this.state.newHighlights) {
         this.setState({newHighlights: diff});
       }
     });
@@ -144,11 +146,13 @@ class App extends React.Component {
   }
 
   sortByAge() {
-    //updates tempHighlights with new data, clears new highlight count
-    this.tempHighlights = this.allHighlights.slice(0);
-    this.setState({newHighlights: 0});
-    this.selected.sortType = 'age';
-    this.updateList();
+    //updates allHighlights with new data
+    if (this.state.newHighlights) {
+      this.updateAllHighlights();
+    } else {
+      this.selected.sortType = 'age';
+      this.updateList();
+    }
   }
 
   sortByFollowedChannels() {
@@ -164,8 +168,8 @@ class App extends React.Component {
   }
   
   filter() {
-    //get highlights from tempHighlights
-    this.myHighlights = this.tempHighlights.slice(0);
+    //get highlights from allHighlights
+    this.myHighlights = this.allHighlights.slice(0);
     if (this.selected.followedChannels) {
       let arr = this.state.followedChannels;
       this.myHighlights = this.myHighlights.filter(function (elem) {

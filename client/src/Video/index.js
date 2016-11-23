@@ -41,6 +41,7 @@ class Video extends React.Component {
       duration={this.props.video.duration}
       preview={this.props.video.preview}
       handleTimeChange={this.props.handleTimeChange}
+      fetchChat={this.props.video.fetchChat}
       handleHeightCalculation={this.props.handleHeightCalculation}
     />, this.refs.video);
   }
