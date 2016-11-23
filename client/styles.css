@@ -275,12 +275,25 @@ button:focus {
   position: absolute;
   top: 0;
   right: 0;
-  display: none;
   z-index: 5;
+
+  visibility: hidden;
+  opacity: 0;
+  transform: scaleY(0.7);
+  transform-origin: top right;
+
+  transition: all 0.2s ease;
 }
 
 .nav-menu.open {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  transform: scaleY(1.0);
+}
+
+.menu-toggle .icon {
+  width: 40px;
+  height: 40px;
 }
 
 .logo {

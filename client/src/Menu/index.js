@@ -1,6 +1,9 @@
 import React from 'react';
 import JSONP from 'browser-jsonp';
 import NavItem from '../NavItem';
+import InlineSVG from 'svg-inline-react';
+
+import menuSVG from '../icons/menu.svg';
 
 /** Menu
  * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
@@ -168,7 +171,7 @@ class Menu extends React.Component {
             className='menu-toggle'
             onClick={this.toggleMenu}
           >
-            menu
+            <InlineSVG src={menuSVG} />
           </button>
           <div className={this.state.menuOpen ? 'nav-menu open' : 'nav-menu'}>
             <ul className='nav-section'>
