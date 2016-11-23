@@ -242,7 +242,10 @@ button:focus {
   transition: background 0.2s ease;
 }
 
-.nav-item.active {
+.nav-item.active,
+.nav-item:hover,
+.nav-item:focus,
+.nav-item:active {
   background: #341174;
 }
 
