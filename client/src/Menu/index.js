@@ -17,19 +17,29 @@ class Menu extends React.Component {
       name: '',
       filterByFollowedChannels: false,
       filterByFollowedGames: false,
-      menuOpen: false,
+      isMenuOpen: false,
     };
 
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
     this.handleClickFollowedChannels = this.handleClickFollowedChannels.bind(this);
     this.handleClickFollowedGames = this.handleClickFollowedGames.bind(this);
   }
 
-  toggleMenu() {
+  toggleMenu(event) {
+    // Prevent the event from propagating so that the document-wide click handler
+    // for closeMenu() is not called
+    event.nativeEvent.stopImmediatePropagation();
     this.setState({
-      menuOpen: !this.state.menuOpen
+      isMenuOpen: !this.state.isMenuOpen
+    });
+  }
+
+  closeMenu() {
+    this.setState({
+      isMenuOpen: false
     });
   }
 
@@ -105,6 +115,8 @@ class Menu extends React.Component {
   }
 
   componentDidMount() {
+    document.addEventListener('click', this.closeMenu);
+
     //if logged in, get user's name and followed things. pass it up to main app
     var that = this;
     if (this.props.twitchStatus.authenticated) {
@@ -128,13 +140,15 @@ class Menu extends React.Component {
     }
   }
 
-  handleClickFollowedChannels () {
+  handleClickFollowedChannels (event) {
+    event.nativeEvent.stopImmediatePropagation();
     let prev = this.state.filterByFollowedChannels;
     this.setState({filterByFollowedChannels: !prev});
     this.props.sort.followedChannels();
   }
 
-  handleClickFollowedGames() {
+  handleClickFollowedGames(event) {
+    event.nativeEvent.stopImmediatePropagation();
     let prev = this.state.filterByFollowedGames;
     this.setState({filterByFollowedGames: !prev});
     this.props.sort.followedGames();
@@ -143,22 +157,18 @@ class Menu extends React.Component {
   render() {
     //change user view depending on whether or not user is logged in
     let auth;
-    let followedChannelsLink;
-    let followedGamesLink;
-    let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
-    let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
+    let followedChannelsLink = null;
+    let followedGamesLink = null;
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
       auth = <NavItem handleClick={this.logout}>LOGOUT {this.state.name}</NavItem>;
       followedChannelsLink = (
-        <NavItem handleClick={this.handleClickFollowedChannels} className={followedChannelsClass}>Followed Channels</NavItem>
+        <NavItem handleClick={this.handleClickFollowedChannels} isActive={this.state.filterByFollowedChannels}>Followed Channels</NavItem>
       );
       followedGamesLink = (
-        <NavItem handleClick={this.handleClickFollowedGames} className={followedGamesClass}>Followed Games</NavItem>
+        <NavItem handleClick={this.handleClickFollowedGames} isActive={this.state.filterByFollowedGames}>Followed Games</NavItem>
       );
     } else {
       auth = <NavItem handleClick={this.login}>LOGIN</NavItem>;
-      followedChannelsLink = null;
-      followedGamesLink = null;
     }
 
     return (
@@ -168,13 +178,13 @@ class Menu extends React.Component {
         </div>
 
         <button
-          className='menu-toggle'
+          className={this.state.isMenuOpen ? 'menu-toggle active' : 'menu-toggle'}
           onClick={this.toggleMenu}
         >
           <InlineSVG src={menuSVG} />
         </button>
 
-        <div className={this.state.menuOpen ? 'nav-menu open' : 'nav-menu'}>
+        <div className={this.state.isMenuOpen ? 'nav-menu open' : 'nav-menu'}>
           <div className='nav-left'>
             <ul className='nav-section'>
             <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>

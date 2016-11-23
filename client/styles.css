@@ -297,6 +297,12 @@ button:focus {
     items, so this is a replacement)
   */
   margin-left: auto;
+
+  border-radius: 0;
+}
+
+.menu-toggle.active {
+  background: #341174;
 }
 
 .menu-toggle .icon {

@@ -1,8 +1,9 @@
 import React from 'react';
 
 const NavItem = (props) => {
+  console.log('is active?', props.isActive);
   return (
-    <li className='nav-item' onClick={props.handleClick}>
+    <li className={props.isActive ? 'nav-item active' : 'nav-item'} onClick={props.handleClick}>
       <button className='nav-button'>
         {props.children}
       </button>
@@ -15,7 +16,8 @@ NavItem.propTypes = {
     React.PropTypes.string,
     React.PropTypes.array
   ]),
-  handleClick: React.PropTypes.func.isRequired
+  handleClick: React.PropTypes.func.isRequired,
+  isActive: React.PropTypes.bool
 };
 
 export default NavItem;
