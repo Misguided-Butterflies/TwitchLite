@@ -2,7 +2,6 @@ import React from 'react';
 import Video from '../Video';
 import ChatsContainer from '../ChatsContainer';
 import axios from 'axios';
-import {Row, Col} from 'react-bootstrap';
 import InlineSVG from 'svg-inline-react';
 
 import upvoteSVG from '../icons/upvote.svg';
