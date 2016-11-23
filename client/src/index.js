@@ -1,6 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
 import axios from 'axios';
@@ -115,7 +114,7 @@ class App extends React.Component {
       this.sortByAge();
     });
   }
-  
+
   //gets count of new highlights
   updateHighlightCount() {
     axios.get('/highlights/count')
