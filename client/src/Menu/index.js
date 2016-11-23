@@ -13,13 +13,21 @@ class Menu extends React.Component {
     this.state = {
       name: '',
       filterByFollowedChannels: false,
-      filterByFollowedGames: false
+      filterByFollowedGames: false,
+      menuOpen: false,
     };
 
+    this.toggleMenu = this.toggleMenu.bind(this);
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
     this.handleClickFollowedChannels = this.handleClickFollowedChannels.bind(this);
     this.handleClickFollowedGames = this.handleClickFollowedGames.bind(this);
+  }
+
+  toggleMenu() {
+    this.setState({
+      menuOpen: !this.state.menuOpen
+    });
   }
 
   login() {
@@ -156,16 +164,24 @@ class Menu extends React.Component {
           <div className='nav-logo-container'>
             <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
           </div>
-          <ul className='nav-section'>
-            <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
-            <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
-            {followedChannelsLink}
-            {followedGamesLink}
-          </ul>
-          <input placeholder='Search' onChange={this.props.sort.search}/>
-          <ul className='nav-section'>
+          <button
+            className='menu-toggle'
+            onClick={this.toggleMenu}
+          >
+            menu
+          </button>
+          <div className={this.state.menuOpen ? 'nav-menu open' : 'nav-menu'}>
+            <ul className='nav-section'>
+              <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
+              <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
+              {followedChannelsLink}
+              {followedGamesLink}
+            </ul>
+            <input placeholder='Search' onChange={this.props.sort.search}/>
+            <ul className='nav-section'>
             {auth}
-          </ul>
+            </ul>
+          </div>
         </div>
       </nav>
     );

@@ -232,11 +232,13 @@ button:focus {
 }
 
 .nav-section {
+  display: flex;
+  flex-flow: column nowrap;
 
+  /* make flex-flow: row nowrap on larger screens */
 }
 
 .nav-item {
-  display: inline-block;
   padding: 1.25em 1em;
   cursor: pointer;
   transition: background 0.2s ease;
@@ -266,6 +268,19 @@ button:focus {
   background: #341174;
   width: 8em;
   padding: 0 2em;
+}
+
+.nav-menu {
+  background: #6441a4;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  z-index: 5;
+}
+
+.nav-menu.open {
+  display: block;
 }
 
 .logo {
