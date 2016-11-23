@@ -197,16 +197,15 @@ class App extends React.Component {
   updateList() {
     //filter list into myHighlights
     this.filter();
-    //change state
     this.setState({
-      list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
+      list: this.myHighlights ? this.myHighlights.slice(0, numberOfVideosToShowPerPage) : [],
       next: numberOfVideosToShowPerPage,
     });
   }
 
   increaseList() {
     this.setState({
-      list: this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)),
+      list: this.myHighlights ? this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)) : [],
       next: this.state.next + numberOfVideosToShowPerPage
     });
   }

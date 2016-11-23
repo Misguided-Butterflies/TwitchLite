@@ -1,7 +1,6 @@
 import React from 'react';
 
 const NavItem = (props) => {
-  console.log('is active?', props.isActive);
   return (
     <li className={props.isActive ? 'nav-item active' : 'nav-item'} onClick={props.handleClick}>
       <button className='nav-button'>
