@@ -124,7 +124,7 @@ class App extends React.Component {
       let diff = parseInt(response.data) - this.allHighlights.length;
       if (diff > this.state.newHighlights) {
         this.setState({newHighlights: diff});
-      };
+      }
     });
   }
   
