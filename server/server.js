@@ -30,15 +30,15 @@ app.get('/highlights/count', function(req, res) {
   highlight.findCount()
   .then(data => {
     res.send('' + data);
-  })
-})
+  });
+});
 
 app.get('/highlights/chat', function(req, res) {
   chat.findOne(req.query.id)
   .then(data => {
     res.json(data);
-  })
-})
+  });
+});
 
 app.get('/emotes', function(req, res) {
   fs.readFile('emotes.json', (err, data) => {

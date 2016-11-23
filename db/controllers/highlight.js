@@ -1,4 +1,5 @@
 var Highlight = require('../models/highlight.js');
+var Chat = require('./chat.js');
 var mongoose = require ('mongoose');
 var fetch = require('node-fetch');
 
@@ -26,19 +27,25 @@ var insertOne = function(highlightData) {
     }
   })
   .then(results => {
+    
+    var chatData = {};
+    chatData.messages = highlightData.messages;
+    chatData.highlightId = highlightData._id;
+    
     if (results.length) {
-      if (results.length > 1) {
-        throw new Error('too many similar results when inserting' + highlightData + ' into the database: ' + results);
-      }
       let oldHighlight = results[0];
 
-      oldHighlight.messages = oldHighlight.messages.concat(highlightData.messages.filter(message => message.time > oldHighlight.highlightEnd));
-      oldHighlight.highlightEnd = highlightData.highlightEnd;
-      oldHighlight.multiplier = Math.max(oldHighlight.multiplier, highlightData.multiplier);
-      return oldHighlight.save();
-
+      return Chat.findOne(oldHighlight._id)
+        .then(function(oldChat) {
+        oldChat.messages =  oldChat.messages.concat(chatData.messages.filter(message => message.time > oldHighlight.highlightEnd));
+        
+        oldHighlight.highlightEnd = highlightData.highlightEnd;
+        oldHighlight.multiplier = Math.max(oldHighlight.multiplier, highlightData.multiplier);
+        return oldChat.save().then(() => oldHighlight.save());
+      });
+      
     } else {
-      return Highlight.create(highlightData);
+      return Chat.insertOne(chatData).then(() => Highlight.create(highlightData));
     }
   })
   .catch(error => {

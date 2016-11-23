@@ -6,7 +6,7 @@ var insertOne = function(obj) {
 }
 
 var findOne = function(id) {
-  return Chat.find({highlightId: id});
+  return Chat.findOne({highlightId: id});
 }
 
 module.exports = {insertOne, findOne};
