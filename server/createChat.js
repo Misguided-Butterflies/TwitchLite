@@ -1,5 +1,0 @@
-var mongoose = require('mongoose');
-var db = mongoose.connect(process.env.MONGODB_URI);
-var { insertOne } = require('../db/controllers/chat');
-
-insertOne({ highlightId:"582f59c0b2a0c2057664baf7", messages: [{ "from" : "TheFIyingFooI", "text" : "Professional!!!!", "time" : 1479498125996 }, { "from" : "Xenoriax", "text" : "LUL", "time" : 1479498126414 }, { "from" : "Ovie97", "text" : "ANIIIIIII", "time" : 1479498126842 }, { "from" : "zdubs888", "text" : "woah", "time" : 1479498128360 }, { "from" : "Kalecommander", "text" : "Oh sheezh PogChamp", "time" : 1479498128690 }, { "from" : "Satturs", "text" : "Grapergruiy", "time" : 1479498128711 }, { "from" : "CarlosR221", "text" : "GRAPEFRUIT!!!!!!!!!!!!!!!!!!!!!!", "time" : 1479498129448 }, { "from" : "Jillliann", "text" : "Uh wtf am i watching o.O", "time" : 1479498129566 }, { "from" : "crownV", "text" : "Um?", "time" : 1479498130090 }, { "from" : "getinback2Dsean", "text" : "I member this", "time" : 1479498130167 }, { "from" : "hthorn95", "text" : "This is unholy", "time" : 1479498133732 }] });

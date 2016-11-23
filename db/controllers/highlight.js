@@ -30,10 +30,10 @@ var insertOne = function(highlightData) {
     
     var chatData = {};
     chatData.messages = highlightData.messages;
-    chatData.highlightId = highlightData._id;
     
     if (results.length) {
       let oldHighlight = results[0];
+      chatData.highlightId = oldHighlight._id;
 
       return Chat.findOne(oldHighlight._id)
         .then(function(oldChat) {
@@ -45,7 +45,10 @@ var insertOne = function(highlightData) {
       });
       
     } else {
-      return Chat.insertOne(chatData).then(() => Highlight.create(highlightData));
+      return Highlight.create(highlightData).then(highlight => {
+        chatData.highlightId = highlight._id
+        return Chat.insertOne(chatData);
+      })
     }
   })
   .catch(error => {

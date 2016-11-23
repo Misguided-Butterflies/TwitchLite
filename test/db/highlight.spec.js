@@ -69,7 +69,7 @@ describe('Highlights Model', function() {
   });
 
   it('is able to add a highlight', function(done) {
-    insertOne(obj)
+    insertOne(obj).then(() => findOne(obj._id))
     .then(created => {
       expect(created.game).to.equal('pong');
       expect(created.votes).to.eql({});
