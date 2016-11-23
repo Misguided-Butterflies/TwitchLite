@@ -5,6 +5,7 @@ const numberOfSecondsToAddToBeginningOfHighlights = 30;
 const minimumMultiplierToBeConsideredAHighlight = 5;
 const secondsPerBlockOfMessages = 10;
 const numberOfDataPointsInRollingAvg = 120;
+const minimumCommentsPerSecond = 1;
 
 /** createClient
  * returns a twitch chat irc client to connect to.
@@ -46,7 +47,7 @@ var createWorker = function(stream, handleHighlight) {
     messagesDataPoint.push({
       time: Date.now(),
       text: message,
-      from: from['display-name'] || from['name']
+      from: from['display-name'] || from['name'] || 'Anonymous'
     });
     messagesCount++;
   });
@@ -54,7 +55,8 @@ var createWorker = function(stream, handleHighlight) {
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over
   var checkHighlight = function(detectedMultiplier) {
-    if (detectedMultiplier > minimumMultiplierToBeConsideredAHighlight) {
+    if (detectedMultiplier > minimumMultiplierToBeConsideredAHighlight
+      && highlightMessages[highlightMessages.length - 1].length >= minimumCommentsPerSecond * secondsPerBlockOfMessages) {
       //if highlight is detected, increment end time, calculate multiplier
       if (detectedMultiplier > currentHighlightMultiplier) {
         currentHighlightMultiplier = detectedMultiplier;
