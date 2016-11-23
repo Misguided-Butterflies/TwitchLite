@@ -35,7 +35,7 @@ var insertOne = function(highlightData) {
       return appendHighlight(oldHighlight, highlightData);
     } else {
       return Highlight.create(highlightData).then(highlight => {
-        chatData.highlightId = highlight._id
+        chatData.highlightId = highlight._id;
         return Chat.insertOne(chatData);
       });
     }
@@ -79,7 +79,9 @@ var updateVote = function(voteData) {
 
 var findCount = function() {
   //gets total number of highlights out there
-  return Highlight.count({});
+  let currentTime = Date.now();
+  return Highlight.count({highlightEnd: {$lt: currentTime - 30 * 60 * 1000}});
+  //FIXME
 }
 
 module.exports = {findAll, findOne, insertOne, remove, updateVote, findCount};
