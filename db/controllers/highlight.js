@@ -27,34 +27,35 @@ var insertOne = function(highlightData) {
     }
   })
   .then(results => {
-    
     var chatData = {};
     chatData.messages = highlightData.messages;
     
     if (results.length) {
       let oldHighlight = results[0];
-      chatData.highlightId = oldHighlight._id;
-
-      return Chat.findOne(oldHighlight._id)
-        .then(function(oldChat) {
-        oldChat.messages =  oldChat.messages.concat(chatData.messages.filter(message => message.time > oldHighlight.highlightEnd));
-        
-        oldHighlight.highlightEnd = highlightData.highlightEnd;
-        oldHighlight.multiplier = Math.max(oldHighlight.multiplier, highlightData.multiplier);
-        return oldChat.save().then(() => oldHighlight.save());
-      });
-      
+      return appendHighlight(oldHighlight, highlightData);
     } else {
       return Highlight.create(highlightData).then(highlight => {
         chatData.highlightId = highlight._id
         return Chat.insertOne(chatData);
-      })
+      });
     }
   })
   .catch(error => {
     console.error('Error inserting highlight into database:', error);
   });
 };
+
+//appends newHighlight content to oldHighlight, returns promise
+var appendHighlight = function(oldHighlight, newHighlight) {
+  return Chat.findOne(oldHighlight._id)
+    .then(function(oldChat) {
+    oldChat.messages =  oldChat.messages.concat(newHighlight.messages.filter(message => message.time > oldHighlight.highlightEnd));
+
+    oldHighlight.highlightEnd = newHighlight.highlightEnd;
+    oldHighlight.multiplier = Math.max(oldHighlight.multiplier, newHighlight.multiplier);
+    return oldChat.save().then(() => oldHighlight.save());
+  });
+}
 
 var remove = function(highlightData) {
   return Highlight.remove(highlightData).exec();

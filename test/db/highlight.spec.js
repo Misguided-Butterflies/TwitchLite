@@ -65,7 +65,9 @@ describe('Highlights Model', function() {
   });
 
   afterEach(function(done) {
-    remove({vodId: obj.vodId}).then(() => mongoose.disconnect()).then(() => done());
+    remove({vodId: obj.vodId})
+      .then(() => Chat.remove({highlightId: obj._id}))
+      .then(() => mongoose.disconnect()).then(() => done());
   });
 
   it('is able to add a highlight', function(done) {

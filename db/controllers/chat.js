@@ -9,4 +9,8 @@ var findOne = function(id) {
   return Chat.findOne({highlightId: id});
 }
 
-module.exports = {insertOne, findOne};
+var remove = function(obj) {
+  return Chat.remove(obj);
+}
+
+module.exports = {insertOne, findOne, remove};
