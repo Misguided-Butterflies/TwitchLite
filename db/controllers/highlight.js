@@ -81,7 +81,6 @@ var findCount = function() {
   //gets total number of highlights out there
   let currentTime = Date.now();
   return Highlight.count({highlightEnd: {$lt: currentTime - 30 * 60 * 1000}});
-  //FIXME
 }
 
 module.exports = {findAll, findOne, insertOne, remove, updateVote, findCount};
