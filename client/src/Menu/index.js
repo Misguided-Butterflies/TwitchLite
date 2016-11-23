@@ -22,15 +22,20 @@ class Menu extends React.Component {
 
     this.toggleMenu = this.toggleMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
+    this.handleSearchClick = this.handleSearchClick.bind(this);
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
     this.handleClickFollowedChannels = this.handleClickFollowedChannels.bind(this);
     this.handleClickFollowedGames = this.handleClickFollowedGames.bind(this);
   }
 
-  toggleMenu(event) {
+  handleSearchClick(event) {
     // Prevent the event from propagating so that the document-wide click handler
     // for closeMenu() is not called
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
+  toggleMenu(event) {
     event.nativeEvent.stopImmediatePropagation();
     this.setState({
       isMenuOpen: !this.state.isMenuOpen
@@ -196,7 +201,12 @@ class Menu extends React.Component {
 
           <div className='nav-right'>
             <ul className='nav-section'>
-              <input placeholder='Search' onChange={this.props.sort.search}/>
+              <input
+                className='nav-search'
+                placeholder='Search'
+                onClick={this.handleSearchClick}
+                onChange={this.props.sort.search}
+              />
               {auth}
             </ul>
           </div>

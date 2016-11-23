@@ -239,6 +239,10 @@ button:focus {
   /* make flex-flow: row nowrap on larger screens */
 }
 
+.nav-search {
+  margin: 1em;
+}
+
 .nav-item {
   padding: 1.25em 1em;
   cursor: pointer;
