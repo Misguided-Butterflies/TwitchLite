@@ -227,4 +227,31 @@ describe('workerMaster', function() {
     });
   });
 
+  describe('purgeOldDbEntries', function() {
+    var highlightData = {
+      highlightStart: 1,
+      highlightEnd: 2,
+      channelName: 'twitch',
+      messages: [],
+      multiplier: 3
+    };
+    var getStreamVodDataStub = new Promise((resolve, reject) => {
+      resolve({
+        status: 'recording',
+        vodId: 'v34340593453',
+        link: 'fake link',
+        game: 'Hungry Hungry Hippos',
+        streamTitle: 'testing our function',
+        preview: 'link to preview image',
+        streamStart: 0
+      });
+    });
+
+    sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
+
+    it('should remove old db entries', function(done) {
+      done();
+    })
+  });
+
 });

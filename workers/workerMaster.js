@@ -1,8 +1,11 @@
 // Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
 // or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
-var { findAll, findOne, insertOne } = require('../db/controllers/highlight');
+var { findAll, findOne, insertOne, remove } = require('../db/controllers/highlight');
 var fetch = require('node-fetch');
 var worker = require('./worker');
+
+const maximumHighlightAge = 1000 * 60 * 60 * 24 * 7;
+
 var fetchOptions = {
   headers: {
     'Client-ID': process.env.TWITCH_CLIENT_ID
@@ -142,6 +145,14 @@ var workerMaster = {
       // Return a list of all the old channels; not necessary but maybe useful
       // down the line
       return oldWorkers;
+    });
+  },
+
+  purgeOldDbEntries: function() {
+    return remove({
+      streamStart: {
+        $lt: Date.now() - maximumHighlightAge
+      }
     });
   }
 };
