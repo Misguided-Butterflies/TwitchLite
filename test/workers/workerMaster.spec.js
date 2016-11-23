@@ -1,6 +1,7 @@
 var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
 var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 
 // See explanation in db test .setup.js
 mongoose.models = {};
@@ -89,6 +90,7 @@ describe('workerMaster', function() {
 
   describe('saveHighlight', function() {
     var highlightData = {
+      _id: new ObjectId(),
       highlightStart: 1,
       highlightEnd: 2,
       channelName: 'twitch',
@@ -134,8 +136,8 @@ describe('workerMaster', function() {
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
       workerMaster.saveHighlight(highlightData)
-      .then( savedHighlight => {
-        return findOne(savedHighlight._id);
+      .then( () => {
+        return findOne(highlightData._id);
       })
       .then(retrievedHighlight => {
         expect(retrievedHighlight.highlightStart).to.equal(highlightData.highlightStart);
