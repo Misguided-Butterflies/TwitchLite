@@ -82,7 +82,6 @@ describe('Highlights Model', function() {
   it('should only add one highlight at once', function(done) {
     insertOne(obj).then(array => {return array[0]})
     .then( () => {
-      console.log('in second promise');
       return findAll(objBase);
     })
     .then(res => {
