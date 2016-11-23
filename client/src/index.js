@@ -230,7 +230,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header />
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} newHighlights={this.state.newHighlights}/>
         <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes} />
       </div>

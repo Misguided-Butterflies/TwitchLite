@@ -168,7 +168,6 @@ class Menu extends React.Component {
             </div>
             <div title="User" id="basic-nav-dropdown">
               {user}
-              <div divider />
               {auth}
             </div>
           </div>
