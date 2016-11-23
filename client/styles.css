@@ -1,4 +1,5 @@
 /* purple: #6441a4 */
+/* purple dark: #341174 */
 /* black: #222 */
 /* gray: #555 */
 /* default_spacing: 2em */
@@ -7,6 +8,7 @@ body {
   color: #222;
   font-size: 16px;
   overflow-x: hidden;
+  font-family: 'Catamaran', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -22,6 +24,21 @@ h3 {
   font-size: 1em;
   color: #555;
 }
+
+img {
+  max-width: 100%;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
 
 button {
   border-radius: 4px;
@@ -42,10 +59,6 @@ button:focus {
 .app-header {
   text-align: center;
   padding: 2em;
-}
-
-.logo {
-  max-width: 40em;
 }
 
 .icon {
@@ -198,9 +211,147 @@ button:focus {
   margin: 0;
 }
 
-.navbar {
+.nav {
+  border: none;
+  background: #6441a4;
+  color: #fff;
   border-radius: 0;
   margin-bottom: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  height: 4em;
+
+  /* padding-left is covered by the .nav-logo-container */
+  /*padding-right: 2em;*/
+}
+
+/*.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+}*/
+
+.nav-section {
+  display: flex;
+  flex-flow: column nowrap;
+
+  /* make flex-flow: row nowrap on larger screens */
+}
+
+.nav-search {
+  margin: 1em;
+}
+
+.nav-item {
+  padding: 1.25em 1em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-item.active,
+.nav-item:hover,
+.nav-item:focus,
+.nav-item:active {
+  background: #341174;
+}
+
+.nav-button,
+.nav-button:active {
+  color: #fff !important;
+  text-transform: uppercase;
+  background: transparent;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 0;
+}
+
+.nav-logo-container {
+  display: flex;
+  align-items: center;
+  background: #341174;
+  width: 8em;
+  padding: 0 2em;
+}
+
+.nav-menu {
+  background: #6441a4;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  z-index: 5;
+
+  visibility: hidden;
+  opacity: 0;
+  transform: scaleY(0.7);
+  transform-origin: top right;
+
+  transition: all 0.2s ease;
+}
+
+.nav-menu.open {
+  visibility: visible;
+  opacity: 1;
+  transform: scaleY(1.0);
+}
+
+.menu-toggle {
+  /*
+    This aligns it to the left (there's no justify-self property for flexbox
+    items, so this is a replacement)
+  */
+  margin-left: auto;
+
+  border-radius: 0;
+}
+
+.menu-toggle.active {
+  background: #341174;
+}
+
+.menu-toggle .icon {
+  width: 40px;
+  height: 40px;
+}
+
+@media screen and (min-width: 64em) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .nav-menu {
+    position: static;
+    visibility: visible;
+    transform: none;
+    opacity: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2em;
+    flex-grow: 1;
+  }
+
+  .nav-section {
+    flex-flow: row nowrap;
+    height: 100%;
+  }
+}
+
+.logo {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-control {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.filter-active {
+  background-color: #341174;
 }
 
 @media screen and (min-width: 56em) {

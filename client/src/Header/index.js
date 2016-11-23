@@ -1,5 +1,4 @@
 import React from 'react';
-import {PageHeader} from 'react-bootstrap';
 
 /** Header
  * this component is for showing the twitchlite logo.

@@ -1,6 +1,9 @@
 import React from 'react';
 import JSONP from 'browser-jsonp';
-import {Navbar, Nav, NavItem, NavDropdown, MenuItem, FormControl, FormGroup} from 'react-bootstrap';
+import NavItem from '../NavItem';
+import InlineSVG from 'svg-inline-react';
+
+import menuSVG from '../icons/menu.svg';
 
 /** Menu
  * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
@@ -13,15 +16,38 @@ class Menu extends React.Component {
     this.state = {
       name: '',
       filterByFollowedChannels: false,
-      filterByFollowedGames: false
+      filterByFollowedGames: false,
+      isMenuOpen: false,
     };
 
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
+    this.handleSearchClick = this.handleSearchClick.bind(this);
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
-    this.clickFollowedChannels = this.clickFollowedChannels.bind(this);
-    this.clickFollowedGames = this.clickFollowedGames.bind(this);
+    this.handleClickFollowedChannels = this.handleClickFollowedChannels.bind(this);
+    this.handleClickFollowedGames = this.handleClickFollowedGames.bind(this);
   }
-  
+
+  handleSearchClick(event) {
+    // Prevent the event from propagating so that the document-wide click handler
+    // for closeMenu() is not called
+    event.nativeEvent.stopImmediatePropagation();
+  }
+
+  toggleMenu(event) {
+    event.nativeEvent.stopImmediatePropagation();
+    this.setState({
+      isMenuOpen: !this.state.isMenuOpen
+    });
+  }
+
+  closeMenu() {
+    this.setState({
+      isMenuOpen: false
+    });
+  }
+
   login() {
     Twitch.login({
       'response_type': 'token',
@@ -29,7 +55,7 @@ class Menu extends React.Component {
       scope: ['user_read']
     });
   }
-  
+
   logout() {
     Twitch.logout(err => {
       this.props.updateUser({
@@ -40,60 +66,62 @@ class Menu extends React.Component {
       this.setState({name: ''});
     });
   }
-  
+
 
   getTwitchUser(obj) {
     //promisified Twitch get user, gets token
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       Twitch.api({method: 'user'}, (err, res) => {
         if (err) {
-          fail(err);
+          reject(err);
         } else {
           obj.name = res.name;
           obj.token = Twitch.getToken();
-          succ(obj);
+          resolve(obj);
         }
       });
     });
   }
-  
+
   getTwitchFollowedChannels(obj) {
     //promisified get user's followed channels
     let followedChannels = [];
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       Twitch.api({method: 'users/' + obj.name + '/follows/channels'}, (err, list) => {
         if (err) {
-          fail(err)
+          reject(err);
         } else {
           for (let elem of list.follows) {
             followedChannels.push(elem.channel.name);
           }
           obj.followedChannels = followedChannels;
-          succ(obj);
+          resolve(obj);
         }
       });
     });
   }
-  
+
   getTwitchFollowedGames(obj) {
     //promisified get user's followed games from twitch api
     let followedGames = [];
-    return new Promise((succ, fail) => {
+    return new Promise((resolve, reject) => {
       JSONP({
         url: 'https://api.twitch.tv/api/users/' + obj.name + '/follows/games',
-        data: { oauth_token: obj.token },
-        success: function(data) { 
+        data: { 'oauth_token': obj.token },
+        success: function(data) {
           for (let elem of data.follows) {
             followedGames.push(elem.name);
           }
           obj.followedGames = followedGames;
-          succ(obj);
+          resolve(obj);
         }
       });
-    })
+    });
   }
-  
+
   componentDidMount() {
+    document.addEventListener('click', this.closeMenu);
+
     //if logged in, get user's name and followed things. pass it up to main app
     var that = this;
     if (this.props.twitchStatus.authenticated) {
@@ -116,72 +144,74 @@ class Menu extends React.Component {
       );
     }
   }
-  
-  clickFollowedChannels () {
+
+  handleClickFollowedChannels (event) {
+    event.nativeEvent.stopImmediatePropagation();
     let prev = this.state.filterByFollowedChannels;
     this.setState({filterByFollowedChannels: !prev});
     this.props.sort.followedChannels();
   }
-  
-  clickFollowedGames() {
+
+  handleClickFollowedGames(event) {
+    event.nativeEvent.stopImmediatePropagation();
     let prev = this.state.filterByFollowedGames;
     this.setState({filterByFollowedGames: !prev});
     this.props.sort.followedGames();
   }
-  
-  refresh() {
-    window.location.reload();
-  }
-  
+
   render() {
     //change user view depending on whether or not user is logged in
     let auth;
-    let user;
-    let followedChannelsLink;
-    let followedGamesLink;
-    let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
-    let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
+    let followedChannelsLink = null;
+    let followedGamesLink = null;
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
-      auth = <MenuItem onClick={this.logout}>LOGOUT</MenuItem>;
-      user = <MenuItem >{this.state.name}</MenuItem>;
-      followedChannelsLink = <MenuItem onClick={this.clickFollowedChannels} className={followedChannelsClass}>Followed Channels</MenuItem>;
-      followedGamesLink = <MenuItem onClick={this.clickFollowedGames} className={followedGamesClass}>Followed Games</MenuItem>
+      auth = <NavItem handleClick={this.logout}>LOGOUT {this.state.name}</NavItem>;
+      followedChannelsLink = (
+        <NavItem handleClick={this.handleClickFollowedChannels} isActive={this.state.filterByFollowedChannels}>Followed Channels</NavItem>
+      );
+      followedGamesLink = (
+        <NavItem handleClick={this.handleClickFollowedGames} isActive={this.state.filterByFollowedGames}>Followed Games</NavItem>
+      );
     } else {
-      auth = <MenuItem onClick={this.login}>LOGIN</MenuItem>;
-      user = null;
-      followedChannelsLink = null;
-      followedGamesLink = null;
+      auth = <NavItem handleClick={this.login}>LOGIN</NavItem>;
     }
-    
+
     return (
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-            <Navbar.Brand>
-              <a onClick={this.refresh.bind(this)}>TwitchLite</a>
-            </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem onClick={this.props.sort.hotness}>Hottest</NavItem>
-            <NavItem onClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
+      <nav className='nav'>
+        <div className='nav-logo-container'>
+          <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
+        </div>
+
+        <button
+          className={this.state.isMenuOpen ? 'menu-toggle active' : 'menu-toggle'}
+          onClick={this.toggleMenu}
+        >
+          <InlineSVG src={menuSVG} />
+        </button>
+
+        <div className={this.state.isMenuOpen ? 'nav-menu open' : 'nav-menu'}>
+          <div className='nav-left'>
+            <ul className='nav-section'>
+            <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
+            <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
             {followedChannelsLink}
             {followedGamesLink}
-          </Nav>
-          <Nav pullRight>
-            <NavItem>
-              <FormGroup>
-                <FormControl placeholder='Search' onChange={this.props.sort.search}/>
-              </FormGroup>
-            </NavItem>
-            <NavDropdown title="User" id="basic-nav-dropdown">
-              {user}
-              <MenuItem divider />
+            </ul>
+          </div>
+
+          <div className='nav-right'>
+            <ul className='nav-section'>
+              <input
+                className='nav-search'
+                placeholder='Search'
+                onClick={this.handleSearchClick}
+                onChange={this.props.sort.search}
+              />
               {auth}
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+            </ul>
+          </div>
+        </div>
+      </nav>
     );
   }
 }
@@ -192,6 +222,8 @@ Menu.propTypes = {
     follow: React.PropTypes.func,
     hotness: React.PropTypes.func,
     search: React.PropTypes.func,
+    followedGames: React.PropTypes.func,
+    followedChannels: React.PropTypes.func
   }),
   updateUser: React.PropTypes.func,
   twitchStatus: React.PropTypes.object,
