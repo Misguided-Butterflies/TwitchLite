@@ -132,14 +132,12 @@ class Menu extends React.Component {
   render() {
     //change user view depending on whether or not user is logged in
     let auth;
-    let user;
     let followedChannelsLink;
     let followedGamesLink;
     let followedChannelsClass = this.state.filterByFollowedChannels ? 'filter-active' : 'filter-inactive';
     let followedGamesClass = this.state.filterByFollowedGames ? 'filter-active' : 'filter-inactive';
     if (this.state.name.length > 0 && this.props.twitchStatus.authenticated) {
-      auth = <NavItem handleClick={this.logout}>LOGOUT</NavItem>;
-      user = <NavItem>{this.state.name}</NavItem>;
+      auth = <NavItem handleClick={this.logout}>LOGOUT {this.state.name}</NavItem>;
       followedChannelsLink = (
         <NavItem handleClick={this.handleClickFollowedChannels} className={followedChannelsClass}>Followed Channels</NavItem>
       );
@@ -148,7 +146,6 @@ class Menu extends React.Component {
       );
     } else {
       auth = <NavItem handleClick={this.login}>LOGIN</NavItem>;
-      user = null;
       followedChannelsLink = null;
       followedGamesLink = null;
     }
@@ -173,7 +170,6 @@ class Menu extends React.Component {
             </form>
           </div>
           <ul className='nav-section'>
-            {user}
             {auth}
           </ul>
         </div>
