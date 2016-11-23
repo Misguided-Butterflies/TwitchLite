@@ -163,23 +163,28 @@ class Menu extends React.Component {
 
     return (
       <nav className='nav'>
-        <div className='nav-left'>
-          <div className='nav-logo-container'>
-            <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
-          </div>
-          <button
-            className='menu-toggle'
-            onClick={this.toggleMenu}
-          >
-            <InlineSVG src={menuSVG} />
-          </button>
-          <div className={this.state.menuOpen ? 'nav-menu open' : 'nav-menu'}>
+        <div className='nav-logo-container'>
+          <img className='logo' src='/logo.png' alt='TwitchLite logo' title='Twitchlite logo' />
+        </div>
+
+        <button
+          className='menu-toggle'
+          onClick={this.toggleMenu}
+        >
+          <InlineSVG src={menuSVG} />
+        </button>
+
+        <div className={this.state.menuOpen ? 'nav-menu open' : 'nav-menu'}>
+          <div className='nav-left'>
             <ul className='nav-section'>
-              <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
-              <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
-              {followedChannelsLink}
-              {followedGamesLink}
+            <NavItem handleClick={this.props.sort.hotness}>Hottest</NavItem>
+            <NavItem handleClick={this.props.sort.age}>New ({this.props.newHighlights})</NavItem>
+            {followedChannelsLink}
+            {followedGamesLink}
             </ul>
+          </div>
+
+          <div className='nav-right'>
             <input placeholder='Search' onChange={this.props.sort.search}/>
             <ul className='nav-section'>
             {auth}

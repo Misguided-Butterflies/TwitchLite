@@ -220,16 +220,17 @@ button:focus {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  height: 4em;
 
   /* padding-left is covered by the .nav-logo-container */
   padding-right: 2em;
 }
 
-.nav-left,
+/*.nav-left,
 .nav-right {
   display: flex;
   align-items: center;
-}
+}*/
 
 .nav-section {
   display: flex;
@@ -264,7 +265,6 @@ button:focus {
 .nav-logo-container {
   display: flex;
   align-items: center;
-  height: 100%;
   background: #341174;
   width: 8em;
   padding: 0 2em;
@@ -273,7 +273,7 @@ button:focus {
 .nav-menu {
   background: #6441a4;
   position: absolute;
-  top: 0;
+  top: 4em;
   right: 0;
   z-index: 5;
 
@@ -289,6 +289,14 @@ button:focus {
   visibility: visible;
   opacity: 1;
   transform: scaleY(1.0);
+}
+
+.menu-toggle {
+  /*
+    This aligns it to the left (there's no justify-self property for flexbox
+    items, so this is a replacement)
+  */
+  margin-left: auto;
 }
 
 .menu-toggle .icon {
