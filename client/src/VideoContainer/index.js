@@ -12,7 +12,7 @@ import downvoteSVG from '../icons/downvote.svg';
  * this is a component that wraps <Video> and handles all other UI and logic
  * for rendering a <Video>
  * usage:
- * <VideoContainer video={video} />
+ * <VideoContainer video={video} emotes={emotes} username={username}/>
  */
 class VideoContainer extends React.Component {
   constructor(props) {

@@ -1,6 +1,11 @@
 import React from 'react';
 import Chat from '../Chat';
 
+/** ChatsContainer
+ * this component represents a list of chat messages to display alongside a twitch embed video.
+ * usage:
+ * <ChatsContainer videoHeight=768 emotes={{Kappa: 25, ...}} messages={[{from: 'batman', time: 13251345345, text: 'lulz'}, ...]} />
+ */
 class ChatsContainer extends React.Component {
   constructor(props) {
     super(props);
