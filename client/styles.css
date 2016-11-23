@@ -219,11 +219,11 @@ button:focus {
   margin-bottom: 0;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 4em;
 
   /* padding-left is covered by the .nav-logo-container */
-  padding-right: 2em;
+  /*padding-right: 2em;*/
 }
 
 /*.nav-left,
@@ -302,6 +302,28 @@ button:focus {
 .menu-toggle .icon {
   width: 40px;
   height: 40px;
+}
+
+@media screen and (min-width: 64em) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .nav-menu {
+    position: static;
+    visibility: visible;
+    transform: none;
+    opacity: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2em;
+    flex-grow: 1;
+  }
+
+  .nav-section {
+    flex-flow: row nowrap;
+    height: 100%;
+  }
 }
 
 .logo {

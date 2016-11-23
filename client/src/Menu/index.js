@@ -185,9 +185,9 @@ class Menu extends React.Component {
           </div>
 
           <div className='nav-right'>
-            <input placeholder='Search' onChange={this.props.sort.search}/>
             <ul className='nav-section'>
-            {auth}
+              <input placeholder='Search' onChange={this.props.sort.search}/>
+              {auth}
             </ul>
           </div>
         </div>
