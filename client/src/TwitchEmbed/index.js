@@ -42,6 +42,7 @@ class TwitchEmbed extends React.Component {
     // the video player itself
     this.createTwitchPlayer(dimensions);
     this.player.play();
+    this.props.fetchChat();
   }
 
   createTwitchPlayer({width, height}) {

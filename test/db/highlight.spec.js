@@ -1,6 +1,7 @@
 var ObjectId = mongoose.Types.ObjectId;
 var Highlight = require('../../db/models/highlight');
-var { findAll, findOne, insertOne, updateVote, remove } = require('../../db/controllers/highlight');
+var Chat = require('../../db/controllers/chat');
+var { findAll, findOne, insertOne, updateVote, remove, updateVote, findCount } = require('../../db/controllers/highlight');
 
 var obj = {
   _id: new ObjectId(),
@@ -64,11 +65,13 @@ describe('Highlights Model', function() {
   });
 
   afterEach(function(done) {
-    remove({vodId: obj.vodId}).then(() => mongoose.disconnect()).then(() => done());
+    remove({vodId: obj.vodId})
+      .then(() => Chat.remove({highlightId: obj._id}))
+      .then(() => mongoose.disconnect()).then(() => done());
   });
 
   it('is able to add a highlight', function(done) {
-    insertOne(obj)
+    insertOne(obj).then(() => findOne(obj._id))
     .then(created => {
       expect(created.game).to.equal('pong');
       expect(created.votes).to.eql({});
@@ -77,15 +80,41 @@ describe('Highlights Model', function() {
   });
 
   it('should only add one highlight at once', function(done) {
-    insertOne(obj)
+    insertOne(obj).then(array => {return array[0]})
     .then( () => {
+      console.log('in second promise');
       return findAll(objBase);
     })
     .then(res => {
       expect(res.length).to.equal(1);
       done();
+    })
+  });
+  
+  it('should be able to return number of highlights', function(done) {
+    var countBefore = 0;
+    findCount()
+      .then(res => {
+        countBefore = res;
+        return insertOne(obj);
+      })
+      .then(() => findCount())
+      .then(res => {
+      expect(res - 1).to.equal(countBefore);
+      done();
     });
   });
+  
+  it('should be able to add to chat db', function(done) {
+    insertOne(obj)
+    .then(() => {
+      return Chat.findOne(obj._id)
+    })
+    .then((res) => {
+      expect(res.messages.length).to.equal(2);
+      done();
+    })
+  })
 
   it('should be able to find by id', function(done) {
     insertOne(obj)
@@ -121,7 +150,10 @@ describe('Highlights Model', function() {
       expect(res._id.toString()).to.equal(obj._id.toString());
       expect(res.highlightEnd).to.equal(obj2.highlightEnd);
       expect(res.multiplier).to.equal(obj2.multiplier);
-      expect(res.messages.length).to.equal(3);
+    }).then(()=> {
+      return Chat.findOne(obj._id)
+    }).then((resChat) => {
+      expect(resChat.messages.length).to.equal(3);
       done();
     });
   });
