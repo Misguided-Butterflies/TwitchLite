@@ -162,8 +162,6 @@ class Menu extends React.Component {
             {followedChannelsLink}
             {followedGamesLink}
           </ul>
-        </div>
-        <div className='nav-right'>
           <input placeholder='Search' onChange={this.props.sort.search}/>
           <ul className='nav-section'>
             {auth}
