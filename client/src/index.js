@@ -81,7 +81,7 @@ class App extends React.Component {
 
     // Distance from bottom we want to start loading new highlights
     // Makes for a smoother infinite scroll
-    const additionalScrollPadding = 500;
+    const additionalScrollPadding = 800;
 
     // Document height calculation can vary by browser, so calculate all
     // possibilities and take the highest one
@@ -89,7 +89,7 @@ class App extends React.Component {
       $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
     let windowHeight = window.innerHeight;
 
-    if (scrollDistanceFromTop === docHeight - windowHeight - additionalScrollPadding) {
+    if (scrollDistanceFromTop >= docHeight - windowHeight - additionalScrollPadding) {
       this.increaseList();
     }
   }
