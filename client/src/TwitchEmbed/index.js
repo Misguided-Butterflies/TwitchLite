@@ -4,9 +4,6 @@ import InlineSVG from 'svg-inline-react';
 
 import playSVG from '../icons/play.svg';
 
-const proportionOfScreenToFill = .75;
-const heightWidthRatio = 9 / 16;
-
 /** TwitchEmbed
  * this is the component for the actual twitch video player on the page.
  * it starts out as a preview image that turns into a twitch video embed when clicked on.
