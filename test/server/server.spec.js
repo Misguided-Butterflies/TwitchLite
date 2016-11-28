@@ -14,6 +14,11 @@ var fakeHighlight = {
   // messages: []
 };
 
+var fakeHighlightBase = {
+  vodId: fakeHighlight.vodId,
+  highlightStart: fakeHighlight.highlightStart
+};
+
 var fakeHighlight2 = {
   _id: '582bac8d3ca3f34ca40b0f9d',
   vodId: 'v8098092',
@@ -28,12 +33,17 @@ var fakeHighlight2 = {
   // messages: []
 };
 
+var fakeHighlight2Base = {
+  vodId: fakeHighlight2.vodId,
+  highlightStart: fakeHighlight2.highlightStart
+};
+
 describe('server', () => {
 
   beforeEach(done => {
-    highlights.remove(fakeHighlight)
+    highlights.remove(fakeHighlightBase)
     .then(() => {
-      return highlights.remove(fakeHighlight2);
+      return highlights.remove(fakeHighlight2Base);
     })
     .then(() => {
       done();
