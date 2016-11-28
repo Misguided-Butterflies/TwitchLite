@@ -416,6 +416,6 @@ button:focus {
 */
 @media screen and (max-width: 64em) {
   .chats-container {
-    height: 12em !important;
+    height: 10em !important;
   }
 }
