@@ -17,10 +17,6 @@ class ChatsContainer extends React.Component {
     this.refs.container.scrollTop = this.refs.container.scrollHeight;
   }
 
-  componentWillReceiveProps() {
-    console.log(this.props.messages);
-  }
-  
   componentDidUpdate(oldProps) {
     // Scroll down only if we have new messages
     if (oldProps.messages.length !== this.props.messages.length) {
