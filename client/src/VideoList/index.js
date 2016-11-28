@@ -10,7 +10,7 @@ const VideoList = function(props) {
   return (
     <div className='video-list'>
       {props.list.map((video, i) => (
-        <VideoContainer key={i} video={video} username={props.username} emotes={props.emotes} />
+        <VideoContainer key={video.vodId + video.highlightStart} video={video} username={props.username} emotes={props.emotes} />
       ))}
     </div>
   );
