@@ -1,6 +1,8 @@
 import React from 'react';
 import Chat from '../Chat';
 
+const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
+
 /** ChatsContainer
  * this component represents a list of chat messages to display alongside a twitch embed video.
  * usage:
@@ -9,17 +11,27 @@ import Chat from '../Chat';
 class ChatsContainer extends React.Component {
   constructor(props) {
     super(props);
-
-    this.scrollDown = this.scrollDown.bind(this);
   }
 
   scrollDown() {
     this.refs.container.scrollTop = this.refs.container.scrollHeight;
   }
 
+  isScrolledDown() {
+    return this.refs.container.scrollTop - this.refs.container.scrollHeight + this.clientHeight >= 0;
+  }
+
+  componentWillUpdate() {
+    this.scrolledDown = this.isScrolledDown();
+    console.log('client height: ', this.refs.container.clientHeight);
+    console.log('scrollHeight: ', this.refs.container.scrollHeight);
+    console.log('scrollTop: ', this.refs.container.scrollTop);
+    console.log('scrolledDown: ', this.scrolledDown);
+  }
+
   componentDidUpdate(oldProps) {
     // Scroll down only if we have new messages
-    if (oldProps.messages.length !== this.props.messages.length) {
+    if (!oldProps.messages.length || (oldProps.messages.length !== this.props.messages.length && this.scrolledDown)) {
       this.scrollDown();
     }
   }
