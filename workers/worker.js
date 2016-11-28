@@ -52,16 +52,6 @@ var createWorker = function(stream, handleHighlight) {
     messagesCount++;
   });
   
-  //if reconnecting, reset everything.
-  worker.on('connecting', () => {
-    currAvg = createAvg(numberOfDataPointsInRollingAvg);
-    messagesCount = 0;
-    highlightStart = Date.now();
-    highlightEnd = 0;
-    currentHighlightMultiplier = 0;
-    highlightMessages = [];
-    messagesDataPoint = [];
-  })
 
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over
