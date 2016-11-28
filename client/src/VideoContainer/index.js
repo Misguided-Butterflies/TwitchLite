@@ -54,8 +54,12 @@ class VideoContainer extends React.Component {
   handleTimeChange(msSinceHighlightStart) {
     var newPointer = this.state.messagesPointer;
 
+    
+    console.log(this.state.messages[newPointer].time);
+    console.log(this.props.video.highlightStart + msSinceHighlightStart);
     while (this.state.messages[newPointer] &&
       this.state.messages[newPointer].time <= this.props.video.highlightStart + msSinceHighlightStart) {
+      console.log('adding to pointer');
       newPointer++;
     }
 
@@ -106,7 +110,7 @@ class VideoContainer extends React.Component {
     }
 
     this.setState({
-      userVote: this.getUserVote(this.props.username, this.props.video.votes)
+      userVote: this.getUserVote(this.props.username, this.props.video.votes),
     });
   }
 
@@ -135,11 +139,11 @@ class VideoContainer extends React.Component {
     });
   }
   
-  
   render() {
     let upvoteClass = this.state.userVote === 1 ? 'video-button upvote active' : 'video-button upvote';
     let downvoteClass = this.state.userVote === -1 ? 'video-button downvote active' : 'video-button downvote';
-
+    let getCurrentMessages = this.state.messages.slice(0, this.state.messagesPointer);
+    
     return (
       <div className='video-container'>
         <div className='video-top'>
@@ -187,7 +191,7 @@ class VideoContainer extends React.Component {
           }
         </div>
         <ChatsContainer
-          messages={this.state.messages.slice(0, this.state.messagesPointer)}
+          messages={getCurrentMessages}
           emotes={this.props.emotes}
           videoHeight={this.state.videoHeight}
         />
