@@ -33,7 +33,7 @@ class ChatsContainer extends React.Component {
       >
         {
           this.props.messages.map(message => (
-            <Chat key={message.from + message.time + Math.random()} message={message} emotes={this.props.emotes} />
+            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
           ))
         }
       </div>
