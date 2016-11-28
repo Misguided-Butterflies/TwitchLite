@@ -13,3 +13,5 @@ updateWorkers();
 setInterval(() => {
   updateWorkers();
 }, 1000 * 60 * 10);
+
+setInterval(workerMaster.purgeOldDbEntries.bind(workerMaster), 1000 * 60 * 60 * 24);
