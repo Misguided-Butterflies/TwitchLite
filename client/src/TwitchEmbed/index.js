@@ -141,7 +141,8 @@ TwitchEmbed.propTypes = {
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
   handleTimeChange: React.PropTypes.func.isRequired,
-  handleHeightCalculation: React.PropTypes.func.isRequired
+  handleHeightCalculation: React.PropTypes.func.isRequired,
+  fetchChat: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;
