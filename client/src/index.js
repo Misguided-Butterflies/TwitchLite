@@ -75,15 +75,17 @@ class App extends React.Component {
   }
 
   checkScrollBottom() {
-    var $body = document.body;
-    var $html = document.documentElement;
+    let $body = document.body;
+    let $html = document.documentElement;
+    let scrollDistanceFromTop = window.pageYOffset;
 
-    var scrollTop = window.pageYOffset;
-    var docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
+    // Document height calculation can vary by browser, so calculate all
+    // possibilities and take the highest one
+    let docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
       $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
-    var windowHeight = window.innerHeight;
+    let windowHeight = window.innerHeight;
 
-    if (scrollTop === docHeight - windowHeight) {
+    if (scrollDistanceFromTop === docHeight - windowHeight) {
       this.increaseList();
     }
   }
