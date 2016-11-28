@@ -1,5 +1,8 @@
 import React from 'react';
 import 'twitch-embed';
+import InlineSVG from 'svg-inline-react';
+
+import playSVG from '../icons/play.svg';
 
 const proportionOfScreenToFill = .75;
 const heightWidthRatio = 9 / 16;
