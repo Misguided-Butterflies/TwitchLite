@@ -2,6 +2,7 @@ var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
+var chat = require('../../db/controllers/chat');
 
 // See explanation in db test .setup.js
 mongoose.models = {};
@@ -227,11 +228,23 @@ describe('workerMaster', function() {
   });
 
   describe('purgeOldDbEntries', function() {
+    var messages = [
+      {
+        from: 'batman',
+        time: 1234,
+        text: 'robin where are you?????? BibleThump'
+      }, {
+        from: 'joker',
+        time: 1235,
+        text: 'suck it batman Kreygasm'
+      }
+    ];
+
     var highlightData = {
       highlightStart: 1,
       highlightEnd: 2,
       channelName: 'twitch',
-      messages: [],
+      messages: messages,
       multiplier: 3
     };
     var highlightDataBase = {
@@ -244,7 +257,7 @@ describe('workerMaster', function() {
       highlightStart: Date.now(),
       highlightEnd: Date.now(),
       channelName: 'twitch',
-      messages: [],
+      messages: messages,
       multiplier: 3
     };
     
@@ -279,11 +292,17 @@ describe('workerMaster', function() {
         });
       });
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
+      var highlightId;
       workerMaster.saveHighlight(highlightData)
       .then(() => findAll({
         highlightStart: 1
       }))
-      .then(foundHighlights => expect(foundHighlights).to.have.length(1))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(1);
+        highlightId = foundHighlights[0]._id;
+        return chat.findOne(highlightId);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
       .then(() => workerMaster.purgeOldDbEntries())
       .then(() => findAll({
         highlightStart: 1
@@ -312,7 +331,11 @@ describe('workerMaster', function() {
       .then(() => findAll({
         highlightStart: highlightData2.highlightStart
       }))
-      .then(foundHighlights => expect(foundHighlights).to.have.length(1))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(1);
+        return chat.findOne(foundHighlights[0]._id);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
       .then(() => workerMaster.purgeOldDbEntries())
       .then(() => findAll({
         highlightStart: highlightData2.highlightStart
@@ -320,8 +343,10 @@ describe('workerMaster', function() {
       .then(foundHighlights => {
         expect(foundHighlights).to.have.length(1);
         workerMaster.getStreamVodData.restore();
-        done();
-      });
+        return chat.findOne(foundHighlights[0]._id);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
+      .then(() => done());
     });
   });
 });
