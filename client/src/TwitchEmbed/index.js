@@ -121,13 +121,15 @@ class TwitchEmbed extends React.Component {
   render() {
     return (
       <div className='twitch-embed' id={this.divId} ref='base'>
-        <img
+        <div className='video-preview-container' onClick={this.loadVideo}>
+          <img
           src={this.props.preview}
-          onClick={this.loadVideo}
           className='video-preview'
           alt='Stream Preview'
           title='Stream Preview'
-        />
+          />
+          <InlineSVG src={playSVG} />
+        </div>
       </div>
     );
   }
