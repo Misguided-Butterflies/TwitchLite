@@ -17,12 +17,38 @@ var activeWorkers = {};
 var workerMaster = {
   // Fetch the top quantity of streams from Twitch
   getTopStreams: function(quantity = 50) {
-    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity + 10}`, fetchOptions)
+    var allStreams = [];
+    // Refactor this
+    // Should be a separate function that takes in quantity and offset
+    // That function handles just the fetch, jsoning the response, and returning data.streams
+    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=0`, fetchOptions)
       .then(response => {
         return response.json();
       })
       .then(data => {
-        return data.streams;
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 2}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return allStreams;
       });
   },
 
