@@ -1,8 +1,8 @@
 import React from 'react';
 import 'twitch-embed';
+import InlineSVG from 'svg-inline-react';
 
-const proportionOfScreenToFill = .75;
-const heightWidthRatio = 9 / 16;
+import playSVG from '../icons/play.svg';
 
 /** TwitchEmbed
  * this is the component for the actual twitch video player on the page.
@@ -121,13 +121,15 @@ class TwitchEmbed extends React.Component {
   render() {
     return (
       <div className='twitch-embed' id={this.divId} ref='base'>
-        <img
+        <div className='video-preview-container' onClick={this.loadVideo}>
+          <img
           src={this.props.preview}
-          onClick={this.loadVideo}
           className='video-preview'
           alt='Stream Preview'
           title='Stream Preview'
-        />
+          />
+          <InlineSVG src={playSVG} />
+        </div>
       </div>
     );
   }
@@ -141,7 +143,8 @@ TwitchEmbed.propTypes = {
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
   handleTimeChange: React.PropTypes.func.isRequired,
-  handleHeightCalculation: React.PropTypes.func.isRequired
+  handleHeightCalculation: React.PropTypes.func.isRequired,
+  fetchChat: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;
