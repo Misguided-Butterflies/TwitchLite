@@ -1,7 +1,9 @@
 import React from 'react';
 import Chat from '../Chat';
 
-/** ChatsContainer
+const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
+
+/** ChatsContainer 
  * this component represents a list of chat messages to display alongside a twitch embed video.
  * usage:
  * <ChatsContainer videoHeight=768 emotes={{Kappa: 25, ...}} messages={[{from: 'batman', time: 13251345345, text: 'lulz'}, ...]} />
@@ -14,14 +16,17 @@ class ChatsContainer extends React.Component {
   }
 
   scrollDown() {
-    this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    if (this.scrolledDown) {
+      this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    }
   }
 
-  componentDidUpdate(oldProps) {
-    // Scroll down only if we have new messages
-    if (oldProps.messages.length !== this.props.messages.length) {
-      this.scrollDown();
-    }
+  isScrolledDown() {
+    return this.refs.container.scrollTop + this.refs.container.clientHeight >= this.refs.container.scrollHeight - numberOfPixelsFromBottomBeforeCountingAsScrolledUp;
+  }
+
+  componentWillUpdate() {
+    this.scrolledDown = this.isScrolledDown();
   }
 
   render() {
@@ -33,7 +38,7 @@ class ChatsContainer extends React.Component {
       >
         {
           this.props.messages.map(message => (
-            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
+            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} scrollDown={this.scrollDown} />
           ))
         }
       </div>
