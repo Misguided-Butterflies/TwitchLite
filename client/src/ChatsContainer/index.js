@@ -3,7 +3,7 @@ import Chat from '../Chat';
 
 const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
 
-/** ChatsContainer
+/** ChatsContainer 
  * this component represents a list of chat messages to display alongside a twitch embed video.
  * usage:
  * <ChatsContainer videoHeight=768 emotes={{Kappa: 25, ...}} messages={[{from: 'batman', time: 13251345345, text: 'lulz'}, ...]} />
