@@ -41,7 +41,28 @@ var workerMaster = {
       })
       .then(data => {
         allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity}`, fetchOptions);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 3}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 4}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 5}`, fetchOptions);
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        allStreams = allStreams.concat(data.streams);
+        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 6}`, fetchOptions);
       })
       .then(response => {
         return response.json();
@@ -168,6 +189,8 @@ var workerMaster = {
           oldWorkers.push(channelName);
         }
       }
+
+      console.log('list of all workers AFTER:', Object.keys(this.getWorkers()).length);
 
       // Return a list of all the old channels; not necessary but maybe useful
       // down the line
