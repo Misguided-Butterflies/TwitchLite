@@ -15,6 +15,7 @@ var fetchOptions = {
 var activeWorkers = {};
 
 var workerMaster = {
+  // Fetch a single chunk of streams
   getStreams: function(quantity, offset) {
     return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${offset}`, fetchOptions)
       .then(response => {
@@ -26,7 +27,9 @@ var workerMaster = {
   },
 
   // Fetch the top quantity of streams from Twitch
-  getTopStreams: function(quantity = 400) {
+  // There seems to be a limit of 500 active connections at once, so a default
+  // of 450 is safely under
+  getTopStreams: function(quantity = 450) {
     var streamPromises = [];
     var chunkCount = Math.ceil(quantity / 50);
 
@@ -158,8 +161,6 @@ var workerMaster = {
           oldWorkers.push(channelName);
         }
       }
-
-      console.log('list of all workers AFTER:', Object.keys(this.getWorkers()).length);
 
       // Return a list of all the old channels; not necessary but maybe useful
       // down the line
