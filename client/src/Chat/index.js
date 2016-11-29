@@ -15,6 +15,10 @@ class Chat extends React.Component {
     this.replaceEmotes();
   }
 
+  componentDidUpdate() {
+    this.props.scrollDown();
+  }
+
   replaceEmotes() {
     this.refs.text.innerHTML =
       this.props.message.text
@@ -42,7 +46,8 @@ Chat.propTypes = {
     text: React.PropTypes.string.isRequired,
     from: React.PropTypes.string.isRequired
   }).isRequired,
-  emotes: React.PropTypes.object.isRequired
+  emotes: React.PropTypes.object.isRequired,
+  scrollDown: React.PropTypes.func.isRequired
 };
 
 export default Chat;
