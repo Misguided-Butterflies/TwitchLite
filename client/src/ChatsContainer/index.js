@@ -11,30 +11,22 @@ const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
 class ChatsContainer extends React.Component {
   constructor(props) {
     super(props);
+
+    this.scrollDown = this.scrollDown.bind(this);
   }
 
   scrollDown() {
-    this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    if (this.scrolledDown) {
+      this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    }
   }
 
   isScrolledDown() {
-    console.log('client height: ', this.refs.container.clientHeight);
-    console.log('scrollHeight: ', this.refs.container.scrollHeight);
-    console.log('scrollTop: ', this.refs.container.scrollTop);
     return this.refs.container.scrollTop + this.refs.container.clientHeight >= this.refs.container.scrollHeight - numberOfPixelsFromBottomBeforeCountingAsScrolledUp;
   }
 
   componentWillUpdate() {
     this.scrolledDown = this.isScrolledDown();
-    
-    console.log('scrolledDown: ', this.scrolledDown);
-  }
-
-  componentDidUpdate(oldProps) {
-    // Scroll down only if we have new messages
-    if (!oldProps.messages.length || (oldProps.messages.length !== this.props.messages.length && this.scrolledDown)) {
-      this.scrollDown();
-    }
   }
 
   render() {
@@ -46,7 +38,7 @@ class ChatsContainer extends React.Component {
       >
         {
           this.props.messages.map(message => (
-            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
+            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} scrollDown={this.scrollDown} />
           ))
         }
       </div>
