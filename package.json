@@ -17,7 +17,7 @@
     "test:db": "mocha test/db/.setup.js test/db/**.spec.js",
     "test:db:watch": "mocha test/db/.setup.js test/db/**.spec.js --watch",
     "lint": "eslint ./",
-    "build": "webpack",
+    "build": "webpack --prod",
     "build:watch": "webpack -w",
     "postinstall": "npm run build",
     "start": "npm run start:workers & npm run start:server",
