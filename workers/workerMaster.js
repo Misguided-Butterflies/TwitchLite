@@ -15,61 +15,30 @@ var fetchOptions = {
 var activeWorkers = {};
 
 var workerMaster = {
+  getStreams: function(quantity, offset) {
+    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${offset}`, fetchOptions)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        return data.streams;
+      });
+  },
+
   // Fetch the top quantity of streams from Twitch
-  getTopStreams: function(quantity = 50) {
-    var allStreams = [];
-    // Refactor this
-    // Should be a separate function that takes in quantity and offset
-    // That function handles just the fetch, jsoning the response, and returning data.streams
-    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=0`, fetchOptions)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 2}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 3}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 4}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 5}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${quantity * 6}`, fetchOptions);
-      })
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        allStreams = allStreams.concat(data.streams);
-        return allStreams;
+  getTopStreams: function(quantity = 400) {
+    var streamPromises = [];
+    var chunkCount = Math.ceil(quantity / 50);
+
+    for (var i = 0; i < chunkCount; i++) {
+      streamPromises.push(this.getStreams(50, 50 * i));
+    }
+
+    return Promise.all(streamPromises)
+      .then(allStreams => {
+        return allStreams.reduce((previousStreams, currentStreams) => {
+          return previousStreams.concat(currentStreams);
+        });
       });
   },
 
