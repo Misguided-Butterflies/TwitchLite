@@ -18,14 +18,15 @@ class ChatsContainer extends React.Component {
   }
 
   isScrolledDown() {
-    return this.refs.container.scrollTop - this.refs.container.scrollHeight + this.clientHeight >= 0;
+    console.log('client height: ', this.refs.container.clientHeight);
+    console.log('scrollHeight: ', this.refs.container.scrollHeight);
+    console.log('scrollTop: ', this.refs.container.scrollTop);
+    return this.refs.container.scrollTop + this.refs.container.clientHeight >= this.refs.container.scrollHeight - numberOfPixelsFromBottomBeforeCountingAsScrolledUp;
   }
 
   componentWillUpdate() {
     this.scrolledDown = this.isScrolledDown();
-    console.log('client height: ', this.refs.container.clientHeight);
-    console.log('scrollHeight: ', this.refs.container.scrollHeight);
-    console.log('scrollTop: ', this.refs.container.scrollTop);
+    
     console.log('scrolledDown: ', this.scrolledDown);
   }
 
