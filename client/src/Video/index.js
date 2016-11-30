@@ -5,15 +5,8 @@ import ReactDOM from 'react-dom';
 import utils from '../utils';
 
 /** Video
- * this is a component for showing a twitch vod highlight.
- * usage:
- * let video = {
- *   id: 'v97978712', // twitch video id
- *   start: 7206, // start time of the hightlight in seconds
- *   duration: 15, // duration of the highlight in seconds
- * };
- * // ...
- * <Video video={video} />
+ * this is a container component for showing a twitch vod highlight.
+ * it will remove and replace the child TwitchEmbed when the user sorts differently.
  */
 class Video extends React.Component {
   constructor(props) {
@@ -48,12 +41,16 @@ class Video extends React.Component {
       duration={this.props.video.duration}
       preview={this.props.video.preview}
       handleTimeChange={this.props.handleTimeChange}
+      fetchChat={this.props.video.fetchChat}
+      handleHeightCalculation={this.props.handleHeightCalculation}
     />, this.refs.video);
   }
 
   render() {
     return (
-      <div className='video' ref='video'></div>
+      <div className='video-outer'>
+        <div className='video' ref='video'></div>
+      </div>
     );
   }
 }
@@ -65,7 +62,8 @@ Video.propTypes = {
     duration: React.PropTypes.number.isRequired,
     preview: React.PropTypes.string.isRequired,
   }).isRequired,
-  handleTimeChange: React.PropTypes.func.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired,
+  handleHeightCalculation: React.PropTypes.func.isRequired
 };
 
 export default Video;

@@ -1,8 +1,12 @@
 // Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
 // or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
-var { findAll, findOne, insertOne } = require('../db/controllers/highlight');
+var { findAll, findOne, insertOne, remove } = require('../db/controllers/highlight');
+var chat = require('../db/controllers/chat');
 var fetch = require('node-fetch');
 var worker = require('./worker');
+
+const maximumHighlightAge = 1000 * 60 * 60 * 24 * 7;
+
 var fetchOptions = {
   headers: {
     'Client-ID': process.env.TWITCH_CLIENT_ID
@@ -11,14 +15,33 @@ var fetchOptions = {
 var activeWorkers = {};
 
 var workerMaster = {
-  // Fetch the top quantity of streams from Twitch
-  getTopStreams: function(quantity = 50) {
-    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity + 10}`, fetchOptions)
+  // Fetch a single chunk of streams
+  getStreams: function(quantity, offset) {
+    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${offset}`, fetchOptions)
       .then(response => {
         return response.json();
       })
       .then(data => {
         return data.streams;
+      });
+  },
+
+  // Fetch the top quantity of streams from Twitch
+  // There seems to be a limit of 500 active connections at once, so a default
+  // of 450 is safely under
+  getTopStreams: function(quantity = 450) {
+    var streamPromises = [];
+    var chunkCount = Math.ceil(quantity / 50);
+
+    for (var i = 0; i < chunkCount; i++) {
+      streamPromises.push(this.getStreams(50, 50 * i));
+    }
+
+    return Promise.all(streamPromises)
+      .then(allStreams => {
+        return allStreams.reduce((previousStreams, currentStreams) => {
+          return previousStreams.concat(currentStreams);
+        });
       });
   },
 
@@ -139,10 +162,33 @@ var workerMaster = {
         }
       }
 
+      var workerCount = Object.keys(this.getWorkers()).length;
+      console.log(`There are now ${workerCount} workers`);
+
       // Return a list of all the old channels; not necessary but maybe useful
       // down the line
       return oldWorkers;
     });
+  },
+
+  purgeOldDbEntries: function() {
+    let currentTime = Date.now();
+    return findAll({
+      streamStart: {
+        $lt: currentTime - maximumHighlightAge
+      }
+    })
+    .then(highlights => highlights.map(highlight => highlight._id))
+    .then(highlightIds => chat.remove({
+      highlightId: {
+        $in: highlightIds
+      }
+    }))
+    .then(() => remove({
+      streamStart: {
+        $lt: currentTime - maximumHighlightAge
+      }
+    }));
   }
 };
 

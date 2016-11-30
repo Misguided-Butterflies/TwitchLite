@@ -10,6 +10,8 @@ var updateWorkers = function() {
 
 updateWorkers();
 
-setInterval(() => {
-  updateWorkers();
-}, 1000 * 60 * 10);
+setInterval(updateWorkers, 1000 * 60 * 10);
+
+workerMaster.purgeOldDbEntries();
+
+setInterval(workerMaster.purgeOldDbEntries.bind(workerMaster), 1000 * 60 * 60 * 24);

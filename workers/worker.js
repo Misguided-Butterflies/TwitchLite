@@ -2,9 +2,10 @@ var tmi = require('tmi.js');
 var createAvg = require('./rollingAvg');
 
 const numberOfSecondsToAddToBeginningOfHighlights = 30;
-const minimumMultiplierToBeConsideredAHighlight = 5;
+const minimumMultiplierToBeConsideredAHighlight = 10;
 const secondsPerBlockOfMessages = 10;
 const numberOfDataPointsInRollingAvg = 120;
+const minimumCommentsPerSecond = 1;
 
 /** createClient
  * returns a twitch chat irc client to connect to.
@@ -40,27 +41,39 @@ var createWorker = function(stream, handleHighlight) {
   var currentHighlightMultiplier = 0;
   var highlightMessages = [];
   var messagesDataPoint = [];
+  var validHighlight = true;
 
   //event handler for receiving messages
   worker.on('message', (to, from, message) => {
     messagesDataPoint.push({
       time: Date.now(),
       text: message,
-      from: from['display-name'] || from['name']
+      from: from['display-name'] || from['name'] || 'Anonymous'
     });
     messagesCount++;
+  });
+
+  //if just reconnected after disconnect, invalidate last 40s of highlights
+  //to account for unnatural rush of chat activity
+  worker.on('reconnect', () => {
+    validHighlight = false;
+    currentHighlightMultiplier = 0;
+    setTimeout(() => {
+      validHighlight = true;
+    }, 40000);
   });
 
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over
   var checkHighlight = function(detectedMultiplier) {
-    if (detectedMultiplier > minimumMultiplierToBeConsideredAHighlight) {
+    if (validHighlight && detectedMultiplier > minimumMultiplierToBeConsideredAHighlight
+      && highlightMessages[highlightMessages.length - 1].length >= minimumCommentsPerSecond * secondsPerBlockOfMessages) {
       //if highlight is detected, increment end time, calculate multiplier
       if (detectedMultiplier > currentHighlightMultiplier) {
         currentHighlightMultiplier = detectedMultiplier;
       }
       highlightEnd = Date.now();
-    } else if (highlightEnd > 0) {
+    } else if (validHighlight && highlightEnd > 0) {
       //if highlight is now over, send highlight off to worker manager
       handleHighlight({
         highlightStart: highlightStart - (numberOfSecondsToAddToBeginningOfHighlights * 1000),

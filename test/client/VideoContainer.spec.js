@@ -42,7 +42,7 @@ describe('<VideoContainer>', () => {
   let videoContainer;
 
   beforeEach(() => {
-    videoContainer = (<VideoContainer video={testVideo} username='batman' />);
+    videoContainer = (<VideoContainer video={testVideo} username='batman' emotes={{}} dbHandleVote={()=>null}/>);
   });
 
   it('should be able to calculate total vote counts', () => {
@@ -54,6 +54,7 @@ describe('<VideoContainer>', () => {
 
   it('should update state.messagesPointer when handleTimeChange is called', () => {
     let wrapper = shallow(videoContainer);
+    wrapper.setState({messages: testVideo.messages});
     expect(wrapper.state().messagesPointer).to.equal(0);
     wrapper.instance().handleTimeChange(3);
     expect(wrapper.state().messagesPointer).to.equal(1);
@@ -96,7 +97,7 @@ describe('<VideoContainer>', () => {
   });
 
   it('should not render any voting buttons if no user is supplied', () => {
-    let wrapper = shallow(<VideoContainer video={testVideo} />);
+    let wrapper = shallow(<VideoContainer video={testVideo} emotes={{}} />);
 
     expect(wrapper.find('.downvote')).to.have.length(0);
     expect(wrapper.find('.upvote')).to.have.length(0);

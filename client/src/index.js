@@ -1,13 +1,11 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {Button, ButtonToolbar} from 'react-bootstrap';
-import Header from './Header';
 import Menu from './Menu';
 import VideoList from './VideoList';
 import axios from 'axios';
 import utils from './utils';
 
-const timeBetweenNewHighlightsCheck = 2000;
+const timeBetweenNewHighlightsCheck = 5000;
 const numberOfVideosToShowPerPage = 5;
 const dateRedditUsesForTheirAlgorithm = 1134028003000;
 const baseMultiplier = 7;
@@ -25,10 +23,10 @@ class App extends React.Component {
       newHighlights: 0
     };
     this.getEmotes();
-    
+
     //initialize twitch SDK
     Twitch.init({clientId: process.env.TWITCH_CLIENT_ID}, (error, status) => this.status = status);
-    
+
     //single source of truth for highlights
     this.allHighlights = [];
     //tracks which sorting options are chosen
@@ -38,9 +36,7 @@ class App extends React.Component {
       followedGames: false,
       search: '',
     };
-    //stores current list of highlights without newly added highlights
-    this.tempHighlights = null;
-    //current highlight list, refiltered from tempHighlights when option is selected
+    //current highlight list, filtered from allHighlights when option is selected
     this.myHighlights = null;
 
     this.sortByAge = this.sortByAge.bind(this);
@@ -50,9 +46,11 @@ class App extends React.Component {
     this.updateList = this.updateList.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.updateAllHighlights = this.updateAllHighlights.bind(this);
+    this.updateHighlightCount = this.updateHighlightCount.bind(this);
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.dbHandleVote = this.dbHandleVote.bind(this);
 
     //refrences all sort functions from one object
     this.sortFunctions = {
@@ -78,15 +76,21 @@ class App extends React.Component {
   }
 
   checkScrollBottom() {
-    var $body = document.body;
-    var $html = document.documentElement;
+    let $body = document.body;
+    let $html = document.documentElement;
+    let scrollDistanceFromTop = window.pageYOffset;
 
-    var scrollTop = window.pageYOffset;
-    var docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
+    // Distance from bottom we want to start loading new highlights
+    // Makes for a smoother infinite scroll
+    const additionalScrollPadding = 800;
+
+    // Document height calculation can vary by browser, so calculate all
+    // possibilities and take the highest one
+    let docHeight = Math.max($body.scrollHeight, $body.offsetHeight,
       $html.clientHeight, $html.scrollHeight, $html.offsetHeight);
-    var windowHeight = window.innerHeight;
+    let windowHeight = window.innerHeight;
 
-    if (scrollTop === docHeight - windowHeight) {
+    if (scrollDistanceFromTop >= docHeight - windowHeight - additionalScrollPadding) {
       this.increaseList();
     }
   }
@@ -94,38 +98,41 @@ class App extends React.Component {
   /** componentWillMount
    * runs once when component loads
    * fetches all highlights from the database first
-   * sets an interval for fetching highlights to 2s
+   * sets an interval for fetching highlight count to 5s
    * creates an interval object to later clear if needed
    * sets the first numberOfVideosToShowPerPage highlights to be shown on the page
    */
   componentWillMount() {
     this.updateAllHighlights();
-    var updateInterval = setInterval(this.updateAllHighlights, timeBetweenNewHighlightsCheck);
+    var updateInterval = setInterval(this.updateHighlightCount, timeBetweenNewHighlightsCheck);
     this.setState({interval: updateInterval});
   }
-  
+
   componentWillUnmount() {
     clearInterval(this.state.interval);
   }
 
   //checks for new highlights, put into allHighlights
-  //writes to tempHighlights object to store currently viewed highlights
   updateAllHighlights() {
     axios.get('/highlights')
     .then(response => {
       this.allHighlights = response.data;
-      if (this.tempHighlights === null) {
-        //if this is first time updating highlights
-        this.tempHighlights = this.allHighlights.slice(0);
-        this.sortByAge();
-      } else {
-        //otherwise- calculate number of new highlights
-        let diff = this.allHighlights.length - this.tempHighlights.length;
+      this.setState({newHighlights: 0});
+      this.sortByAge();
+    });
+  }
+
+  //gets count of new highlights
+  updateHighlightCount() {
+    axios.get('/highlights/count')
+    .then(response => {
+      let diff = parseInt(response.data) - this.allHighlights.length;
+      if (diff > this.state.newHighlights) {
         this.setState({newHighlights: diff});
       }
     });
   }
-  
+
   sortByHotness() {
     this.selected.sortType = 'hotness';
     this.updateList();
@@ -144,11 +151,13 @@ class App extends React.Component {
   }
 
   sortByAge() {
-    //updates tempHighlights with new data, clears new highlight count
-    this.tempHighlights = this.allHighlights.slice(0);
-    this.setState({newHighlights: 0});
-    this.selected.sortType = 'age';
-    this.updateList();
+    //updates allHighlights with new data
+    if (this.state.newHighlights) {
+      this.updateAllHighlights();
+    } else {
+      this.selected.sortType = 'age';
+      this.updateList();
+    }
   }
 
   sortByFollowedChannels() {
@@ -156,16 +165,16 @@ class App extends React.Component {
     this.selected.followedChannels = !this.selected.followedChannels;
     this.updateList();
   }
-  
+
   sortByFollowedGames() {
     //Toggles whether or not to filter by following games
     this.selected.followedGames = !this.selected.followedGames;
     this.updateList();
   }
-  
+
   filter() {
-    //get highlights from tempHighlights
-    this.myHighlights = this.tempHighlights.slice(0);
+    //get highlights from allHighlights
+    this.myHighlights = this.allHighlights.slice(0);
     if (this.selected.followedChannels) {
       let arr = this.state.followedChannels;
       this.myHighlights = this.myHighlights.filter(function (elem) {
@@ -194,16 +203,15 @@ class App extends React.Component {
   updateList() {
     //filter list into myHighlights
     this.filter();
-    //change state
     this.setState({
-      list: this.myHighlights.slice(0, numberOfVideosToShowPerPage),
+      list: this.myHighlights ? this.myHighlights.slice(0, numberOfVideosToShowPerPage) : [],
       next: numberOfVideosToShowPerPage,
     });
   }
 
   increaseList() {
     this.setState({
-      list: this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)),
+      list: this.myHighlights ? this.myHighlights.slice(0, Math.min(this.state.next + numberOfVideosToShowPerPage, this.myHighlights.length)) : [],
       next: this.state.next + numberOfVideosToShowPerPage
     });
   }
@@ -218,18 +226,23 @@ class App extends React.Component {
     this.setState(info);
   }
 
-    
+
   handleSearch(e) {
     this.selected.search = e.target.value;
     this.updateList();
+  }
+  
+  dbHandleVote(id, user, vote) {
+    //changes single source of truth to update votes on client db
+    var votedHighlight = this.allHighlights.filter((highlightElem) => highlightElem._id == id)[0];
+    votedHighlight.votes[user] = vote;
   }
 
   render() {
     return (
       <div>
-        <Header />
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} newHighlights={this.state.newHighlights}/>
-        <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes} />
+        <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes} dbHandleVote={this.dbHandleVote}/>
       </div>
     );
   }

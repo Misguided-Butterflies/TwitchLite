@@ -1,6 +1,13 @@
 import React from 'react';
 import Chat from '../Chat';
 
+const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
+
+/** ChatsContainer 
+ * this component represents a list of chat messages to display alongside a twitch embed video.
+ * usage:
+ * <ChatsContainer videoHeight=768 emotes={{Kappa: 25, ...}} messages={[{from: 'batman', time: 13251345345, text: 'lulz'}, ...]} />
+ */
 class ChatsContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -9,22 +16,31 @@ class ChatsContainer extends React.Component {
   }
 
   scrollDown() {
-    this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    if (this.scrolledDown) {
+      this.refs.container.scrollTop = this.refs.container.scrollHeight;
+    }
   }
 
-  componentDidUpdate() {
-    this.scrollDown();
+  isScrolledDown() {
+    return this.refs.container.scrollTop + this.refs.container.clientHeight >= this.refs.container.scrollHeight - numberOfPixelsFromBottomBeforeCountingAsScrolledUp;
+  }
+
+  componentWillUpdate() {
+    this.scrolledDown = this.isScrolledDown();
   }
 
   render() {
     return (
-      <div className='chats-container' ref='container'>
-      <h4 className='chat-header'>Chat Replay</h4>
-      {
-        this.props.messages.map(message => (
-          <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} />
-        ))
-      }
+      <div
+        className='chats-container'
+        ref='container'
+        style={{height: this.props.videoHeight}}
+      >
+        {
+          this.props.messages.map(message => (
+            <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} scrollDown={this.scrollDown} />
+          ))
+        }
       </div>
     );
   }
@@ -33,7 +49,8 @@ class ChatsContainer extends React.Component {
 
 ChatsContainer.propTypes = {
   emotes: React.PropTypes.object.isRequired,
-  messages: React.PropTypes.array.isRequired
+  messages: React.PropTypes.array.isRequired,
+  videoHeight: React.PropTypes.number
 };
 
 export default ChatsContainer;

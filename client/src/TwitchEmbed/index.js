@@ -1,9 +1,14 @@
 import React from 'react';
 import 'twitch-embed';
+import InlineSVG from 'svg-inline-react';
 
-const proportionOfScreenToFill = .75;
-const heightWidthRatio = 9 / 16;
+import playSVG from '../icons/play.svg';
 
+/** TwitchEmbed
+ * this is the component for the actual twitch video player on the page.
+ * it starts out as a preview image that turns into a twitch video embed when clicked on.
+ * when clicked, the appropriate twitch player embed loads as described by the props.
+ */
 class TwitchEmbed extends React.Component {
   constructor(props) {
     super(props);
@@ -16,31 +21,34 @@ class TwitchEmbed extends React.Component {
     this.handleHighlightEnd = this.handleHighlightEnd.bind(this);
     this.loadVideo = this.loadVideo.bind(this);
     this.checkChatTime = this.checkChatTime.bind(this);
-
-    this.calculateDimensions();
+    this.getDimensions = this.getDimensions.bind(this);
   }
 
-  calculateDimensions() {
-    if (innerWidth * heightWidthRatio > innerHeight) {
-      this.embedHeight = innerHeight * proportionOfScreenToFill;
-      this.embedWidth = this.embedHeight / heightWidthRatio;
-    } else {
-      this.embedWidth = innerWidth * proportionOfScreenToFill;
-      this.embedHeight = this.embedWidth * heightWidthRatio;
-    }
+  getDimensions() {
+    // Get the dimensions of the container element (which is handled in CSS)
+    return {
+      width: this.refs.base.offsetWidth,
+      height: this.refs.base.offsetHeight
+    };
   }
 
   loadVideo() {
+    const dimensions = this.getDimensions();
     this.refs.base.innerHTML = '';
-    this.calculateDimensions();
-    this.createTwitchPlayer();
+    // Pass up the video height so that <ChatsContainer> can resize
+    // itself appropriately
+    this.props.handleHeightCalculation(dimensions.height);
+    // But use both width AND height when setting the dimensions of
+    // the video player itself
+    this.createTwitchPlayer(dimensions);
     this.player.play();
+    this.props.fetchChat();
   }
 
-  createTwitchPlayer() {
+  createTwitchPlayer({width, height}) {
     let options = {
-      width: this.embedWidth,
-      height: this.embedHeight,
+      width,
+      height,
       video: this.props.id,
       time: this.props.startString,
       autoplay: false
@@ -112,18 +120,21 @@ class TwitchEmbed extends React.Component {
 
   render() {
     return (
-      <div id={this.divId} ref='base'>
-        <img
+      <div className='twitch-embed' id={this.divId} ref='base'>
+        <div className='video-preview-container' onClick={this.loadVideo}>
+          <img
           src={this.props.preview}
-          onClick={this.loadVideo}
-          height={this.embedHeight}
-          width={this.embedWidth}
           className='video-preview'
-        />
+          alt='Stream Preview'
+          title='Stream Preview'
+          />
+          <InlineSVG src={playSVG} />
+        </div>
       </div>
     );
   }
 }
+
 
 TwitchEmbed.propTypes = {
   id: React.PropTypes.string.isRequired,
@@ -131,7 +142,9 @@ TwitchEmbed.propTypes = {
   startString: React.PropTypes.string.isRequired,
   duration: React.PropTypes.number.isRequired,
   preview: React.PropTypes.string,
-  handleTimeChange: React.PropTypes.func.isRequired
+  handleTimeChange: React.PropTypes.func.isRequired,
+  handleHeightCalculation: React.PropTypes.func.isRequired,
+  fetchChat: React.PropTypes.func.isRequired
 };
 
 export default TwitchEmbed;

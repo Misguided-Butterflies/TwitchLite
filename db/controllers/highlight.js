@@ -1,4 +1,5 @@
 var Highlight = require('../models/highlight.js');
+var Chat = require('./chat.js');
 var mongoose = require ('mongoose');
 var fetch = require('node-fetch');
 
@@ -20,24 +21,44 @@ var findOne = function(id) {
 // insertOne inserts a highlight into the db if it doesn't yet exist
 var insertOne = function(highlightData) {
   return findAll({
-    channelName: highlightData.channelName,
-    highlightStart: highlightData.highlightStart,
-    highlightEnd: highlightData.highlightEnd
+    vodId: highlightData.vodId,
+    highlightEnd: {
+      $gt: highlightData.highlightStart
+    }
   })
   .then(results => {
+    var chatData = {};
+    chatData.messages = highlightData.messages;
+    
     if (results.length) {
-      return results[0];
+      let oldHighlight = results[0];
+      return appendHighlight(oldHighlight, highlightData);
     } else {
-      return Highlight.create(highlightData);
+      return Highlight.create(highlightData).then(highlight => {
+        chatData.highlightId = highlight._id;
+        return Chat.insertOne(chatData);
+      });
     }
   })
   .catch(error => {
-    console.error('Error finding highlight in database:', error);
+    console.error('Error inserting highlight into database:', error);
   });
 };
 
+//appends newHighlight content to oldHighlight, returns promise
+var appendHighlight = function(oldHighlight, newHighlight) {
+  return Chat.findOne(oldHighlight._id)
+    .then(function(oldChat) {
+    oldChat.messages =  oldChat.messages.concat(newHighlight.messages.filter(message => message.time > oldHighlight.highlightEnd));
+
+    oldHighlight.highlightEnd = newHighlight.highlightEnd;
+    oldHighlight.multiplier = Math.max(oldHighlight.multiplier, newHighlight.multiplier);
+    return oldChat.save().then(() => oldHighlight.save());
+  });
+}
+
 var remove = function(highlightData) {
-  return Highlight.remove(highlightData);
+  return Highlight.remove(highlightData).exec();
 };
 
 var updateVote = function(voteData) {
@@ -56,4 +77,10 @@ var updateVote = function(voteData) {
   });
 };
 
-module.exports = {findAll, findOne, insertOne, remove, updateVote};
+var findCount = function() {
+  //gets total number of highlights out there
+  let currentTime = Date.now();
+  return Highlight.count({highlightEnd: {$lt: currentTime - 30 * 60 * 1000}});
+}
+
+module.exports = {findAll, findOne, insertOne, remove, updateVote, findCount};

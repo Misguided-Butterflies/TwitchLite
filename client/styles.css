@@ -1,10 +1,14 @@
 /* purple: #6441a4 */
+/* purple dark: #341174 */
 /* black: #222 */
 /* gray: #555 */
 /* default_spacing: 2em */
 
 body {
   color: #222;
+  font-size: 16px;
+  overflow-x: hidden;
+  font-family: 'Catamaran', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -21,14 +25,29 @@ h3 {
   color: #555;
 }
 
+img {
+  max-width: 100%;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+
 button {
-	border-radius: 4px;
+  border-radius: 4px;
   border: none;
-	background: #6441a4;
-	color: #fff;
-	transition: all 0.2s ease;
-	cursor: pointer;
-	text-transform: uppercase;
+  background: #6441a4;
+  color: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 button,
@@ -42,10 +61,6 @@ button:focus {
   padding: 2em;
 }
 
-.logo {
-  max-width: 40em;
-}
-
 .icon {
   fill: #fff;
   transition: all 0.2s ease;
@@ -56,30 +71,36 @@ button:focus {
 }
 
 .video-buttons {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  height: 11em;
-  left: -1.5em;
+  margin-top: 2em;
+  width: 100%;
+  display: flex;
+  flex-flow: row-reverse wrap;
+  justify-content: center;
 }
 
 .video-button {
+  display: inline-block;
   width: 3em;
   height: 3em;
+  margin: 0 0.5em;
 
   /* Copy of button styles */
   border-radius: 4px;
   border: none;
-	background: #6441a4;
-	color: #fff;
-	transition: all 0.2s ease;
-	cursor: pointer;
-	text-transform: uppercase;
+  background: #6441a4;
+  color: #fff;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
-.video-button + .video-button {
-  margin-top: 1em;
+.upvote i,
+.downvote i {
+  position: relative;
+}
+
+.downvote i {
+  top: 4px;
 }
 
 .vote-count {
@@ -103,7 +124,8 @@ button:focus {
 }
 
 .video-list {
-  padding: 4em;
+  min-height: 100vh;
+  padding: 2em 0em;
   background: linear-gradient(to bottom, #17141f, #07040f);
   background-attachment: fixed;
 }
@@ -111,34 +133,89 @@ button:focus {
 .video-container {
   border-radius: 4px;
   background: #fff;
-  padding: 2em;
-  border: 1px solid #555;
   position: relative;
+  padding: 2em 0;
+
+  animation: 0.4s fade-up ease;
+  animation-fill-mode: both;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
 
 .video-container + .video-container {
-  margin-top: 2em;
+  margin-top: 4em;
+}
+
+.video-top {
+  padding: 0 2em 2em;
 }
 
 .video-subtitle {
   margin-top: 0.5em;
-  margin-bottom: 2em;
 }
 
 .video {
   background: #000;
   overflow: hidden;
+  width: 100%;
+  position: relative;
+
+  /*
+   9/16 (video aspect ratio) is about .5625, so this padding-bottom will keep
+   the element's proportions accurate
+  */
+  padding-bottom: 56%;
+}
+
+.twitch-embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .video-preview {
   filter: blur(5px);
+  width: 100%;
+  height: 100%;
+}
+
+.video-preview-container {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+.video-preview-container .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  z-index: 20;
+  fill: #fff;
+
+  width: 6em;
+  height: 6em;
 }
 
 .chats-container {
   overflow: scroll;
 
-  /* Placeholder; should be dynamically calculated instead */
-  height: 544px;
+  height: 12em;
+  margin-top: 1em;
+  padding: 0 2em;
 }
 
 .chat-from {
@@ -153,7 +230,211 @@ button:focus {
   margin: 0;
 }
 
-.navbar {
+.nav {
+  border: none;
+  background: #6441a4;
+  color: #fff;
   border-radius: 0;
   margin-bottom: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  height: 4em;
+
+  /* padding-left is covered by the .nav-logo-container */
+  /*padding-right: 2em;*/
+}
+
+/*.nav-left,
+.nav-right {
+  display: flex;
+  align-items: center;
+}*/
+
+.nav-section {
+  display: flex;
+  flex-flow: column nowrap;
+
+  /* make flex-flow: row nowrap on larger screens */
+}
+
+.nav-search {
+  margin: 1em;
+}
+
+.nav-item {
+  padding: 1.25em 1em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-item.active,
+.nav-item:hover,
+.nav-item:focus,
+.nav-item:active {
+  background: #341174;
+}
+
+.nav-button,
+.nav-button:active {
+  color: #fff !important;
+  text-transform: uppercase;
+  background: transparent;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 0;
+}
+
+.nav-logo-container {
+  display: flex;
+  align-items: center;
+  background: #341174;
+  width: 8em;
+  padding: 0 2em;
+}
+
+.nav-menu {
+  background: #6441a4;
+  position: absolute;
+  top: 4em;
+  right: 0;
+  z-index: 5;
+
+  visibility: hidden;
+  opacity: 0;
+  transform: scaleY(0.7);
+  transform-origin: top right;
+
+  transition: all 0.2s ease;
+}
+
+.nav-menu.open {
+  visibility: visible;
+  opacity: 1;
+  transform: scaleY(1.0);
+}
+
+.menu-toggle {
+  /*
+    This aligns it to the left (there's no justify-self property for flexbox
+    items, so this is a replacement)
+  */
+  margin-left: auto;
+
+  border-radius: 0;
+}
+
+.menu-toggle.active {
+  background: #341174;
+}
+
+.menu-toggle .icon {
+  width: 40px;
+  height: 40px;
+}
+
+@media screen and (min-width: 64em) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .nav-menu {
+    position: static;
+    visibility: visible;
+    transform: none;
+    opacity: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2em;
+    flex-grow: 1;
+  }
+
+  .nav-section {
+    flex-flow: row nowrap;
+    height: 100%;
+  }
+}
+
+.logo {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-control {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.filter-active {
+  background-color: #341174;
+}
+
+@media screen and (min-width: 56em) {
+  .video-list {
+    padding: 2em;
+  }
+
+  .video-container {
+    padding: 2em;
+  }
+
+  .video-top {
+    padding-left: 0;
+  }
+
+  .video-buttons {
+    flex-flow: column nowrap;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    height: 11em;
+    left: -2em;
+    width: 3.5em;
+  }
+
+  .video-button + .video-button {
+    margin-top: 1em;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .video-list {
+    padding: 4em;
+  }
+
+  .video-top {
+    padding-bottom: 2em;
+  }
+
+  .video-outer,
+  .chats-container {
+    vertical-align: top;
+    display: inline-block;
+  }
+
+  .video-outer {
+    width: 70%;
+  }
+
+  .chats-container {
+    margin-top: 0;
+    padding: 0;
+    margin-left: 2em;
+    width: calc(30% - 2em);
+  }
+}
+
+/*
+  Enforce size of .chats-container on small screens to prevent the
+  calculated-at-embed-time dimensions from being used at small screen sizes
+*/
+@media screen and (max-width: 64em) {
+  .chats-container {
+    height: 10em !important;
+  }
 }

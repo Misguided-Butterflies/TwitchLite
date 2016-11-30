@@ -11,6 +11,12 @@ var fakeHighlight = {
   streamTitle: 'Playin Magic yo!',
   highlightStart: 1235,
   highlightEnd: 1236,
+  // messages: []
+};
+
+var fakeHighlightBase = {
+  vodId: fakeHighlight.vodId,
+  highlightStart: fakeHighlight.highlightStart
 };
 
 var fakeHighlight2 = {
@@ -24,14 +30,20 @@ var fakeHighlight2 = {
   streamTitle: 'Playin Magic',
   highlightStart: 12355,
   highlightEnd: 12376,
+  // messages: []
+};
+
+var fakeHighlight2Base = {
+  vodId: fakeHighlight2.vodId,
+  highlightStart: fakeHighlight2.highlightStart
 };
 
 describe('server', () => {
 
   beforeEach(done => {
-    highlights.remove(fakeHighlight)
+    highlights.remove(fakeHighlightBase)
     .then(() => {
-      return highlights.remove(fakeHighlight2);
+      return highlights.remove(fakeHighlight2Base);
     })
     .then(() => {
       done();

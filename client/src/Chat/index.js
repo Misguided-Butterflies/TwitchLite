@@ -1,6 +1,11 @@
 import React from 'react';
 import utils from '../utils';
 
+/** Chat
+ * This component represents one chat message in a chat log associated with a twitch highlight.
+ * usage:
+ * <Chat message={{from: 'batman', time: 123987293, text: 'KappaRoss KappaPride'}} emotes={{Kappa: 25, ...}} />
+ */
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -8,6 +13,10 @@ class Chat extends React.Component {
 
   componentDidMount() {
     this.replaceEmotes();
+  }
+
+  componentDidUpdate() {
+    this.props.scrollDown();
   }
 
   replaceEmotes() {
@@ -37,7 +46,8 @@ Chat.propTypes = {
     text: React.PropTypes.string.isRequired,
     from: React.PropTypes.string.isRequired
   }).isRequired,
-  emotes: React.PropTypes.object.isRequired
+  emotes: React.PropTypes.object.isRequired,
+  scrollDown: React.PropTypes.func.isRequired
 };
 
 export default Chat;

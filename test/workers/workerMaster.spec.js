@@ -1,11 +1,13 @@
 var Promise = require('node-fetch').Promise;
 var workerMaster = require('../../workers/workerMaster');
 var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
+var chat = require('../../db/controllers/chat');
 
 // See explanation in db test .setup.js
 mongoose.models = {};
 mongoose.modelSchemas = {};
-var { findAll, findOne, insertOne } = require('../../db/controllers/highlight');
+var { findAll, findOne, insertOne, remove } = require('../../db/controllers/highlight');
 
 var sampleChannel = 'twitch';
 
@@ -41,6 +43,14 @@ describe('workerMaster', function() {
     expect(workerMaster.getWorkers()).to.eql({});
   });
 
+  describe('getStreams', function() {
+    it('should return a Promise', function() {
+      var result = workerMaster.getStreams();
+
+      expect(result).to.be.an.instanceOf(Promise);
+    });
+  });
+
   describe('getTopStreams', function() {
     it('should return a Promise', function() {
       var result = workerMaster.getTopStreams();
@@ -49,11 +59,12 @@ describe('workerMaster', function() {
     });
 
     it('should fetch the top Twitch streams', function(done) {
-      var desiredStreamCount = 25;
-      workerMaster.getTopStreams(desiredStreamCount)
+      // 450 is the number we're *trying* to get, but because Twitch won't always
+      // give us the perfect amount every time, we just check for a reasonable
+      // minimum
+      var desiredStreamCount = 400;
+      workerMaster.getTopStreams()
       .then(streams => {
-        // 25 is an arbitrary number, but we want to ensure we always have a
-        // sizable portion at least
         expect(streams.length > desiredStreamCount).to.be.true;
         done();
       })
@@ -89,15 +100,33 @@ describe('workerMaster', function() {
 
   describe('saveHighlight', function() {
     var highlightData = {
+      _id: new ObjectId(),
       highlightStart: 1,
       highlightEnd: 2,
-      channelName: 'twitch'
+      channelName: 'twitch',
+      messages: [],
+      multiplier: 3
     };
 
-    it('should return a Promise', function() {
-      var result = workerMaster.saveHighlight(highlightData);
+    var highlightDataBase = {
+      highlightStart: highlightData.highlightStart,
+      highlightEnd: highlightData.highlightEnd,
+      channelName: highlightData.channelName,
+    };
 
-      expect(result).to.be.an.instanceOf(Promise);
+    beforeEach(function(done) {
+      mongoose.connect(process.env.MONGODB_URI)
+      .then(() => done());
+    });
+
+    afterEach(function(done) {
+      remove(highlightDataBase)
+      .then(() => mongoose.disconnect())
+      .then(() => done());
+    });
+
+    it('should return a Promise', function() {
+      expect(workerMaster.saveHighlight(highlightData)).to.be.an.instanceOf(Promise);
     });
 
     it('should save highlights to the database if the stream is still recording', function(done) {
@@ -115,24 +144,19 @@ describe('workerMaster', function() {
 
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
-      mongoose.connect(process.env.MONGODB_URI)
-      .then( stuff => {
-        return workerMaster.saveHighlight(highlightData);
-      })
-      .then( savedHighlight => {
-        return findOne(savedHighlight._id);
+      workerMaster.saveHighlight(highlightData)
+      .then( () => {
+        return findOne(highlightData._id);
       })
       .then(retrievedHighlight => {
         expect(retrievedHighlight.highlightStart).to.equal(highlightData.highlightStart);
         expect(retrievedHighlight.highlightEnd).to.equal(highlightData.highlightEnd);
         expect(retrievedHighlight.channel).to.equal(highlightData.channel);
         workerMaster.getStreamVodData.restore();
-        mongoose.disconnect();
         done();
       })
       .catch(error => {
         console.error('There was an error testing highlight saving to database:', error);
-        mongoose.disconnect();
       });
     });
 
@@ -150,22 +174,17 @@ describe('workerMaster', function() {
       });
       sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
 
-      mongoose.connect(process.env.MONGODB_URI)
-      .then( stuff => {
-        return workerMaster.saveHighlight(highlightData);
-      })
+      workerMaster.saveHighlight(highlightData)
       .then( savedHighlight => {
         return findOne(savedHighlight._id);
       })
       .then(retrievedHighlight => {
         expect(retrievedHighlight).to.equal(null);
         workerMaster.getStreamVodData.restore();
-        mongoose.disconnect();
         done();
       })
       .catch(error => {
         console.error('There was an error testing highlight not saving to database:', error);
-        mongoose.disconnect();
       });
 
     });
@@ -217,4 +236,126 @@ describe('workerMaster', function() {
     });
   });
 
+  describe('purgeOldDbEntries', function() {
+    var messages = [
+      {
+        from: 'batman',
+        time: 1234,
+        text: 'robin where are you?????? BibleThump'
+      }, {
+        from: 'joker',
+        time: 1235,
+        text: 'suck it batman Kreygasm'
+      }
+    ];
+
+    var highlightData = {
+      highlightStart: 1,
+      highlightEnd: 2,
+      channelName: 'twitch',
+      messages: messages,
+      multiplier: 3
+    };
+    var highlightDataBase = {
+      highlightStart: highlightData.highlightStart,
+      highlightEnd: highlightData.highlightEnd,
+      channelName: highlightData.channelName,
+    };
+
+    var highlightData2 = {
+      highlightStart: Date.now(),
+      highlightEnd: Date.now(),
+      channelName: 'twitch',
+      messages: messages,
+      multiplier: 3
+    };
+
+    var highlightData2Base = {
+      highlightStart: highlightData2.highlightStart,
+      highlightEnd: highlightData2.highlightEnd,
+      channelName: highlightData2.channelName,
+    };
+
+    beforeEach(function(done) {
+      mongoose.connect(process.env.MONGODB_URI)
+      .then(() => done());
+    });
+
+    afterEach(function(done) {
+      remove(highlightDataBase)
+      .then(() => remove(highlightData2Base))
+      .then(() => mongoose.disconnect())
+      .then(() => done());
+    });
+
+    it('should remove old db entries', function(done) {
+      var getStreamVodDataStub = new Promise((resolve, reject) => {
+        resolve({
+          status: 'recording',
+          vodId: 'v34340593453',
+          link: 'fake link',
+          game: 'Hungry Hungry Hippos',
+          streamTitle: 'testing our function',
+          preview: 'link to preview image',
+          streamStart: 0
+        });
+      });
+      sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
+      var highlightId;
+      workerMaster.saveHighlight(highlightData)
+      .then(() => findAll({
+        highlightStart: 1
+      }))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(1);
+        highlightId = foundHighlights[0]._id;
+        return chat.findOne(highlightId);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
+      .then(() => workerMaster.purgeOldDbEntries())
+      .then(() => findAll({
+        highlightStart: 1
+      }))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(0);
+        workerMaster.getStreamVodData.restore();
+        done();
+      });
+    });
+
+    it('should not remove new db entries', function(done) {
+      var getStreamVodDataStub = new Promise((resolve, reject) => {
+        resolve({
+          status: 'recording',
+          vodId: 'v34340593453',
+          link: 'fake link',
+          game: 'Hungry Hungry Hippos',
+          streamTitle: 'testing our function',
+          preview: 'link to preview image',
+          streamStart: Date.now()
+        });
+      });
+      sinon.stub(workerMaster, 'getStreamVodData').returns(getStreamVodDataStub);
+      workerMaster.saveHighlight(highlightData2)
+      .then(() => findAll({
+        highlightStart: highlightData2.highlightStart
+      }))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(1);
+        return chat.findOne(foundHighlights[0]._id);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
+      .then(() => workerMaster.purgeOldDbEntries())
+      .then(() => findAll({
+        highlightStart: highlightData2.highlightStart
+      }))
+      .then(foundHighlights => {
+        expect(foundHighlights).to.have.length(1);
+        workerMaster.getStreamVodData.restore();
+        return chat.findOne(foundHighlights[0]._id);
+      })
+      .then(chatDbEntry => expect(!!chatDbEntry).to.be.true)
+      .then(() => done());
+    });
+  });
 });
