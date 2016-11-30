@@ -2,7 +2,7 @@ var tmi = require('tmi.js');
 var createAvg = require('./rollingAvg');
 
 const numberOfSecondsToAddToBeginningOfHighlights = 30;
-const minimumMultiplierToBeConsideredAHighlight = 5;
+const minimumMultiplierToBeConsideredAHighlight = 10;
 const secondsPerBlockOfMessages = 10;
 const numberOfDataPointsInRollingAvg = 120;
 const minimumCommentsPerSecond = 1;
@@ -52,7 +52,7 @@ var createWorker = function(stream, handleHighlight) {
     });
     messagesCount++;
   });
-  
+
   //if just reconnected after disconnect, invalidate last 40s of highlights
   //to account for unnatural rush of chat activity
   worker.on('reconnect', () => {
@@ -61,7 +61,7 @@ var createWorker = function(stream, handleHighlight) {
     setTimeout(() => {
       validHighlight = true;
     }, 40000);
-  })
+  });
 
   //given a multiplier and cutoff, records start times, end times for highlights
   //calls handleHighlight when highlight is over

@@ -43,6 +43,14 @@ describe('workerMaster', function() {
     expect(workerMaster.getWorkers()).to.eql({});
   });
 
+  describe('getStreams', function() {
+    it('should return a Promise', function() {
+      var result = workerMaster.getStreams();
+
+      expect(result).to.be.an.instanceOf(Promise);
+    });
+  });
+
   describe('getTopStreams', function() {
     it('should return a Promise', function() {
       var result = workerMaster.getTopStreams();
@@ -51,11 +59,12 @@ describe('workerMaster', function() {
     });
 
     it('should fetch the top Twitch streams', function(done) {
-      var desiredStreamCount = 25;
-      workerMaster.getTopStreams(desiredStreamCount)
+      // 450 is the number we're *trying* to get, but because Twitch won't always
+      // give us the perfect amount every time, we just check for a reasonable
+      // minimum
+      var desiredStreamCount = 400;
+      workerMaster.getTopStreams()
       .then(streams => {
-        // 25 is an arbitrary number, but we want to ensure we always have a
-        // sizable portion at least
         expect(streams.length > desiredStreamCount).to.be.true;
         done();
       })
@@ -260,7 +269,7 @@ describe('workerMaster', function() {
       messages: messages,
       multiplier: 3
     };
-    
+
     var highlightData2Base = {
       highlightStart: highlightData2.highlightStart,
       highlightEnd: highlightData2.highlightEnd,
