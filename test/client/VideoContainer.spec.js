@@ -42,7 +42,7 @@ describe('<VideoContainer>', () => {
   let videoContainer;
 
   beforeEach(() => {
-    videoContainer = (<VideoContainer video={testVideo} username='batman' emotes={{}} />);
+    videoContainer = (<VideoContainer video={testVideo} username='batman' emotes={{}} dbHandleVote={()=>null}/>);
   });
 
   it('should be able to calculate total vote counts', () => {
