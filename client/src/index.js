@@ -50,6 +50,7 @@ class App extends React.Component {
     this.increaseList = this.increaseList.bind(this);
     this.checkScrollBottom = this.checkScrollBottom.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.dbHandleVote = this.dbHandleVote.bind(this);
 
     //refrences all sort functions from one object
     this.sortFunctions = {
@@ -230,12 +231,18 @@ class App extends React.Component {
     this.selected.search = e.target.value;
     this.updateList();
   }
+  
+  dbHandleVote(id, user, vote) {
+    //changes single source of truth to update votes on client db
+    var votedHighlight = this.allHighlights.filter((highlightElem) => highlightElem._id == id)[0];
+    votedHighlight.votes[user] = vote;
+  }
 
   render() {
     return (
       <div>
         <Menu sort={this.sortFunctions} updateUser={this.updateUser} twitchStatus={this.status} newHighlights={this.state.newHighlights}/>
-        <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes} />
+        <VideoList list={this.state.list} username={this.state.name} emotes={this.state.emotes} dbHandleVote={this.dbHandleVote}/>
       </div>
     );
   }
