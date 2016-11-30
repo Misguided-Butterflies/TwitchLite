@@ -78,7 +78,7 @@ class VideoContainer extends React.Component {
   updateUserVote(vote) {
     if (vote === this.state.userVote) {
       //set client side db to zero
-      this.props.video.votes[this.props.username] = 0;
+      this.props.dbHandleVote(this.props.video._id, this.props.username, 0);
       
       // If we're trying to update the vote to be what it already is, that means
       // we're simply toggling the current vote, ie turning it into 0
@@ -92,7 +92,7 @@ class VideoContainer extends React.Component {
     }
     
     //set client side db to vote
-    this.props.video.votes[this.props.username] = vote;
+    this.props.dbHandleVote(this.props.video._id, this.props.username, vote);
 
     this.setState({
       voteCount: this.state.voteCount + (vote - this.state.userVote),
@@ -218,7 +218,8 @@ VideoContainer.propTypes = {
     messages: React.PropTypes.array.isRequired
   }).isRequired,
   emotes: React.PropTypes.object.isRequired,
-  username: React.PropTypes.string
+  username: React.PropTypes.string,
+  dbHandleVote: React.PropTypes.func
 };
 
 export default VideoContainer;
