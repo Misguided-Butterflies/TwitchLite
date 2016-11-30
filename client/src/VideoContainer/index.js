@@ -77,6 +77,9 @@ class VideoContainer extends React.Component {
 
   updateUserVote(vote) {
     if (vote === this.state.userVote) {
+      //set client side db to zero
+      this.props.video.votes[this.props.username] = 0;
+      
       // If we're trying to update the vote to be what it already is, that means
       // we're simply toggling the current vote, ie turning it into 0
       this.setState({
@@ -85,9 +88,11 @@ class VideoContainer extends React.Component {
       });
 
       this.sendVote(this.state.voteCount - vote);
-
       return;
     }
+    
+    //set client side db to vote
+    this.props.video.votes[this.props.username] = vote;
 
     this.setState({
       voteCount: this.state.voteCount + (vote - this.state.userVote),
@@ -96,7 +101,7 @@ class VideoContainer extends React.Component {
 
     this.sendVote(vote);
   }
-
+  
   componentDidUpdate(prevProps) {
     // This check is here to prevent an infinite loop; we only want to do stuff
     // if the username has updated
