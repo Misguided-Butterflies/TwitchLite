@@ -162,6 +162,9 @@ var workerMaster = {
         }
       }
 
+      var workerCount = Object.keys(this.getWorkers()).length;
+      console.log(`There are now ${workerCount} workers`);
+
       // Return a list of all the old channels; not necessary but maybe useful
       // down the line
       return oldWorkers;
