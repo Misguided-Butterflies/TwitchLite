@@ -266,6 +266,9 @@ button:focus {
   padding: 1.25em 1em;
   cursor: pointer;
   transition: background 0.2s ease;
+
+  /* Allows text to be centered vertically */
+  display: flex;
 }
 
 .nav-item.active,
@@ -283,6 +286,9 @@ button:focus {
   font-size: 12px;
   letter-spacing: 1px;
   padding: 0;
+
+  /* Makes it easier to center vertically */
+  line-height: 1;
 }
 
 .nav-logo-container {
