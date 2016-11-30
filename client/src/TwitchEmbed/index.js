@@ -5,9 +5,9 @@ import InlineSVG from 'svg-inline-react';
 import playSVG from '../icons/play.svg';
 
 /** TwitchEmbed
- * this is the component for the actual twitch video player on the page.
- * it starts out as a preview image that turns into a twitch video embed when clicked on.
- * when clicked, the appropriate twitch player embed loads as described by the props.
+ * Renders the actual twitch video player on the page.
+ * Starts out as a preview image that turns into a twitch video embed when clicked.
+ * When clicked, the appropriate twitch player embed loads as described by the props.
  */
 class TwitchEmbed extends React.Component {
   constructor(props) {
