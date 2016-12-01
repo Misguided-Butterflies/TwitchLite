@@ -30,12 +30,14 @@ class ChatsContainer extends React.Component {
   }
 
   render() {
+    let chatImage = this.props.messages.length ? null : <img style={{display: 'block', margin: 'auto', height: '150px'}} src="./chat.svg" />;
     return (
       <div
         className='chats-container'
         ref='container'
         style={{height: this.props.videoHeight}}
       >
+        {chatImage}
         {
           this.props.messages.map(message => (
             <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} scrollDown={this.scrollDown} />
