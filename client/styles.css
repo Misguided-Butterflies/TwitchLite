@@ -444,3 +444,69 @@ button:focus {
     height: 10em !important;
   }
 }
+
+/*
+controls color and animation for loading spinner
+regular spinner path and dash styles control outer circle
+the alt css styles control the inner circle
+*/
+
+.spinner {
+  animation: rotator 1.4s linear infinite;
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(50%, 50%);
+}
+
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+.path {
+  stroke-dasharray: 187;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  stroke: #6441a5;
+  animation: dash 1.4s ease-in-out infinite;
+}
+
+.altPath {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  stroke: #6441a5;
+  animation: altDash 1.4s ease-in-out infinite;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 187;
+  }
+  50% {
+    stroke-dashoffset: 46.75;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 187;
+    transform: rotate(450deg);
+  }
+}
+
+@keyframes altDash {
+  0% {
+    stroke-dashoffset: 180;
+  }
+  50% {
+    stroke-dashoffset: 100;
+    transform: rotate(300deg);
+  }
+  100% {
+    stroke-dashoffset: 180;
+    transform: rotate(450deg);
+  }
+}
