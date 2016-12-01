@@ -211,7 +211,7 @@ button:focus {
 }
 
 .chats-container {
-  overflow: scroll;
+  overflow: auto;
 
   height: 12em;
   margin-top: 1em;
