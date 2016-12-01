@@ -445,6 +445,7 @@ button:focus {
   }
 }
 
+/*styles below control behavior and look of loading spinner*/
 
 .spinner {
   display: block;
