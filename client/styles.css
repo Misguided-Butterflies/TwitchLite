@@ -453,8 +453,10 @@ the alt css styles control the inner circle
 
 .spinner {
   animation: rotator 1.4s linear infinite;
-  display: block;
-  margin: auto;
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  transform:translate(50%, 50%);
 }
 
 @keyframes rotator {
