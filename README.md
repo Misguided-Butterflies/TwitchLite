@@ -15,7 +15,6 @@ highlight occurs, and how standout that particular highlight is.
 1. [Usage](#Usage)
 1. [Development](#development)
 1. [Contributing](#contributing)
-1. [Project Structure](#project-structure)
 
 ## Usage
 
@@ -75,24 +74,3 @@ be `mongodb://localhost/twitchlite`.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
-
-## Project Structure
-
-TwitchLite consists of 4 main components: _front-end_, _server_, _workers_, and _database_.
-
-### Front-End (`/client`)
-
-The TwitchLite front-end is written in [React](https://facebook.github.io/react/) and integrates with
-Twitch's OAuth login system.
-
-### Server (`/server`)
-
-TwitchLite uses a [Node](https://nodejs.org/en/) server.
-
-### Workers (`/workers`)
-
-TwitchLite workers are Node-based, IRC bots that monitor Twitch chats.
-
-### Database (`/db`)
-
-TwitchLite uses MongoDB to store both metadata about highlights, and chat logs for each highlight.
