@@ -30,7 +30,7 @@ class ChatsContainer extends React.Component {
   }
 
   render() {
-    let chatImage = this.props.messages.length ? null : <img style={{display: 'block', margin: 'auto'}} src="./chat.png" />;
+    let chatImage = this.props.messages.length ? null : <img style={{display: 'block', margin: 'auto', height: '150px'}} src="./chat.svg" />;
     return (
       <div
         className='chats-container'
