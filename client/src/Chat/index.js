@@ -2,7 +2,7 @@ import React from 'react';
 import utils from '../utils';
 
 /** Chat
- * This component represents one chat message in a chat log associated with a twitch highlight.
+ * Represents one chat message in a chat log associated with a twitch highlight.
  * usage:
  * <Chat message={{from: 'batman', time: 123987293, text: 'KappaRoss KappaPride'}} emotes={{Kappa: 25, ...}} />
  */

@@ -3,8 +3,8 @@ import Chat from '../Chat';
 
 const numberOfPixelsFromBottomBeforeCountingAsScrolledUp = 20;
 
-/** ChatsContainer 
- * this component represents a list of chat messages to display alongside a twitch embed video.
+/** ChatsContainer
+ * Represents a list of chat messages to display alongside a twitch embed video.
  * usage:
  * <ChatsContainer videoHeight=768 emotes={{Kappa: 25, ...}} messages={[{from: 'batman', time: 13251345345, text: 'lulz'}, ...]} />
  */
@@ -30,12 +30,14 @@ class ChatsContainer extends React.Component {
   }
 
   render() {
+    let chatImage = this.props.messages.length ? null : <img style={{display: 'block', margin: 'auto', height: '150px'}} src="./chat.svg" />;
     return (
       <div
         className='chats-container'
         ref='container'
         style={{height: this.props.videoHeight}}
       >
+        {chatImage}
         {
           this.props.messages.map(message => (
             <Chat key={message.from + message.time} message={message} emotes={this.props.emotes} scrollDown={this.scrollDown} />

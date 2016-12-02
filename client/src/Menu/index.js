@@ -6,13 +6,12 @@ import InlineSVG from 'svg-inline-react';
 import menuSVG from '../icons/menu.svg';
 
 /** Menu
- * this is the component for the nav bar on our site. it has various buttons to change how the data is sorted and displayed.
- * the actual sorting functions must be passed in.
+ * Top nav bar. It has various buttons to change how the data is sorted and displayed.
+ * The actual sorting functions must be passed in.
  */
 class Menu extends React.Component {
   constructor(props) {
     super(props);
-    //init twitch js api
     this.state = {
       name: '',
       filterByFollowedChannels: false,
@@ -69,7 +68,6 @@ class Menu extends React.Component {
 
 
   getTwitchUser(obj) {
-    //promisified Twitch get user, gets token
     return new Promise((resolve, reject) => {
       Twitch.api({method: 'user'}, (err, res) => {
         if (err) {
@@ -84,7 +82,6 @@ class Menu extends React.Component {
   }
 
   getTwitchFollowedChannels(obj) {
-    //promisified get user's followed channels
     let followedChannels = [];
     return new Promise((resolve, reject) => {
       Twitch.api({method: 'users/' + obj.name + '/follows/channels'}, (err, list) => {
@@ -102,7 +99,6 @@ class Menu extends React.Component {
   }
 
   getTwitchFollowedGames(obj) {
-    //promisified get user's followed games from twitch api
     let followedGames = [];
     return new Promise((resolve, reject) => {
       JSONP({
@@ -122,27 +118,27 @@ class Menu extends React.Component {
   componentDidMount() {
     document.addEventListener('click', this.closeMenu);
 
-    //if logged in, get user's name and followed things. pass it up to main app
-    var that = this;
-    if (this.props.twitchStatus.authenticated) {
-      this.getTwitchUser({})
-        .then(this.getTwitchFollowedChannels)
-        .then(this.getTwitchFollowedGames)
-        .then(
-        function(data) {
-          //update userData object in parent app
-          that.props.updateUser({
-            name: data.name,
-            followedChannels: data.followedChannels,
-            followedGames: data.followedGames
-          });
-          //update menu state with username
-          that.setState({
-            name: data.name
-          });
-        }
-      );
+    if (!this.props.twitchStatus.authenticated) {
+      return;
     }
+
+    // If logged in, get user's name and followed things; pass it up to main app
+    this.getTwitchUser({})
+      .then(this.getTwitchFollowedChannels)
+      .then(this.getTwitchFollowedGames)
+      .then(data => {
+        // Pass userData up to parent component
+        this.props.updateUser({
+          name: data.name,
+          followedChannels: data.followedChannels,
+          followedGames: data.followedGames
+        });
+
+        this.setState({
+          name: data.name
+        });
+      }
+    );
   }
 
   handleClickFollowedChannels (event) {
@@ -160,7 +156,7 @@ class Menu extends React.Component {
   }
 
   render() {
-    //change user view depending on whether or not user is logged in
+    // Change user view depending on whether or not user is logged in
     let auth;
     let followedChannelsLink = null;
     let followedGamesLink = null;
