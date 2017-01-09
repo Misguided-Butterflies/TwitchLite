@@ -49,6 +49,32 @@ describe('workerMaster', function() {
 
       expect(result).to.be.an.instanceOf(Promise);
     });
+
+    it('should get only English language streams by default', function(done) {
+      var options = { quantity: 10 };
+      workerMaster.getStreams(options)
+      .then(streams => {
+        streams.forEach(stream => {
+          expect(stream.channel.language).to.equal('en');
+        });
+      })
+      .then( () => {
+        done();
+      });
+    });
+
+    it('should be able to get streams in other languages', function(done) {
+      var language = 'ko';
+      workerMaster.getStreams({ quantity: 10, language })
+      .then(streams => {
+        streams.forEach(stream => {
+          expect(stream.channel.language).to.equal(language);
+        });
+      })
+      .then( () => {
+        done();
+      });
+    });
   });
 
   describe('getTopStreams', function() {
