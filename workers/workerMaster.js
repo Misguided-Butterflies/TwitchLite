@@ -16,8 +16,12 @@ var activeWorkers = {};
 
 var workerMaster = {
   // Fetch a single chunk of streams
-  getStreams: function(quantity, offset) {
-    return fetch(`https://api.twitch.tv/kraken/streams?limit=${quantity}&offset=${offset}`, fetchOptions)
+  // The default to {} is just a safeguard against a type error in case the
+  // function is called with no arguments at all; see here:
+  // http://stackoverflow.com/questions/37453235/typeerror-cannot-match-against-undefined-or-null
+  // The destructuring + default params still otherwise work perfectly as intended
+  getStreams: function({ quantity = 10, offset = 0, language = 'en'} = {}) {
+    return fetch(`https://api.twitch.tv/kraken/streams?language=${language}&limit=${quantity}&offset=${offset}`, fetchOptions)
       .then(response => {
         return response.json();
       })
@@ -34,7 +38,10 @@ var workerMaster = {
     var chunkCount = Math.ceil(quantity / 50);
 
     for (var i = 0; i < chunkCount; i++) {
-      streamPromises.push(this.getStreams(50, 50 * i));
+      streamPromises.push(this.getStreams({
+        quantity: 50,
+        offset: 50 * i
+      }));
     }
 
     return Promise.all(streamPromises)
