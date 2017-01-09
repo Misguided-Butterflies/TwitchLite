@@ -105,16 +105,17 @@ var workerMaster = {
         throw new Error(`Channel ${channelName} does not store VODs`);
         return;
       }
-      var streamStart = new Date(data.videos[0]['recorded_at']);
+      var vod = data.videos[0];
+      var streamStart = new Date(vod['recorded_at']);
       streamStart = streamStart.getTime();
 
       return {
-        status: data.videos[0].status,
-        vodId: data.videos[0]._id,
-        link: data.videos[0].url,
-        game: data.videos[0].game,
-        streamTitle: data.videos[0].title,
-        preview: data.videos[0].preview,
+        status: vod.status,
+        vodId: vod._id,
+        link: vod.url,
+        game: vod.game,
+        streamTitle: vod.title,
+        preview: vod.preview,
         streamStart
       };
     });
