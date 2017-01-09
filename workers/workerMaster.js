@@ -1,5 +1,3 @@
-// Might need to rename this to workerUtil or something; the true 'master' is the server really, I think
-// or maybe this file is what is the connection between the db? and the server doesn't actually deal directly with the db
 var { findAll, findOne, insertOne, remove } = require('../db/controllers/highlight');
 var chat = require('../db/controllers/chat');
 var fetch = require('node-fetch');
