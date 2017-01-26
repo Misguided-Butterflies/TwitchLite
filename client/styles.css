@@ -279,7 +279,8 @@ button:focus {
 }
 
 .nav-button,
-.nav-button:active {
+.nav-button:active,
+.nav-button:focus {
   color: #fff !important;
   text-transform: uppercase;
   background: transparent;
